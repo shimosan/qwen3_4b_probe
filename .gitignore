@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Local environments
+.venv/
+venv/
+env/
+
+# Runtime outputs
+outputs/
+runs/
+logs/
+cache/
+
+# Local scratch links or local-only dirs inside workspace, if any
+scratch/
+tmp/
+
+# Secrets / local env
+.env
+.env.*
+huggingface_token*
+
+# OS/editor noise
+.DS_Store

@@ -1,0 +1,10 @@
+{
+  "workspace_name": "qwen3_4b_probe",
+  "model_id": "Qwen/Qwen3-4B",
+  "default_prompt": "京都大学の情報学科1回生に、言語モデルとは何かを短く説明してください。",
+  "max_new_tokens": 64,
+  "attn_implementation": "eager",
+  "output_hidden_states": true,
+  "output_attentions": true,
+  "use_cache": false
+}
