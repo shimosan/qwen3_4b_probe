@@ -18,5 +18,8 @@
     "scratch": true,
     "tmp": true,
     "**/__pycache__": true
-  }
+  },
+  "cursorpyright.analysis.diagnosticMode": "openFilesOnly",
+  "cursorpyright.analysis.typeCheckingMode": "basic",
+  "python-envs.pythonProjects": []
 }
