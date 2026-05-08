@@ -211,9 +211,10 @@ qwen3_4b_probe/
     04_probe_forward.py
     05_show_transformers_source.py
     06_attention_heatmap.py
-  outputs/
-  docs/
-    experiment_log.md
+ notebooks/
+ outputs/
+ docs/
+  experiment_log.md
 ```
 
 `outputs/` は runtime output 用のフォルダであり、Git 管理対象ではありません。
