@@ -21,5 +21,13 @@
   },
   "cursorpyright.analysis.diagnosticMode": "openFilesOnly",
   "cursorpyright.analysis.typeCheckingMode": "basic",
-  "python-envs.pythonProjects": []
+  "claude.preferredLocation": "sidebar",
+
+  "python-envs.pythonProjects": [
+    {
+      "path": ".",
+      "envManager": "ms-python.python:venv",
+      "packageManager": "ms-python.python:pip"
+    }
+  ]
 }

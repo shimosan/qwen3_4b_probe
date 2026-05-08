@@ -25,3 +25,4 @@ huggingface_token*
 
 # OS/editor noise
 .DS_Store
+*.code-workspace
