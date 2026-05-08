@@ -18,6 +18,9 @@ cache/
 scratch/
 tmp/
 
+# Sandbox notebooks (free to modify, not tracked)
+sandbox/
+
 # Secrets / local env
 .env
 .env.*
