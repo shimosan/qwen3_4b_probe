@@ -430,6 +430,37 @@ Hugging Face cache
 token や secret
 ```
 
+## 自律実行の禁止
+
+明示的な指示があるまで以下を実行しない：
+
+- `git commit` / `git commit --amend`
+- `git push` / `git push --force`（force push は絶対に実行しない）
+- `git rebase` / `git reset --hard`
+- `git restore` / `git checkout -- .`（未コミット変更が消える）
+- `git clean -f` / `git clean -fd`
+- ブランチの作成・削除・リネーム
+
+## commit の作業フロー
+
+1. `git diff` / `git status` で変更内容を確認してユーザーに提示する
+2. ユーザーの承認を得てから `git add`（対象ファイルを明示）
+3. commit メッセージ案を提示する
+4. ユーザーの承認を得てから `git commit`
+5. `git push` はユーザーが明示的に要求した場合のみ実行する
+
+## commit メッセージのスタイル
+
+シンプルに1行で。プレフィックス例：`add:` `update:` `fix:` `remove:`
+
+```text
+add: cursor rule for git safety
+update: probe config for short sequences
+fix: scratch path resolution
+```
+
+署名（Co-Authored-By 等）は追記しない。
+
 ---
 
 ## やってはいけないこと
