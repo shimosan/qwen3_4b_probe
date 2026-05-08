@@ -1,0 +1,95 @@
+---
+description: Git safety rules — prohibit autonomous commit/push and enforce safe git operations
+alwaysApply: true
+---
+
+# Git Safety Rules
+
+## 絶対に自律実行しないこと
+
+- `git commit` — ユーザーから明示的な指示があるまで実行しない
+- `git push` — ユーザーから明示的な指示があるまで実行しない
+- `git push --force` / `git push -f` — 絶対に実行しない
+- `git commit --amend` — 明示的な指示がない限り実行しない
+- `git rebase` — 明示的な指示がない限り実行しない
+- `git reset --hard` — 明示的な指示がない限り実行しない
+- `git restore` / `git checkout -- .` — 明示的な指示がない限り実行しない（未コミット変更が消える）
+- `git clean -f` / `git clean -fd` — 明示的な指示がない限り実行しない
+- `git checkout -b` / `git switch -c` / `git branch -d` / `git branch -m` — 明示的な指示がない限り実行しない
+
+## ファイルの stage
+
+- `git add .` や `git add -A` は使わない
+- 必ず対象ファイルを明示して stage する
+
+```bash
+# ❌ NG
+git add .
+
+# ✅ OK
+git add scripts/04_probe_forward.py
+git add CLAUDE.md README.md
+```
+
+## commit してはいけないファイル
+
+以下は絶対に commit しない。
+
+```
+outputs/
+runs/
+logs/
+cache/
+scratch/
+tmp/
+*.pt
+*.bin
+*.safetensors
+.vscode/settings.json
+.env
+.env.*
+token や secret を含むファイル
+```
+
+## ブランチ操作
+
+ブランチの作成・削除・リネームはユーザーの明示的な指示があった場合のみ行う。
+`git branch`（一覧表示）は調査目的で自由に使ってよい。
+
+```bash
+# ❌ NG — 指示なしに作成しない
+git checkout -b feature/xxx
+git switch -c feature/xxx
+
+# ✅ OK — 指示を受けてから実行（コマンドはどちらでもよい）
+git switch -c feature/xxx
+```
+
+ローカルブランチを push するときは、同名のリモートブランチを作成する。
+
+```bash
+git push -u origin feature/xxx
+```
+
+## commit メッセージのスタイル
+
+シンプルかつ明確に。1行で完結させる。
+プレフィックス例: `add:` `update:` `fix:` `remove:`
+
+```
+# ✅ OK
+add: attention heatmap script
+update: probe config for short sequences
+fix: scratch path resolution
+
+# ❌ NG — 冗長
+add: add a new script for attention heatmap visualization with multiple label modes
+```
+
+## 作業フロー
+
+1. 変更内容を `git diff` / `git status` で確認してユーザーに提示する
+2. ユーザーの承認を得てから `git add` する
+3. commit メッセージの草案を提示する
+4. ユーザーの承認を得てから `git commit` する
+5. `git push` はユーザーが明示的に要求した場合のみ実行する
