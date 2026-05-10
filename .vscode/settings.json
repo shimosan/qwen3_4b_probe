@@ -5,6 +5,10 @@
   "python.analysis.typeCheckingMode": "basic",
   "python.analysis.diagnosticMode": "openFilesOnly",
 
+  "files.readonlyInclude": {
+    "notebooks/**": true
+  },
+
   "files.exclude": {
     "**/__pycache__": true,
     "**/*.pyc": true

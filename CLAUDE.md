@@ -384,6 +384,21 @@ autoregressive LM では、未来 token を見られないため、通常は cau
 
 ---
 
+## notebook の作業フロー
+
+作業はすべて `sandbox/` で行い、完了・確認後にのみ `notebooks/` の原本に反映する。
+
+```text
+1. sandbox/ のノートブックで修正・実験・検証する
+2. ユーザーから明示的に指示があったときのみ notebooks/ に反映する
+3. 指示なしに notebooks/ を変更しない
+```
+
+`notebooks/` は常にクリーンな原本として保つ。  
+`sandbox/` は git 管理外（`.gitignore` に登録済み）の自由な作業領域。
+
+---
+
 ## Git の注意
 
 明示的に指示されない限り、広い範囲をまとめて stage しないでください。
