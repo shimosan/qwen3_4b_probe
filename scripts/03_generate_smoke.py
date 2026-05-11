@@ -37,14 +37,14 @@ inputs = tokenizer(text, return_tensors="pt").to(device)
 
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
-    torch_dtype=dtype,
+    dtype=dtype,
     attn_implementation=cfg["attn_implementation"],
 )
-model.to(device)
+model.to(device)  # type: ignore[union-attr]
 model.eval()
 
 with torch.no_grad():
-    generated = model.generate(
+    generated = model.generate(  # type: ignore[union-attr]
         **inputs,
         max_new_tokens=cfg["max_new_tokens"],
         do_sample=False,
