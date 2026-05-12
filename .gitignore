@@ -26,6 +26,9 @@ sandbox/
 .env.*
 huggingface_token*
 
+# Claude Code project-local settings (machine-specific, not for sharing)
+.claude/
+
 # OS/editor noise
 .DS_Store
 *.code-workspace
