@@ -97,23 +97,23 @@ def compute_own_logit_lens_selected_position(
     Each tensor has shape [vocab_size].
     """
     hs_local = outputs.hidden_states
-    K_local = len(model.model.layers)
+    K_local = model.config.num_hidden_layers  # type: ignore[union-attr]
     if len(hs_local) != K_local + 1:
         raise RuntimeError(f"Expected {K_local + 1} hidden states, got {len(hs_local)}")
     result: list[torch.Tensor] = []
     for k in range(K_local + 1):
         with torch.no_grad():
             if k < K_local:
-                readout = model.model.norm(hs_local[k][:, pos:pos + 1, :])[:, 0, :]
+                readout = model.model.norm(hs_local[k][:, pos:pos + 1, :])[:, 0, :]  # type: ignore[union-attr]
             else:
                 readout = hs_local[K_local][:, pos, :]
-            logits_k = model.lm_head(readout.to(device)).float()
+            logits_k = model.lm_head(readout.to(device)).float()  # type: ignore[union-attr]
         result.append(logits_k[0].cpu())  # [vocab], float32
     return result
 
 
 print("\n[2] own logit lens")
-own_logits_by_layer = compute_own_logit_lens_selected_position(model, outputs, pos)
+own_logits_by_layer = compute_own_logit_lens_selected_position(model, outputs, pos)  # type: ignore[arg-type]
 print(f"  computed {len(own_logits_by_layer)} logit vectors (k=0..{K})")
 
 # sanity: k=K selected position
@@ -294,7 +294,7 @@ try:
         center_writing_weights=False,
         center_unembed=False,
         default_prepend_bos=False,
-        dtype=torch.float32,
+        dtype=torch.float32,  # type: ignore[arg-type]
         trust_remote_code=True,
     )
     tl_model.eval()
@@ -360,7 +360,7 @@ try:
             prepend_bos=False,
             remove_batch_dim=False,
         )
-    tl_logits_dtype_str = str(tl_logits_out.dtype)
+    tl_logits_dtype_str = str(tl_logits_out.dtype)  # type: ignore[union-attr]
     transformer_lens_summary["dtype_info"] = {
         "hf_model_dtype": hf_model_dtype_str,
         "tl_model_dtype": tl_model_dtype_str,
@@ -520,7 +520,7 @@ try:
         center_writing_weights=False,
         center_unembed=False,
         default_prepend_bos=False,
-        dtype=torch.float16,
+        dtype=torch.float16,  # type: ignore[arg-type]
         trust_remote_code=True,
     )
     tl_model_f16.eval()

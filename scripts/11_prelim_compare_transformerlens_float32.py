@@ -104,7 +104,7 @@ try:
         torch_dtype=torch.float32,
         attn_implementation=attn_impl,
     )
-    model.to(hf_device).eval()
+    model.to(hf_device).eval()  # type: ignore[union-attr]
 
     hf_dtype_str = str(next(model.parameters()).dtype)
     K_hf = len(model.model.layers)
@@ -226,7 +226,7 @@ try:
         center_writing_weights=False,
         center_unembed=False,
         default_prepend_bos=False,
-        dtype=torch.float32,
+        dtype=torch.float32,  # type: ignore[arg-type]
         trust_remote_code=True,
     )
     tl_model.to(tl_device).eval()
@@ -276,7 +276,7 @@ try:
             prepend_bos=False,
             remove_batch_dim=False,
         )
-    tl_s["logits_dtype"] = str(tl_logits_out.dtype)
+    tl_s["logits_dtype"] = str(tl_logits_out.dtype)  # type: ignore[union-attr]
     del tl_logits_out
 
     # TL logit lens: k=0..K
