@@ -6,7 +6,7 @@ import json
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from common import ensure_dir, load_config, project_root
+from common import load_config, resolve_outputs_dir
 
 # ── Config ─────────────────────────────────────────────────────────────────────
 cfg = load_config()
@@ -19,7 +19,7 @@ CLEAN_ANSWER   = " Tokyo"
 CORRUPT_ANSWER = " Paris"
 TOP_K = 10
 
-outputs_dir = ensure_dir(project_root() / "outputs")
+outputs_dir = resolve_outputs_dir()
 
 # ── Device ─────────────────────────────────────────────────────────────────────
 if torch.cuda.is_available():

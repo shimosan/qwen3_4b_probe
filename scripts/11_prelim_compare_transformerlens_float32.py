@@ -10,7 +10,7 @@ import traceback as tb
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from common import ensure_dir, load_config, project_root
+from common import load_config, resolve_outputs_dir
 
 # ── Config ─────────────────────────────────────────────────────────────────────
 cfg = load_config()
@@ -18,7 +18,7 @@ model_id = cfg["model_id"]
 prompt = cfg["default_prompt"]
 attn_impl = cfg["attn_implementation"]
 
-outputs_dir = ensure_dir(project_root() / "outputs")
+outputs_dir = resolve_outputs_dir()
 
 hf_device = "cpu"
 tl_device = "cpu"
