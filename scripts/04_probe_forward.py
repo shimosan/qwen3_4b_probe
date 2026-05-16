@@ -76,8 +76,8 @@ for rank, (idx, prob) in enumerate(zip(top.indices.tolist(), top.values.tolist()
         {
             "rank": rank,
             "token_id": idx,
-            "raw_token": tokenizer.convert_ids_to_tokens([idx])[0],
-            "decoded_piece": tokenizer.decode([idx]),
+            "piece": tokenizer.convert_ids_to_tokens([idx])[0],
+            "decoded": tokenizer.decode([idx]),
             "prob": prob,
         }
     )

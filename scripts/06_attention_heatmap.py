@@ -29,7 +29,7 @@ def set_japanese_font_if_available() -> None:
 
 
 def choose_token_text(row: pd.Series) -> str:
-    for col in ["decoded_piece", "token", "raw_token"]:
+    for col in ["decoded", "piece", "token"]:
         if col not in row.index:
             continue
         val = row[col]
