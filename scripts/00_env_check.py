@@ -7,11 +7,10 @@ import torch
 import transformers
 import huggingface_hub
 
-from common import load_config, resolve_scratch_dir, ensure_dir
+from common import load_config, resolve_outputs_dir
 
 cfg = load_config()
-workspace_name = cfg["workspace_name"]
-scratch_dir = ensure_dir(resolve_scratch_dir(workspace_name))
+outputs_dir = resolve_outputs_dir()
 
 print("python:", platform.python_version())
 print("platform:", platform.platform())
@@ -28,5 +27,5 @@ if torch.cuda.is_available():
     print("cuda device:", torch.cuda.get_device_name(0))
 
 print("workspace:", Path.cwd())
-print("scratch_dir:", scratch_dir)
+print("outputs_dir:", outputs_dir)
 print("model_id:", cfg["model_id"])
