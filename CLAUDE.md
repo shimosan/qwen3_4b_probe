@@ -201,9 +201,9 @@ qwen3_4b_probe/
   .vscode/
     settings.json
     launch.json
-  configs/
-    qwen3_4b_probe.json
   scripts/
+    common.py
+    qwen3_4b_probe.json
     00_env_check.py
     01_download_model.py
     02_tokenizer_probe.py
@@ -213,8 +213,6 @@ qwen3_4b_probe/
     06_attention_heatmap.py
  notebooks/
  outputs/
- docs/
-  experiment_log.md
 ```
 
 `outputs/` は runtime output 用のフォルダであり、Git 管理対象ではありません。
@@ -307,7 +305,7 @@ Python script は、講義デモで説明しやすいように、簡潔で明示
 ```text
 - notebook よりも再現しやすい Python script を優先する。
 - pathlib.Path を使う。
-- 調整可能なパラメータは configs/*.json または script 冒頭にまとめる。
+- 調整可能なパラメータは scripts/qwen3_4b_probe.json または script 冒頭にまとめる。
 - scripts/common.py に既存 utility がある場合はそれを使う。
 - 出力先ディレクトリは保存前に作成する。
 - 進捗が分かる簡潔な print を入れる。

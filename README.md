@@ -24,11 +24,9 @@ Qwen3-4B を用いた LLM 内部可視化の軽量調査 workspace。
 
 | Path | Contents |
 |---|---|
-| `scripts/` | 番号付き再現スクリプト（主要実行単位） |
+| `scripts/` | 番号付き再現スクリプトと設定ファイル（JSON） |
 | `notebooks/` | 探索・補助用 Jupyter Notebook |
-| `configs/` | 調整可能パラメータ（JSON） |
 | `outputs/` | 軽量な出力ファイル（PNG / CSV 等） |
-| `docs/` | 実験ログ等のドキュメント |
 
 ## Setup
 

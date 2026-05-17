@@ -13,7 +13,7 @@ def project_root() -> Path:
 
 
 def load_config() -> dict[str, Any]:
-    cfg_path = project_root() / "configs" / "qwen3_4b_probe.json"
+    cfg_path = Path(__file__).parent / "qwen3_4b_probe.json"
     with cfg_path.open("r", encoding="utf-8") as f:
         return json.load(f)
 
