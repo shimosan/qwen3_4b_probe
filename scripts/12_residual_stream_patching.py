@@ -1,3 +1,9 @@
+# 残差ストリームへの activation patching を実装し、因果的な情報の流れを可視化する。
+# clean prompt（"The capital of Japan is"）と corrupt prompt（"The capital of France is"）を用意し、
+# 各層の hidden state を clean → corrupt に置き換えたとき答えの確率がどう変わるかを測定する。
+# 出力: outputs/prelim_residual_patching_topk.csv, _baseline_topk.csv, _summary.json
+# 環境: llm2026-dev
+
 from __future__ import annotations
 
 import csv

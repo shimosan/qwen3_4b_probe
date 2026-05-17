@@ -1,3 +1,9 @@
+# Qwen3-4B の hidden states の構造を hook を使って検証する。
+# embed_tokens の出力と hidden_states[0] の一致、各 decoder layer の出力と hidden_states[j+1] の一致、
+# lm_head(hidden_states[-1]) と outputs.logits の一致を数値で確認する。
+# 出力: outputs/prelim_hidden_state_mapping_diffs.csv, prelim_hidden_state_mapping_summary.json
+# 環境: llm2026-dev
+
 from __future__ import annotations
 
 import csv

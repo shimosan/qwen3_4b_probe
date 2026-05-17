@@ -1,3 +1,7 @@
+# モデルをロードして短い日本語テキストを生成し、基本的な動作を確認する（スモークテスト）。
+# 生成結果を outputs/generate_smoke.txt に保存する。
+# 環境: llm2026
+
 from __future__ import annotations
 
 import torch

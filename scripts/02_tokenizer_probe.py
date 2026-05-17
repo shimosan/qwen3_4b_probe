@@ -1,3 +1,7 @@
+# chat template を適用したプロンプトをトークナイズし、各トークンの情報を表示・保存する。
+# position / token_id / piece / decoded_piece を一覧化した CSV を outputs/token_table.csv に保存する。
+# 環境: llm2026
+
 from __future__ import annotations
 
 import pandas as pd

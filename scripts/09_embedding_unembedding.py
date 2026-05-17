@@ -1,3 +1,8 @@
+# embedding 行列（W_E）と unembedding 行列（W_U）の関係を調べる。
+# tie_word_embeddings の確認、トークン部分集合の PCA・t-SNE による次元削減と可視化を行う。
+# 出力: outputs/prelim_embedding_unembedding_tokens.csv, _coords.csv, _summary.json
+# 環境: llm2026-dev（sklearn による PCA/t-SNE を使用）
+
 from __future__ import annotations
 
 import csv

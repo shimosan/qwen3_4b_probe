@@ -1,3 +1,7 @@
+# Python・PyTorch・Transformers のバージョン、MPS/CUDA の利用可否を確認する。
+# outputs/ ディレクトリのパスと設定ファイルの model_id も表示する。
+# 環境: llm2026
+
 from __future__ import annotations
 
 import platform

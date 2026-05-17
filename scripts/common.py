@@ -1,3 +1,9 @@
+# スクリプト間で共有するユーティリティ関数モジュール。
+# load_config()        : scripts/qwen3_4b_probe.json を読み込む
+# resolve_outputs_dir(): outputs/ ディレクトリのパスを返す（なければ作成）
+# resolve_scratch_dir(): scratch ディレクトリのパスを返す（環境変数で切り替え可）
+# ensure_dir()         : 指定パスのディレクトリを作成して返す
+
 from __future__ import annotations
 
 import json

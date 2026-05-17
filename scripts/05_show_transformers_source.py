@@ -1,3 +1,7 @@
+# インストール済み Transformers パッケージの Qwen3 実装ファイルのパスを表示する。
+# pip install 版の transformers がどこにあるかを確認するためのユーティリティスクリプト。
+# 環境: llm2026
+
 from __future__ import annotations
 
 import inspect

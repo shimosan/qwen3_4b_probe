@@ -1,3 +1,8 @@
+# logit lens を実装し、各層の hidden state を lm_head に通して次トークン予測を可視化する。
+# 層ごとに top-k 予測トークンと確率を計算し、残差ストリームの情報蓄積過程を確認する。
+# 出力: outputs/prelim_logit_lens_summary.json
+# 環境: llm2026-dev
+
 from __future__ import annotations
 
 import csv

@@ -1,3 +1,9 @@
+# 04_probe_forward.py が保存した probe_forward_compact.pt を読み込み、
+# attention heatmap（PNG）と attention 重みの CSV を outputs/ に保存する。
+# 引数: --head <head番号> --label-mode <both|piece|position>
+# 依存: 04_probe_forward.py を先に実行しておく必要がある。
+# 環境: llm2026
+
 from __future__ import annotations
 
 import argparse

@@ -1,3 +1,8 @@
+# HF モデルと TransformerLens をどちらも float32/CPU でロードし、logit lens の数値を比較する。
+# dtype 差を排除した条件で自前実装と TransformerLens の一致を確認する（max_abs_diff < 1e-3 が目標）。
+# 出力: outputs/prelim_compare_transformerlens_float32_layer_diffs.csv, _summary.json
+# 環境: llm2026-dev（transformer-lens が必要）
+
 from __future__ import annotations
 
 import csv

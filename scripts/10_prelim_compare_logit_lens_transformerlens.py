@@ -1,3 +1,9 @@
+# 自前の logit lens 実装と TransformerLens の logit lens を比較し、実装の正確性を検証する。
+# HF モデル（float16/MPS）と TransformerLens（float32/CPU）の dtype 差による誤差も確認する。
+# tuned-lens は Qwen3 未対応のため不動作。[3] に記録コメントのみ残している。
+# 出力: outputs/prelim_compare_logit_lens_transformerlens_summary.json
+# 環境: llm2026-dev（transformer-lens が必要）
+
 from __future__ import annotations
 
 import csv
