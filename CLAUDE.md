@@ -395,16 +395,17 @@ autoregressive LM では、未来 token を見られないため、通常は cau
 
 ## notebook の作業フロー
 
-作業はすべて `sandbox/` で行い、完了・確認後にのみ `notebooks/` の原本に反映する。
+原則として `notebooks/` で直接作業してよい。  
+大規模な改修や、壊れるリスクが高い変更の場合は、`sandbox/` のコピーで検証してから `notebooks/` に反映してもよい。
 
 ```text
-1. sandbox/ のノートブックで修正・実験・検証する
-2. ユーザーから明示的に指示があったときのみ notebooks/ に反映する
-3. 指示なしに notebooks/ を変更しない
+1. 通常の修正は notebooks/ で直接行う
+2. 大きな改修・破壊的変更が心配なときは sandbox/ で先に検証してから notebooks/ に反映する
+3. notebook の実行・出力上書きは、ユーザーから明示的に指示があったときのみ行う
 ```
 
-`notebooks/` は常にクリーンな原本として保つ。  
-`sandbox/` は git 管理外（`.gitignore` に登録済み）の自由な作業領域。
+`sandbox/` は git 管理外（`.gitignore` に登録済み）の自由な作業領域。  
+`notebooks/` は git 管理下なので、変更後は `git status` / `git diff` で内容を確認できるようにする。
 
 ## notebook の設計原則
 
