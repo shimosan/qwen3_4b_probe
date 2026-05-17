@@ -30,6 +30,16 @@ Qwen3-4B を用いた LLM 内部可視化の軽量調査 workspace。
 | `outputs/` | 軽量な出力ファイル（PNG / CSV 等） |
 | `docs/` | 実験ログ等のドキュメント |
 
+## Setup
+
+```bash
+python3 -m venv ~/.venvs/llm2026
+source ~/.venvs/llm2026/bin/activate
+pip install -U pip wheel
+pip install -r requirements.txt
+python scripts/01_download_model.py
+```
+
 ## Notes
 
 This probe workspace should not modify Transformers source code.
