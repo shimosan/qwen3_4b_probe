@@ -83,8 +83,10 @@ multiprocess==0.70.19
 nbclient==0.10.4
 nbconvert==7.17.1
 nbformat==5.10.4
+nbstripout==0.9.1
 nest-asyncio==1.6.0
 networkx==3.6.1
+nodeenv==1.10.0
 notebook_shim==0.2.4
 numpy==2.4.4
 packaging==26.2
@@ -107,6 +109,7 @@ pydantic==2.13.4
 pydantic_core==2.46.4
 Pygments==2.20.0
 pyparsing==3.3.2
+pyright==1.1.409
 python-dateutil==2.9.0.post0
 python-json-logger==4.1.0
 PyYAML==6.0.3
