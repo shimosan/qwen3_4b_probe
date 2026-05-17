@@ -143,103 +143,12 @@ own_summary: dict = {
     ),
 }
 
-# ── [3] tuned-lens ────────────────────────────────────────────────────────────
-# tuned-lens 0.2.0 の LogitLens は Unembed を使い、
-# Unembed.forward(h) = final_norm(h) -> unembedding を計算する。
-# ただし tuned_lens.model_surgery.get_final_norm は Qwen3Model を明示的に
-# サポートしておらず (OPT/GPTNeoX/Bloom/GPT2/GPTNeo/GPTJ/Llama のみ)、
-# Qwen3 に対して NotImplementedError を送出することが予想される。
-print("\n[3] tuned-lens")
-tuned_lens_summary: dict = {
-    "import_ok": False,
-    "attempted": False,
-    "success": False,
-    "comparison_available": False,
-}
-comparison_own_vs_tuned: dict = {
-    "attempted": False,
-    "comparison_available": False,
-    "success": False,
-}
-
-try:
-    import tuned_lens as tl_mod
-    from tuned_lens.nn.lenses import LogitLens  # noqa: F401
-
-    tuned_lens_summary["import_ok"] = True
-    tuned_lens_summary["version"] = ilm.version("tuned-lens")
-    tuned_lens_summary["source_path"] = tl_mod.__file__
-    print(f"  tuned_lens: import OK  version={tuned_lens_summary['version']}")
-
-    tuned_lens_summary["attempted"] = True
-    print("  Attempting LogitLens.from_model(model) ...")
-    logit_lens_obj = LogitLens.from_model(model)
-    tuned_lens_summary["success"] = True
-    print("  LogitLens.from_model: success")
-
-    # normalization convention note:
-    # Unembed.forward always applies final_norm before unembedding.
-    # own_logit_lens at k=K uses hs[K] which is already post-norm,
-    # so passing hs[K] through LogitLens applies norm again -> differs at k=K.
-    tuned_lens_summary["normalization_convention_note"] = (
-        "tuned_lens Unembed always applies final_norm before unembedding. "
-        "own_logit_lens at k=K uses hs[K] (already post-norm) directly. "
-        "Passing hs[K] through LogitLens applies norm twice -> diff at k=K is expected."
-    )
-
-    logit_lens_cpu = logit_lens_obj.to("cpu")
-    comparison_own_vs_tuned["attempted"] = True
-
-    # 主比較: k = 0..K-1 のみ
-    # (k=K は hs[K] が既に post-norm のため normalization convention が異なる)
-    max_diffs_main: list[float] = []
-    mean_diffs_main: list[float] = []
-    for k in range(K):  # k = 0..K-1
-        h_k = hs[k][:, pos:pos + 1, :].detach().cpu().float()  # [1, 1, hidden]
-        with torch.no_grad():
-            tl_out = logit_lens_cpu(h_k, k)
-        tl_logits_k = tl_out.squeeze().cpu()  # [vocab]
-        own_k = own_logits_by_layer[k]
-        diff = (own_k - tl_logits_k).abs()
-        max_diffs_main.append(diff.max().item())
-        mean_diffs_main.append(diff.mean().item())
-
-    # k=K は別項目として記録
-    h_kK = hs[K][:, pos:pos + 1, :].detach().cpu().float()
-    with torch.no_grad():
-        tl_out_kK = logit_lens_cpu(h_kK, K)
-    tl_logits_kK = tl_out_kK.squeeze().cpu()
-    kK_max_diff = (own_logits_by_layer[K] - tl_logits_kK).abs().max().item()
-
-    max_main = max(max_diffs_main) if max_diffs_main else float("nan")
-    mean_main = (
-        sum(mean_diffs_main) / len(mean_diffs_main) if mean_diffs_main else float("nan")
-    )
-
-    tuned_lens_summary["comparison_available"] = True
-    comparison_own_vs_tuned["comparison_available"] = True
-    comparison_own_vs_tuned["layers_compared_main"] = K        # k=0..K-1 の個数
-    comparison_own_vs_tuned["max_abs_diff_to_own_main"] = max_main
-    comparison_own_vs_tuned["mean_abs_diff_to_own_main"] = mean_main
-    comparison_own_vs_tuned["success_main"] = max_main <= 1e-3
-    comparison_own_vs_tuned["tolerance_used"] = 1e-3
-    comparison_own_vs_tuned["kK_compared_separately"] = True
-    comparison_own_vs_tuned["kK_max_abs_diff_to_own"] = kK_max_diff
-    comparison_own_vs_tuned["kK_note"] = (
-        "k=K may differ because tuned-lens may apply final_norm to hs[K], "
-        "which is already post-norm in Qwen3 HF outputs."
-    )
-    print(f"  main (k=0..{K - 1}): max_abs_diff={max_main:.4e}  mean_abs_diff={mean_main:.4e}")
-    print(f"  k=K separately     : max_abs_diff={kK_max_diff:.4e}")
-    print(f"  own == tuned_lens (main): {comparison_own_vs_tuned['success_main']} (tol=1e-3)")
-
-except Exception as exc:
-    fail_msg = f"{type(exc).__name__}: {exc}"
-    tuned_lens_summary["failure_reason"] = fail_msg
-    comparison_own_vs_tuned["failure_reason"] = fail_msg
-    print(f"  FAILED: {fail_msg}")
-    if not isinstance(exc, NotImplementedError):
-        print(tb.format_exc())
+# ── [3] tuned-lens（不動作記録） ──────────────────────────────────────────────
+# tuned-lens 0.2.0 を試みたが Qwen3 は未対応（NotImplementedError）。
+# tuned_lens.model_surgery.get_final_norm の対応モデルは
+# OPT / GPTNeoX / Bloom / GPT2 / GPTNeo / GPTJ / Llama のみ。
+# Qwen3 に対して LogitLens.from_model() が NotImplementedError を送出する。
+# 再現不要のため実行コードは削除し、記録のみ残す。
 
 # ── [4] TransformerLens ───────────────────────────────────────────────────────
 # TransformerLens 3.2.1 は Qwen/Qwen3-4B を OFFICIAL_MODEL_NAMES に含む。
@@ -592,9 +501,7 @@ except Exception as exc:
 
 # ── [6] Save summary JSON ──────────────────────────────────────────────────────
 notes = [
-    "Primary goal: verify own_logit_lens == transformer_lens AND own_logit_lens == tuned_lens independently.",
-    "transformer_lens == tuned_lens is NOT a primary goal; both are verified against own_logit_lens only.",
-    "If one library fails, the other is still attempted independently.",
+    "Primary goal: verify own_logit_lens == transformer_lens logit_lens.",
     (
         f"transformer_lens {transformer_lens_summary.get('version', '?')}: "
         "Qwen/Qwen3-4B is listed in OFFICIAL_MODEL_NAMES as of 3.2.1."
@@ -603,22 +510,15 @@ notes = [
         "transformer_lens loading options: fold_ln=False, center_writing_weights=False, "
         "center_unembed=False to minimize weight transformation relative to HF checkpoint."
     ),
-    (
-        "tuned_lens 0.2.0: tuned_lens.model_surgery.get_final_norm supports only "
-        "OPT / GPTNeoX / Bloom / GPT2 / GPTNeo / GPTJ / Llama. "
-        "Qwen3 is not in this list -> NotImplementedError expected from LogitLens.from_model."
-    ),
-    (
-        "tuned_lens normalization convention: Unembed.forward always applies final_norm before "
-        "unembedding. own_logit_lens at k=K passes hs[K] (already post-norm) directly -> "
-        "if tuned_lens somehow succeeds, diff at k=K is expected due to double normalization."
-    ),
     "All logit comparisons are done in float32 on CPU regardless of model loading dtype.",
     (
         "HF float32 comparison (HF model loaded in float32 for direct weight-level comparison) "
         "is NOT run automatically due to memory/time cost. "
-        "If further investigation is needed, load HF model with dtype=torch.float32 "
-        "and re-run comparison_own_vs_transformer_lens as the next step."
+        "If further investigation is needed, see 11_prelim_compare_logit_lens_float32.py."
+    ),
+    (
+        "tuned-lens 0.2.0 was attempted but does not support Qwen3 (NotImplementedError). "
+        "Execution code removed; see [3] comment for details."
     ),
 ]
 
@@ -634,15 +534,13 @@ summary = {
     "selected_position_raw_token": pos_raw_token,
     "selected_position_piece": pos_piece,
     "own_logit_lens": own_summary,
-    "tuned_lens": tuned_lens_summary,
     "transformer_lens": transformer_lens_summary,
-    "comparison_own_vs_tuned_lens": comparison_own_vs_tuned,
     "comparison_own_vs_transformer_lens": comparison_own_vs_tl,
     "comparison_own_vs_transformer_lens_dtype_matched": comparison_dtype_matched,
     "notes": notes,
 }
 
-summary_json = outputs_dir / "prelim_compare_existing_logit_lens_summary.json"
+summary_json = outputs_dir / "prelim_compare_logit_lens_transformerlens_summary.json"
 with summary_json.open("w", encoding="utf-8") as f:
     json.dump(summary, f, indent=2, ensure_ascii=False)
 

@@ -98,35 +98,31 @@ hidden states や attentions を保存するとメモリを使うため、prompt
 
 ## Python 環境
 
-標準の Python 環境は以下です。
+この workspace では venv を用途別に分けます。
 
 ```text
-~/.venvs/llm2026
+~/.venvs/llm2026      notebooks + core scripts (00-06) 用
+~/.venvs/llm2026-dev  実験スクリプト (07 以降) 用（llm2026 の上位互換）
 ```
 
-実行前に activate します。
+管理ファイル：
+
+```text
+requirements.txt      llm2026 の pip freeze
+requirements-dev.txt  llm2026-dev の pip freeze
+```
+
+notebooks のカーネルには `llm2026` を使います。  
+scripts/07 以降は `llm2026-dev` を前提とします。
+
+activate：
 
 ```bash
-cd ~/.../aidemo2026/qwen3_4b_probe
-source ~/.venvs/llm2026/bin/activate
+source ~/.venvs/llm2026/bin/activate      # notebooks / core scripts
+source ~/.venvs/llm2026-dev/bin/activate  # 実験スクリプト
 ```
 
 この workspace では、原則として **pip install 版 Transformers** を使います。
-
-想定する主要パッケージは以下です。
-
-```text
-Python 3.12.x
-torch
-transformers
-huggingface_hub
-accelerate
-safetensors
-sentencepiece
-protobuf
-pandas
-matplotlib
-```
 
 Mac では MPS、Windows / GPU サーバーでは CUDA が使える場合はそれを利用します。
 
@@ -191,6 +187,7 @@ qwen3_4b_probe/
   CLAUDE.md
   README.md
   requirements.txt
+  requirements-dev.txt
   .gitignore
   .cursorignore
   .cursor/
@@ -211,8 +208,14 @@ qwen3_4b_probe/
     04_probe_forward.py
     05_show_transformers_source.py
     06_attention_heatmap.py
- notebooks/
- outputs/
+    07_hidden_state_mapping.py
+    08_logit_lens.py
+    09_embedding_unembedding.py
+    10_prelim_compare_logit_lens_transformerlens.py
+    11_prelim_compare_logit_lens_float32.py
+    12_residual_stream_patching.py
+  notebooks/
+  outputs/
 ```
 
 `outputs/` は runtime output 用のフォルダであり、Git 管理対象ではありません。
@@ -232,7 +235,7 @@ Path("outputs").mkdir(parents=True, exist_ok=True)
 script の番号には意味があります。  
 番号順の構成をなるべく保ってください。
 
-標準的な実行順序は以下です。
+core scripts（`llm2026` で実行）：
 
 ```bash
 python scripts/00_env_check.py
@@ -243,18 +246,26 @@ python scripts/04_probe_forward.py
 python scripts/06_attention_heatmap.py --head 0 --label-mode both
 ```
 
-依存関係は特に以下に注意してください。
+依存関係：
 
 ```text
-04_probe_forward.py
-  -> scratch に probe_forward_compact.pt を保存する
-
-06_attention_heatmap.py
-  -> probe_forward_compact.pt を読む
-  -> outputs/ に attention heatmap の PNG / CSV を保存する
+04_probe_forward.py  ->  outputs/ に各種 CSV / JSON を保存
+06_attention_heatmap.py  ->  04 の後に実行
 ```
 
-したがって、`06_attention_heatmap.py` は `04_probe_forward.py` の後に実行します。
+実験スクリプト（`llm2026-dev` で実行、07 以降）：
+
+```bash
+python scripts/07_hidden_state_mapping.py
+python scripts/08_logit_lens.py
+python scripts/09_embedding_unembedding.py
+python scripts/12_residual_stream_patching.py
+# 以下は TransformerLens との比較検証
+python scripts/10_prelim_compare_logit_lens_transformerlens.py
+python scripts/11_prelim_compare_logit_lens_float32.py
+```
+
+scripts と notebooks は独立しています。notebooks は `llm2026` で動作します。
 
 ---
 
@@ -394,6 +405,19 @@ autoregressive LM では、未来 token を見られないため、通常は cau
 
 `notebooks/` は常にクリーンな原本として保つ。  
 `sandbox/` は git 管理外（`.gitignore` に登録済み）の自由な作業領域。
+
+## notebook の設計原則
+
+各 notebook は **単体で完結する**設計にしてください。
+
+```text
+- scripts/ フォルダのファイルを import・実行・参照しない
+- common.py や qwen3_4b_probe.json を notebook から読み込まない
+- モデルのロード・トークナイズ・forward など必要な処理はすべて notebook 内に記述する
+- notebook を開けばそのまま実行できる状態を保つ
+```
+
+scripts と notebooks は独立した成果物であり、scripts が notebook の前提条件にならないようにしてください。
 
 ---
 

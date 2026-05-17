@@ -117,8 +117,8 @@ def main() -> None:
 
     fig.tight_layout()
 
-    out_png = project_root / "outputs" / f"attention_layer0_head{args.head}_{args.label_mode}.png"
-    out_csv = project_root / "outputs" / f"attention_layer0_head{args.head}_{args.label_mode}.csv"
+    out_png = outputs_dir / f"attention_layer0_head{args.head}_{args.label_mode}.png"
+    out_csv = outputs_dir / f"attention_layer0_head{args.head}_{args.label_mode}.csv"
 
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=200)

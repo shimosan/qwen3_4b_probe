@@ -30,12 +30,23 @@ Qwen3-4B を用いた LLM 内部可視化の軽量調査 workspace。
 
 ## Setup
 
+notebooks と core scripts（00–06）：
+
 ```bash
 python3 -m venv ~/.venvs/llm2026
 source ~/.venvs/llm2026/bin/activate
 pip install -U pip wheel
 pip install -r requirements.txt
 python scripts/01_download_model.py
+```
+
+実験スクリプト（07 以降）：
+
+```bash
+python3 -m venv ~/.venvs/llm2026-dev
+source ~/.venvs/llm2026-dev/bin/activate
+pip install -U pip wheel
+pip install -r requirements-dev.txt
 ```
 
 ## Notes
