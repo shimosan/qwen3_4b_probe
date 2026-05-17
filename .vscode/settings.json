@@ -5,9 +5,8 @@
   "python.analysis.typeCheckingMode": "basic",
   "python.analysis.diagnosticMode": "openFilesOnly",
 
-  "files.readonlyInclude": {
-    "notebooks/**": true
-  },
+  "notebook.diff.ignoreOutputs": true,
+  "notebook.diff.ignoreMetadata": true,
 
   "files.exclude": {
     "**/__pycache__": true,
