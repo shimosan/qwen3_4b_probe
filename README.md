@@ -223,3 +223,15 @@ nbstripout --install --keep-id
 - このリポジトリでは Transformers ソースコードを改変しない（pip install 版を使う）。source-level の tracing / 改変が必要な場合は別 workspace `qwen3_4b_trace` を使う。
 - モデル重みは Hugging Face cache に置き、workspace 内には保存しない。
 - 大きな tensor は scratch directory に保存する（CLAUDE.md 参照）。
+
+## 謝辞
+
+本 workspace は以下の open-source プロジェクトと公開モデルに依拠している:
+
+- **[Qwen3](https://huggingface.co/Qwen)** (Alibaba Cloud / Apache-2.0) — 主対象モデル `Qwen3-4B` および 1.7B / 8B 派生
+- **[Transformers](https://github.com/huggingface/transformers)** (Hugging Face / Apache-2.0) — モデルローダー、tokenizer、`output_hidden_states` / `output_attentions` の API
+- **[TransformerLens](https://github.com/TransformerLensOrg/TransformerLens)** (MIT) — logit lens 等の比較実装 ([docs/10](docs/10_compare_logit_lens_transformerlens.md), [docs/11](docs/11_compare_logit_lens_float32.md))
+- **[mwhanna/qwen3-4b-transcoders](https://huggingface.co/mwhanna/qwen3-4b-transcoders)** (MIT) — Qwen3-4B 用 MLP transcoder weights ([docs/14](docs/14_qwen3_4b_transcoder_layers23_24_25.md), [docs/15](docs/15_qwen3_4b_transcoder_layer_sweep.md))
+- **[Qwen-Scope](https://huggingface.co/kisate-team)** (Apache-2.0) — 公式 residual SAE checkpoint ([docs/16](docs/16_qwenscope_sae_qwen3_1p7b_layer20.md), [docs/17](docs/17_qwenscope_sae_qwen3_8b_layer24.md))
+
+本 repository 自体は MIT License（[LICENSE](LICENSE)）で公開している。
