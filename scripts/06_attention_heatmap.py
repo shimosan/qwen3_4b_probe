@@ -1,8 +1,12 @@
+# 04_probe_forward.py が保存した probe_forward_compact.pt を読み込み、
+# attention heatmap（PNG）と attention 重みの CSV を outputs/ に保存する。
+# 引数: --head <head番号> --label-mode <both|piece|position>
+# 依存: 04_probe_forward.py を先に実行しておく必要がある。
+# 環境: llm2026
+
 from __future__ import annotations
 
 import argparse
-import json
-import os
 from pathlib import Path
 from typing import cast
 
@@ -12,25 +16,7 @@ import pandas as pd
 from pandas.api.types import is_scalar
 import torch
 
-
-def resolve_scratch_dir(workspace_name: str) -> Path:
-    explicit = os.environ.get("AIDEMO_SCRATCH_DIR")
-    if explicit:
-        return Path(explicit).expanduser()
-
-    root = os.environ.get("AIDEMO_SCRATCH_ROOT")
-    if root:
-        return Path(root).expanduser() / workspace_name
-
-    return Path.home() / "scratch" / "aidemo2026" / workspace_name
-
-
-def load_workspace_name(project_root: Path) -> str:
-    config_path = project_root / "configs" / "qwen3_4b_probe.json"
-    if config_path.exists():
-        with config_path.open("r", encoding="utf-8") as f:
-            return json.load(f).get("workspace_name", "qwen3_4b_probe")
-    return "qwen3_4b_probe"
+from common import resolve_outputs_dir
 
 
 def set_japanese_font_if_available() -> None:
@@ -49,7 +35,7 @@ def set_japanese_font_if_available() -> None:
 
 
 def choose_token_text(row: pd.Series) -> str:
-    for col in ["decoded_piece", "token", "raw_token"]:
+    for col in ["decoded", "piece", "token"]:
         if col not in row.index:
             continue
         val = row[col]
@@ -90,12 +76,9 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    project_root = Path(__file__).resolve().parents[1]
-    workspace_name = load_workspace_name(project_root)
-    scratch_dir = resolve_scratch_dir(workspace_name)
-
-    compact_path = scratch_dir / "probe_forward_compact.pt"
-    token_table_path = project_root / "outputs" / "token_table.csv"
+    outputs_dir = resolve_outputs_dir()
+    compact_path = outputs_dir / "probe_forward_compact.pt"
+    token_table_path = outputs_dir / "token_table.csv"
 
     if not compact_path.exists():
         raise FileNotFoundError(f"compact tensor file not found: {compact_path}")
@@ -140,8 +123,8 @@ def main() -> None:
 
     fig.tight_layout()
 
-    out_png = project_root / "outputs" / f"attention_layer0_head{args.head}_{args.label_mode}.png"
-    out_csv = project_root / "outputs" / f"attention_layer0_head{args.head}_{args.label_mode}.csv"
+    out_png = outputs_dir / f"attention_layer0_head{args.head}_{args.label_mode}.png"
+    out_csv = outputs_dir / f"attention_layer0_head{args.head}_{args.label_mode}.csv"
 
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=200)

@@ -14,14 +14,19 @@ runs/
 logs/
 cache/
 
-# Local scratch links or local-only dirs inside workspace, if any
-scratch/
+# Local-only dirs inside workspace, if any
 tmp/
+
+# Sandbox notebooks (free to modify, not tracked)
+sandbox/
 
 # Secrets / local env
 .env
 .env.*
 huggingface_token*
+
+# Claude Code project-local settings (machine-specific, not for sharing)
+.claude/
 
 # OS/editor noise
 .DS_Store

@@ -40,7 +40,6 @@ outputs/
 runs/
 logs/
 cache/
-scratch/
 tmp/
 *.pt
 *.bin
@@ -80,7 +79,7 @@ git push -u origin feature/xxx
 # ✅ OK
 add: attention heatmap script
 update: probe config for short sequences
-fix: scratch path resolution
+fix: outputs path resolution
 
 # ❌ NG — 冗長
 add: add a new script for attention heatmap visualization with multiple label modes

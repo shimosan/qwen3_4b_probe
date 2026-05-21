@@ -4,33 +4,233 @@ Qwen3-4B を用いた LLM 内部可視化の軽量調査 workspace。
 
 ## Purpose
 
-- tokenizer の確認
-- token table の作成
-- 既存 Transformers API による hidden states / attentions / logits の取得
-- next-token distribution の確認
-- attention heatmap 作成の準備
+2026 年度「情報AI基礎」講義デモ向けに、Qwen3-4B の内部計算を可視化する workspace。
+講義配布用の主成果物は `notebooks/` 配下の Jupyter Notebook 群で、各ノートは単体で完結する設計。
+`scripts/` はその前段・周辺で行った調査スクリプト群、`docs/` には完成版の実験レポート md が置かれている（学生配布対象）。
 
 ## Model
 
-- `Qwen/Qwen3-4B`
+- 主対象: `Qwen/Qwen3-4B`
+- 比較対象（nb02 派生 / docs/16 / docs/17）: `Qwen/Qwen3-1.7B`, `Qwen/Qwen3-8B`（および Base 系）
 
-## Environment
+## Repository structure
 
-- probe venv: `~/.venvs/llm2026`
-- model cache: Hugging Face cache
-- large runtime outputs: scratch directory resolved by scripts
+| Path | Git | Contents |
+|---|---|---|
+| `notebooks/` | ✓ | 講義デモ用 Jupyter Notebook（主成果物、各ノート self-contained）|
+| `scripts/` | ✓ | 番号付き script 群（後述、3 グループに分かれる）|
+| `docs/` | ✓ | 完成版の実験レポート md と参照画像 `docs/images/`。学生配布対象 |
+| `outputs/` | ✗ | script の生成物（PNG / CSV / JSON 等）。再生成可能で永続性なし |
+| `logs/` | ✗ | 実行ログ（`*.log`）と作業中の md ドラフト |
+| `sandbox/` | ✗ | notebook の検証用作業領域（CLAUDE.md 参照）|
 
-## Structure
+詳細な作業方針は [CLAUDE.md](CLAUDE.md) を参照。
 
-| Path | Contents |
-|---|---|
-| `scripts/` | 番号付き再現スクリプト（主要実行単位） |
-| `notebooks/` | 探索・補助用 Jupyter Notebook |
-| `configs/` | 調整可能パラメータ（JSON） |
-| `outputs/` | 軽量な出力ファイル（PNG / CSV 等） |
-| `docs/` | 実験ログ等のドキュメント |
+---
+
+## Notebooks（主成果物）
+
+`llm2026` venv で動作。各ノートは外部 script に依存せず単体で実行できる設計。
+
+- **[00_intro_chat.ipynb](notebooks/00_intro_chat.ipynb)**
+  Qwen3-4B の読み込み、tokenizer / chat template、シングル・マルチターン chat、greedy decode による動作確認。
+
+- **[01_tokenizer.ipynb](notebooks/01_tokenizer.ipynb)**
+  文字コード（Unicode / UTF-8）の基礎、tokenizer の `encode` / `decode`、token 分割の観察、特殊トークン。
+
+- **[02_residual_stream_logit_lens_patching.ipynb](notebooks/02_residual_stream_logit_lens_patching.ipynb)**（Qwen3-4B 版、主）
+  入口（embedding）と出口（`lm_head` + softmax）の対応、residual stream と `hidden_states` の関係、Logit Lens、Activation Patching。
+
+- **[02_residual_stream_logit_lens_patching_qwen3_1p7b.ipynb](notebooks/02_residual_stream_logit_lens_patching_qwen3_1p7b.ipynb)**（1.7B 派生版）
+  nb02 と同じ実験を Qwen3-1.7B（Instruct）で実施、4B との結果差分を確認。
+
+- **[02_residual_stream_logit_lens_patching_qwen3_8b.ipynb](notebooks/02_residual_stream_logit_lens_patching_qwen3_8b.ipynb)**（8B 派生版）
+  nb02 と同じ実験を Qwen3-8B（Instruct）で実施、4B との結果差分を確認。
+
+- **nb03（予定）** — attention / SAE / transcoder 系の可視化。現在 `scripts/06, 14, 15, 15b, 19` で個別実験中（[後述](#scripts)）。
+
+---
+
+## Setup（notebook 用）
+
+`llm2026` venv を作成し、必要なパッケージを入れ、モデル重みを Hugging Face cache に取得する:
+
+```bash
+python3 -m venv ~/.venvs/llm2026
+source ~/.venvs/llm2026/bin/activate
+pip install -U pip wheel
+pip install -r requirements.txt
+python scripts/01_download_model.py
+```
+
+モデルダウンロードは初回のみで約 8 GB（fp16）。後続の notebook 起動時は HF cache から読み出されます。
+
+## Notebook の開き方
+
+setup 完了後、`llm2026` venv を activate して Jupyter を起動するか、VS Code / Cursor で `.ipynb` を直接開きます。
+
+### 方法 A — Jupyter Lab
+
+```bash
+source ~/.venvs/llm2026/bin/activate
+cd notebooks
+jupyter lab
+```
+
+ブラウザが開いたら、`00_intro_chat.ipynb` などをクリックして実行。カーネル選択で `llm2026` が選ばれていることを確認してください。
+
+### 方法 B — VS Code / Cursor
+
+`.ipynb` ファイルを直接開けば Jupyter 拡張が起動します。右上の「カーネル選択」から `llm2026` (`~/.venvs/llm2026/bin/python`) を選択。cwd は自動で notebook と同じディレクトリに設定されます。
+
+### 初回実行時の注意
+
+- 最初のセル（model load）は **数十秒〜数分**かかります（モデルを RAM に展開するため）。
+- Mac (M シリーズ) では MPS が自動で選ばれます。CUDA 環境では CUDA が選ばれます。何も使えなければ CPU fallback。
+- 「カーネルが見つからない」エラーが出た場合は、`source ~/.venvs/llm2026/bin/activate` してから `python -m ipykernel install --user --name llm2026` でカーネル登録してください。
+
+---
+
+# Advanced — scripts と experiment reports
+
+ここから下は、notebooks の前段・周辺で実施した調査スクリプトおよび実験レポートに関する情報。**学生がノートを動かす分には不要**で、内部の経緯や個別実験の詳細を追いたい人向けです。
+
+## Scripts
+
+`scripts/` は時系列的に **3 つのフェーズ**に分かれている:
+
+### フェーズ 1 — Qwen3 動作確認・基本 probe（scripts 00–06、2026-05-07 〜 08）
+
+Notebook 作成前に行った、Qwen3-4B の動作確認・環境セットアップ・基本的な内部状態 probe。**個々の script を notebook に統合してはおらず、ノート全体の前提知識として吸収**された。`llm2026` venv で動作。
+
+詳細レポートは 1 本にまとめてある: **[docs/00-06_setup_and_basic_probe.md](docs/00-06_setup_and_basic_probe.md)**（7 chapter 構成）。
+
+### フェーズ 2 — nb02 のための事前探査（scripts 07–12、2026-05-11 〜 15）
+
+「residual stream を観察・介入する」notebook 02 を書くために、**各テーマを個別に動作確認した prelim script** 群。`llm2026-dev` venv で動作。これらの実験成果が最終的に nb02 の各セクション (logit lens / activation patching / embedding 解析) に統合された。
+
+各 script ごとに個別 docs/ 化済み: **[docs/07_*.md](docs/07_hidden_state_mapping.md) 〜 [docs/12_*.md](docs/12_residual_stream_patching.md)**。
+
+### フェーズ 3 — nb03（予定）のための個別実験（scripts 06, 14–17, 19、2026-05-08 / 18 〜 21）
+
+community SAE / transcoder / attention 解析の周辺実験。**nb03 にまだ統合されておらず**、各 script が独立した実験として `docs/` に 1:1 でレポート化されている。`llm2026-dev` venv（06 のみ `llm2026`）。
+
+- 06: 基本 attention heatmap（フェーズ 1 に時系列では属するが、nb03 attention 可視化の予備として位置づけ）
+- 14, 15, 15b: mwhanna MLP transcoder（4B、layer 23-25 詳細 + 全 36 layer sweep）
+- 16, 17: Qwen-Scope 公式 residual SAE（1.7B-Base layer 20 / 8B-Base layer 24）
+  - **注**: 検討の結果、これらの SAE は nb03 には**含めない方針**。Base モデル前提・4B 不在のため講義デモには不適と判断（詳細は [docs/16](docs/16_qwenscope_sae_qwen3_1p7b_layer20.md) / [docs/17](docs/17_qwenscope_sae_qwen3_8b_layer24.md) 冒頭の callout 参照）。レポートだけ残してある。
+- 19: attention 総合 probe（attention weights / head scoring / component patching、初版）
+
+13 番は欠番。
+
+### Script → Notebook 対応表
+
+`#` が script 番号、`Script` 列が拡張子なしの短縮名（リンク先はフルファイル名）。
+
+| # | Script | Notebook | 関連内容 |
+|---|---|---|---|
+| 00 | [env_check](scripts/00_env_check.py) | 共通基盤 | 環境（torch / transformers / MPS）の確認 |
+| 01 | [download_model](scripts/01_download_model.py) | 共通基盤 | モデル重みを HF cache に取得 |
+| 02 | [tokenizer_probe](scripts/02_tokenizer_probe.py) | **nb01** | tokenizer / chat template の token 表 |
+| 03 | [generate_smoke](scripts/03_generate_smoke.py) | **nb00** | 短い日本語応答の greedy 生成 |
+| 04 | [probe_forward](scripts/04_probe_forward.py) | **nb02**（基礎） | `output_hidden_states` / `output_attentions` の shape 確認、next-token 分布 |
+| 05 | [show_transformers_source](scripts/05_show_transformers_source.py) | 共通基盤 | `modeling_qwen3.py` のパス表示ユーティリティ |
+| 06 | [attention_heatmap](scripts/06_attention_heatmap.py) | **nb03**（予備） | layer 0 head 0 の attention 可視化 |
+| 07 | [hidden_state_mapping](scripts/07_hidden_state_mapping.py) | **nb02** | hook 出力と `output_hidden_states` の一致確認 |
+| 08 | [logit_lens](scripts/08_logit_lens.py) | **nb02** | 各層 hidden state に `lm_head` を当てる logit lens |
+| 09 | [embedding_unembedding](scripts/09_embedding_unembedding.py) | **nb02** | $W_E$ / $W_U$ の関係、tie_word_embeddings、PCA / t-SNE |
+| 10 | [compare_logit_lens_transformerlens](scripts/10_prelim_compare_logit_lens_transformerlens.py) | **nb02**（検証）| 自前 logit lens vs TransformerLens（fp16） |
+| 11 | [compare_logit_lens_float32](scripts/11_prelim_compare_logit_lens_float32.py) | **nb02**（検証）| 同上の fp32/CPU 完全一致確認 |
+| 12 | [residual_stream_patching](scripts/12_residual_stream_patching.py) | **nb02** | Tokyo/Paris activation patching |
+| 14 | [qwen3_4b_transcoder_smoke](scripts/14_prelim_qwen3_4b_transcoder_smoke.py) | **nb03**（予定） | mwhanna MLP transcoder × Qwen3-4B layer 23/24/25 詳細 |
+| 15 | [qwen3_4b_transcoder_layer_sweep](scripts/15_prelim_qwen3_4b_transcoder_layer_sweep.py) | **nb03**（予定） | 同上、全 36 layer sweep |
+| 15b | [qwen3_4b_transcoder_layer_sweep_replots](scripts/15b_qwen3_4b_transcoder_layer_sweep_replots.py) | **nb03**（予定） | 15 結果の再 plot |
+| 16 | [qwenscope_sae_smoke](scripts/16_prelim_qwenscope_sae_smoke.py) | nb03 不採用 | Qwen-Scope SAE × Qwen3-1.7B-Base layer 20（レポートのみ） |
+| 17 | [qwenscope_sae_8b_smoke](scripts/17_prelim_qwenscope_sae_8b_smoke.py) | nb03 不採用 | 同上、Qwen3-8B-Base layer 24（レポートのみ） |
+| 19 | [attention_probe](scripts/19_prelim_attention_probe.py) | **nb03**（予定） | attention weights / head scoring / component patching |
+
+### Setup（scripts 用、07 以降）
+
+scripts 07 以降は `llm2026-dev` venv が必要（`llm2026` の上位互換で、sklearn / transformer-lens / safetensors 経由の community SAE 等の追加依存を含む）:
+
+```bash
+python3 -m venv ~/.venvs/llm2026-dev
+source ~/.venvs/llm2026-dev/bin/activate
+pip install -U pip wheel
+pip install -r requirements-dev.txt
+```
+
+### Scripts の使い方
+
+`scripts/` 配下の番号付きスクリプトは、どこから実行しても動作する（出力先はプロジェクトルート直下の `outputs/` に解決される）。
+
+```bash
+# フェーズ 1（00–06）は llm2026 venv で
+source ~/.venvs/llm2026/bin/activate
+python scripts/00_env_check.py
+python scripts/04_probe_forward.py
+python scripts/06_attention_heatmap.py --head 0 --label-mode piece
+
+# フェーズ 2 以降（07–）は llm2026-dev venv で
+source ~/.venvs/llm2026-dev/bin/activate
+python scripts/08_logit_lens.py
+python scripts/12_residual_stream_patching.py
+```
+
+実行順序や依存関係（例: 06 は 04 の後に実行）は [CLAUDE.md](CLAUDE.md) と [docs/00-06_setup_and_basic_probe.md](docs/00-06_setup_and_basic_probe.md) を参照。
+
+## Notebook を編集して commit する場合（開発者向け）
+
+学生がノートを動かすだけなら不要だが、`.ipynb` に変更を加えて git commit する人は、**clone 直後に 1 回**以下を実行する:
+
+```bash
+source ~/.venvs/llm2026/bin/activate
+nbstripout --install --keep-id
+```
+
+これは `.git/config` に notebook 用 filter を登録し、`*.ipynb` の output セル（実行結果、画像、エラー出力）を **commit 時に自動的に除去**する設定です。`--keep-id` はセル UUID を保持するオプション（無いと毎回 ID が churning して diff が読みにくくなる）。
+
+`pip install -r requirements.txt` では `nbstripout` パッケージ自体は入るが、git filter の登録は別操作。これを設定しないと出力付きノートをそのまま commit してしまい、リポジトリが肥大化する。
+
+---
+
+## Documentation map
+
+実験レポート md は `docs/` 配下にある。**GitHub** または **`Cmd+Shift+V`（VS Code / Cursor の正規 Markdown Preview）** で読むのが最も見やすい（KaTeX 数式が render される）。Obsidian でも可。
+
+- [CLAUDE.md](CLAUDE.md) — リポジトリ全体の作業方針（Claude Code 向けだが人間にも有用な記述）
+
+フェーズ 1（scripts 00–06）— Qwen3 動作確認:
+- [docs/00-06_setup_and_basic_probe.md](docs/00-06_setup_and_basic_probe.md) — 7 chapter まとめ（環境・tokenizer・forward・attention）
+
+フェーズ 2（scripts 07–12）— nb02 のための事前探査:
+- [docs/07_hidden_state_mapping.md](docs/07_hidden_state_mapping.md) — hook と `output_hidden_states` の一致確認
+- [docs/08_logit_lens.md](docs/08_logit_lens.md) — 各層 hidden state に `lm_head` を当てる logit lens
+- [docs/09_embedding_unembedding.md](docs/09_embedding_unembedding.md) — $W_E$ / $W_U$ の関係（tie_word_embeddings、effective unembedding）
+- [docs/10_compare_logit_lens_transformerlens.md](docs/10_compare_logit_lens_transformerlens.md) — 自前実装 vs TransformerLens（fp16 環境）
+- [docs/11_compare_logit_lens_float32.md](docs/11_compare_logit_lens_float32.md) — 同上の fp32/CPU 完全一致確認
+- [docs/12_residual_stream_patching.md](docs/12_residual_stream_patching.md) — Tokyo/Paris activation patching
+
+フェーズ 3（scripts 14–17, 19）— nb03 のための個別実験:
+- [docs/14_qwen3_4b_transcoder_layers23_24_25.md](docs/14_qwen3_4b_transcoder_layers23_24_25.md) — mwhanna MLP transcoder（layer 23/24/25 詳細）
+- [docs/15_qwen3_4b_transcoder_layer_sweep.md](docs/15_qwen3_4b_transcoder_layer_sweep.md) — 同上の全 36 layer sweep
+- [docs/16_qwenscope_sae_qwen3_1p7b_layer20.md](docs/16_qwenscope_sae_qwen3_1p7b_layer20.md) — Qwen-Scope SAE on Qwen3-1.7B-Base（nb03 不採用）
+- [docs/17_qwenscope_sae_qwen3_8b_layer24.md](docs/17_qwenscope_sae_qwen3_8b_layer24.md) — 同上 on Qwen3-8B-Base（nb03 不採用）
+- [docs/19_qwen3_4b_attention_probe.md](docs/19_qwen3_4b_attention_probe.md) — attention 総合 probe（initial version）
 
 ## Notes
 
-This probe workspace should not modify Transformers source code.
-Use `qwen3_4b_trace` for source-level tracing or modification.
+- このリポジトリでは Transformers ソースコードを改変しない（pip install 版を使う）。source-level の tracing / 改変が必要な場合は別 workspace `qwen3_4b_trace` を使う。
+- モデル重みは Hugging Face cache に置き、workspace 内には保存しない。
+
+## 謝辞
+
+本 workspace は以下の open-source プロジェクトと公開モデルに依拠している:
+
+- **[Qwen3](https://huggingface.co/Qwen)** (Alibaba Cloud / Apache-2.0) — 主対象モデル `Qwen3-4B` および 1.7B / 8B 派生
+- **[Transformers](https://github.com/huggingface/transformers)** (Hugging Face / Apache-2.0) — モデルローダー、tokenizer、`output_hidden_states` / `output_attentions` の API
+- **[TransformerLens](https://github.com/TransformerLensOrg/TransformerLens)** (MIT) — logit lens 等の比較実装 ([docs/10](docs/10_compare_logit_lens_transformerlens.md), [docs/11](docs/11_compare_logit_lens_float32.md))
+- **[mwhanna/qwen3-4b-transcoders](https://huggingface.co/mwhanna/qwen3-4b-transcoders)** (MIT) — Qwen3-4B 用 MLP transcoder weights ([docs/14](docs/14_qwen3_4b_transcoder_layers23_24_25.md), [docs/15](docs/15_qwen3_4b_transcoder_layer_sweep.md))
+- **[Qwen-Scope](https://huggingface.co/kisate-team)** (Apache-2.0) — 公式 residual SAE checkpoint ([docs/16](docs/16_qwenscope_sae_qwen3_1p7b_layer20.md), [docs/17](docs/17_qwenscope_sae_qwen3_8b_layer24.md))
+
+本 repository 自体は MIT License（[LICENSE](LICENSE)）で公開している。

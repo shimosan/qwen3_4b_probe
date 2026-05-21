@@ -1,3 +1,8 @@
+# モデルの forward pass を実行し、hidden states・attentions・logits の shape を確認する。
+# 最終トークンの次トークン予測 top-20 を CSV に、コンパクトな tensor を PT ファイルに保存する。
+# 出力: outputs/shape_info.json, next_token_top20.csv, probe_forward_compact.pt
+# 環境: llm2026
+
 from __future__ import annotations
 
 import json
@@ -6,12 +11,12 @@ import pandas as pd
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from common import load_config, resolve_scratch_dir, ensure_dir
+from common import load_config, resolve_outputs_dir
 
 cfg = load_config()
 model_id = cfg["model_id"]
 prompt = cfg["default_prompt"]
-scratch_dir = ensure_dir(resolve_scratch_dir(cfg["workspace_name"]))
+outputs_dir = resolve_outputs_dir()
 
 if torch.cuda.is_available():
     device = "cuda"
@@ -26,7 +31,7 @@ else:
 print("model_id:", model_id)
 print("device:", device)
 print("dtype:", dtype)
-print("scratch_dir:", scratch_dir)
+print("outputs_dir:", outputs_dir)
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 messages = [{"role": "user", "content": prompt}]
@@ -41,10 +46,10 @@ inputs = tokenizer(text, return_tensors="pt").to(device)
 
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
-    torch_dtype=dtype,
+    dtype=dtype,
     attn_implementation=cfg["attn_implementation"],
 )
-model.to(device)
+model.to(device)  # type: ignore[union-attr]
 model.eval()
 
 with torch.no_grad():
@@ -76,15 +81,15 @@ for rank, (idx, prob) in enumerate(zip(top.indices.tolist(), top.values.tolist()
         {
             "rank": rank,
             "token_id": idx,
-            "raw_token": tokenizer.convert_ids_to_tokens([idx])[0],
-            "decoded_piece": tokenizer.decode([idx]),
+            "piece": tokenizer.convert_ids_to_tokens([idx])[0],
+            "decoded": tokenizer.decode([idx]),
             "prob": prob,
         }
     )
 
 pd.DataFrame(rows).to_csv("outputs/next_token_top20.csv", index=False)
 
-tensor_path = scratch_dir / "probe_forward_compact.pt"
+tensor_path = outputs_dir / "probe_forward_compact.pt"
 payload = {
     "input_ids": inputs["input_ids"].detach().cpu(),
     "logits_last": outputs.logits[:, -1, :].detach().cpu(),

@@ -5,6 +5,9 @@
   "python.analysis.typeCheckingMode": "basic",
   "python.analysis.diagnosticMode": "openFilesOnly",
 
+  "notebook.diff.ignoreOutputs": true,
+  "notebook.diff.ignoreMetadata": true,
+
   "files.exclude": {
     "**/__pycache__": true,
     "**/*.pyc": true
@@ -15,7 +18,6 @@
     "runs": true,
     "logs": true,
     "cache": true,
-    "scratch": true,
     "tmp": true,
     "**/__pycache__": true
   },

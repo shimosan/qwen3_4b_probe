@@ -9,7 +9,6 @@ alwaysApply: true
 
 - Use clear, minimal Python scripts rather than large notebooks for reproducible demos.
 - Use `pathlib.Path` where practical.
-- Put user-adjustable parameters near the top of each script or in `configs/*.json`.
-- Save large tensors and generated media outside the workspace, under the configured scratch directory.
+- Put user-adjustable parameters near the top of each script or in `scripts/qwen3_4b_probe.json`.
 - Print concise progress messages so terminal logs are understandable.
 - Avoid network downloads except in scripts explicitly named for downloading or setup.

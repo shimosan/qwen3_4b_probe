@@ -10,10 +10,7 @@ alwaysApply: true
 - This workspace is part of the 2026 AI lecture demo project.
 - Keep code simple, explicit, and suitable for lecture demonstrations.
 - Do not place model weights, Hugging Face cache files, virtual environments, or large runtime outputs in the Git-managed workspace.
-- Runtime outputs should be written to runtime folders such as `outputs/`, `runs/`, `logs/`, or to the scratch directory resolved by project scripts.
-- Large outputs should use the standard scratch resolver:
-  1. `AIDEMO_SCRATCH_DIR` if set.
-  2. `AIDEMO_SCRATCH_ROOT / <workspace_name>` if `AIDEMO_SCRATCH_ROOT` is set.
-  3. `Path.home() / "scratch" / "aidemo2026" / <workspace_name>` otherwise.
+- Runtime outputs should be written to runtime folders such as `outputs/`, `runs/`, `logs/`.
 - Do not hard-code machine-specific absolute paths in Python scripts.
-- Keep README and `docs/experiment_log.md` synchronized with meaningful changes.
+- Keep README synchronized with meaningful changes.
+- Each notebook must be self-contained: do not import or reference files under `scripts/`. All necessary code (model loading, tokenization, forward pass, etc.) must be written inside the notebook itself.
