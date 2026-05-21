@@ -18,7 +18,6 @@
     "runs": true,
     "logs": true,
     "cache": true,
-    "scratch": true,
     "tmp": true,
     "**/__pycache__": true
   },

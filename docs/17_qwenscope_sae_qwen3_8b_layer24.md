@@ -179,7 +179,7 @@ outputs/nb03_qwenscope_sae_qwen3_8b_layer24_feature_diffs_heatmap.png
 ## 9. 注意事項
 
 - 8B + W64K SAE では **必ず model を free してから SAE 重みを load** する。同時保持はメモリピークが厳しい。
-- SAE checkpoint は **2.15 GB**。Hugging Face cache に置く。`outputs/` や `scratch/` に保存しない。
+- SAE checkpoint は **2.15 GB**。Hugging Face cache に置く。`outputs/` に保存しない。
 - 1.7B (docs/16) と 8B (本 doc) の出力ファイル名 prefix が違うので混同しない（`_layer20_` vs `_qwen3_8b_layer24_`）。
 
 ---

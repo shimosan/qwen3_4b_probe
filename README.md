@@ -22,7 +22,7 @@ Qwen3-4B を用いた LLM 内部可視化の軽量調査 workspace。
 | `docs/` | ✓ | 完成版の実験レポート md と参照画像 `docs/images/`。学生配布対象 |
 | `outputs/` | ✗ | script の生成物（PNG / CSV / JSON 等）。再生成可能で永続性なし |
 | `logs/` | ✗ | 実行ログ（`*.log`）と作業中の md ドラフト |
-| `sandbox/` | ✗ | notebook の検証用 scratch（CLAUDE.md 参照）|
+| `sandbox/` | ✗ | notebook の検証用作業領域（CLAUDE.md 参照）|
 
 詳細な作業方針は [CLAUDE.md](CLAUDE.md) を参照。
 
@@ -222,7 +222,6 @@ nbstripout --install --keep-id
 
 - このリポジトリでは Transformers ソースコードを改変しない（pip install 版を使う）。source-level の tracing / 改変が必要な場合は別 workspace `qwen3_4b_trace` を使う。
 - モデル重みは Hugging Face cache に置き、workspace 内には保存しない。
-- 大きな tensor は scratch directory に保存する（CLAUDE.md 参照）。
 
 ## 謝辞
 

@@ -14,8 +14,7 @@ runs/
 logs/
 cache/
 
-# Local scratch links or local-only dirs inside workspace, if any
-scratch/
+# Local-only dirs inside workspace, if any
 tmp/
 
 # Sandbox notebooks (free to modify, not tracked)

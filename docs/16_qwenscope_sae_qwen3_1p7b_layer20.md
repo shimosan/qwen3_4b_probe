@@ -380,7 +380,7 @@ outputs/nb03_qwenscope_sae_layer20_feature_diffs_heatmap.png
 ## 11. 注意事項
 
 - **公式 Qwen-Scope SAE は residual stream SAE** であり、script 14 の community MLP transcoder (`mwhanna/qwen3-4b-transcoders`) とは入力も復元対象も sparsity 機構も違う。混同しない。
-- SAE checkpoint は **1.7B 版で 537 MB**。Hugging Face cache に置く。`outputs/` や `scratch/` に保存しない。
+- SAE checkpoint は **1.7B 版で 537 MB**。Hugging Face cache に置く。`outputs/` に保存しない。
 - `hf_hub_download` で **単一ファイルだけ** 取得する。`snapshot_download` を使うと repo 全体を引きに行くので避ける（per-layer SAE が多数あるため）。
 - SAE 重みは **CPU float32** で扱う。MPS/CUDA への載せ替えは行わない（モデル forward 後に CPU で encode するため）。
 - TopK SAE は `k = 50` が固定なので、active_fraction や active_count の調整余地はない。代わりに W32K / W64K (SAE 幅) や L0_50 / L0_20 などのバリエーションが Qwen 公式から複数公開されている。

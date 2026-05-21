@@ -61,7 +61,6 @@ scripts 共通ユーティリティは [`scripts/common.py`](../scripts/common.p
 
 - `load_config()` — 上記 json を辞書として返す
 - `resolve_outputs_dir()` — workspace 直下 `outputs/` を返す（無ければ作成）
-- `resolve_scratch_dir()` — `~/scratch/aidemo2026/qwen3_4b_probe`（環境変数 `AIDEMO_SCRATCH_DIR` / `AIDEMO_SCRATCH_ROOT` で上書き可）
 
 ---
 
@@ -92,7 +91,7 @@ workspace: /Users/shimo/.../qwen3_4b_probe
 model_id: Qwen/Qwen3-4B
 ```
 
-→ M4 Mac の MPS バックエンド利用、CUDA 無し、`scratch_dir` のデフォルト解決も期待通り。以降の script は全てこの環境で実行されました。
+→ M4 Mac の MPS バックエンド利用、CUDA 無し。以降の script は全てこの環境で実行されました。
 
 ---
 

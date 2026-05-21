@@ -15,5 +15,4 @@ alwaysApply: true
 - Use existing APIs such as `output_hidden_states=True`, `output_attentions=True`, and PyTorch hooks.
 - Use `attn_implementation="eager"` when attention weights or Python-level debugging are needed.
 - Keep sequence lengths short when saving hidden states or attentions.
-- Save large tensor outputs to the scratch directory resolved by project scripts.
 - Config file is `scripts/qwen3_4b_probe.json`, loaded via `common.load_config()`.

@@ -505,7 +505,7 @@ aggregate:
 
 ## 12. 注意事項
 
-- 巨大 weight (mwhanna は 1.68 GB / layer) は HF cache に置く。outputs/ や scratch/ には保存しない。
+- 巨大 weight (mwhanna は 1.68 GB / layer) は HF cache に置く。outputs/ には保存しない。
 - 36 layer 全部を取得する場合は 56 GB 必要 → script 15 (sweep 版) で実施。
 - transcoder weights は CPU float32 で扱う。MPS/CUDA に載せない（オーバーヘッドが大きいため）。
 - **mwhanna の MLP transcoder は公式 Qwen-Scope SAE ではない**ことに注意。residual stream SAE （script 16/17 で扱う）と混同しない。

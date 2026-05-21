@@ -128,34 +128,6 @@ Mac では MPS、Windows / GPU サーバーでは CUDA が使える場合はそ�
 
 ---
 
-## scratch directory の方針
-
-大きな中間ファイルは Git 管理下の workspace に保存しないでください。
-
-標準の scratch 解決規則は以下です。
-
-```text
-1. AIDEMO_SCRATCH_DIR が設定されていれば、それを使う。
-2. AIDEMO_SCRATCH_ROOT が設定されていれば、AIDEMO_SCRATCH_ROOT / <workspace_name> を使う。
-3. それ以外では、Path.home() / "scratch" / "aidemo2026" / <workspace_name> を使う。
-```
-
-この workspace の標準 scratch は以下です。
-
-```text
-~/scratch/aidemo2026/qwen3_4b_probe
-```
-
-大きめの tensor は、例えば以下に保存します。
-
-```text
-~/scratch/aidemo2026/qwen3_4b_probe/probe_forward_compact.pt
-```
-
-モデル重み、Hugging Face cache、大きな tensor、大量の生成物を workspace 内に保存しないでください。
-
----
-
 ## Hugging Face cache の方針
 
 モデル本体は workspace に置きません。
@@ -291,14 +263,6 @@ attention_layer0_head0_both.csv
 attention_layer0_head0_both.png
 ```
 
-大きめの tensor は scratch に保存します。
-
-例：
-
-```text
-probe_forward_compact.pt
-```
-
 compact tensor には、講義デモに必要な最小限の情報だけを入れます。
 
 例：
@@ -426,7 +390,6 @@ Python script は、講義デモで説明しやすいように、簡潔で明示
 - scripts/common.py に既存 utility がある場合はそれを使う。
 - 出力先ディレクトリは保存前に作成する。
 - 進捗が分かる簡潔な print を入れる。
-- 大きな出力は scratch に保存する。
 - マシン固有の絶対パスをハードコードしない。
 - download / setup 用 script 以外に暗黙のネットワークアクセスを入れない。
 ```
@@ -550,7 +513,6 @@ git add scripts/06_attention_heatmap.py
 ```text
 .vscode/settings.json
 outputs/
-scratch/
 ```
 
 `.vscode/settings.json` は Cursor / Pyright 由来のローカル変更が入りやすいです。  
@@ -563,7 +525,6 @@ outputs/
 runs/
 logs/
 cache/
-scratch/
 tmp/
 *.pt
 大きな tensor
@@ -600,7 +561,7 @@ token や secret
 ```text
 add: cursor rule for git safety
 update: probe config for short sequences
-fix: scratch path resolution
+fix: outputs path resolution
 ```
 
 署名（Co-Authored-By 等）は追記しない。
