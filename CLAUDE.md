@@ -377,6 +377,43 @@ logs/ に書かずいきなり docs/ に書く運用も可。実験中のドラ�
 
 ---
 
+## notebook の output 方針 (dev / release)
+
+### dev フェーズ (現在)
+
+- nbstripout filter が有効 (`.git/config` の `filter.nbstripout.clean` で `--keep-id` 付き)
+- `git add` 時に **outputs / execution_count / metadata.execution が自動 strip** される
+- repo は軽量、diff は clean
+
+### release フェーズ (講義開始直前に 1 回だけ実施)
+
+公開時は**学生が実行しなくても出力が見える**よう、output 込みの commit を打ち込む:
+
+```bash
+source ~/.venvs/llm2026/bin/activate
+
+# 1. 全 notebook を実行して outputs を生成
+cd notebooks
+jupyter execute 00_intro_chat.ipynb 01_tokenizer.ipynb \
+                02_residual_stream_logit_lens_patching.ipynb \
+                02_residual_stream_logit_lens_patching_qwen3_1p7b.ipynb \
+                02_residual_stream_logit_lens_patching_qwen3_8b.ipynb
+cd ..
+
+# 2. nbstripout filter を一時的に bypass して output 込みで commit
+git -c filter.nbstripout.clean=cat add notebooks/*.ipynb
+git commit -m "release: include notebook outputs for v1.0"
+
+# 3. tag を打って公開ポイントを固定
+git tag v1.0
+git push origin main --tags
+```
+
+公開後も継続開発するなら、その後は通常通り `git add` で nbstripout が再び outputs を strip する (= v1.0 tag は output 込みで永続保存、main は output なしに戻る)。
+学生は GitHub の Release ページから v1.0 を取得すれば output 込み notebook を読める。
+
+---
+
 ## コーディング方針
 
 Python script は、講義デモで説明しやすいように、簡潔で明示的に書いてください。
