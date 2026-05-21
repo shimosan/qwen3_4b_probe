@@ -216,9 +216,16 @@ qwen3_4b_probe/
     12_residual_stream_patching.py
   notebooks/
   outputs/
+  logs/
+  docs/
+    images/
 ```
 
-`outputs/` は runtime output 用のフォルダであり、Git 管理対象ではありません。
+`outputs/` は runtime output 用のフォルダで、Git 管理対象**外**です（PNG / CSV / JSON など）。
+
+`logs/` は実行ログおよび drafts 用の Git 管理対象**外**フォルダです（`*.log` と作業中の `*.md`）。
+
+`docs/` は完成品の実験レポート md を置く Git 管理対象フォルダです。`docs/images/` には report が参照する figure を `outputs/` から **cp**（mv ではない）してきます。学生配布や永続的なドキュメントは docs/ に置きます。
 
 script で `outputs/` に保存する場合は、必ず事前にディレクトリを作成してください。
 
@@ -304,6 +311,105 @@ attention_layer0
 ```
 
 全 layer の hidden states や attentions を丸ごと保存することは、明示的に必要な場合を除いて避けます。
+
+---
+
+## 実験レポート md (docs/) の方針
+
+実験スクリプトを実行した後に、実験者の報告書として md を書きます。
+log file（テキスト実行ログ）とは別物で、これは**実行後に整理して作成する完成品**です。
+
+### 三層の役割分担
+
+```text
+outputs/   git 管理外。script の生成物（PNG / CSV / JSON）。再生成可能、永続性なし。
+logs/      git 管理外。実行ログ (*.log) と作業中の md ドラフト。
+docs/      git 管理。完成品の実験レポート md。学生配布対象。
+docs/images/  git 管理。docs/*.md が参照する figure を outputs/ から cp する。
+```
+
+- `outputs/` と `logs/` は再生成可能で永続性がないので、**完成版のレポート**は必ず `docs/` に置く。
+- figure は `outputs/` から `docs/images/` へ **cp**（mv ではない）。outputs/ にも原本を残す。
+- 1 script = 1 docs md。同じ script を複数回更新しても**新ファイルを作らず**、md を更新する。
+
+### ファイル命名
+
+```text
+docs/{script番号}_{短い slug}.md
+docs/images/{outputs と同じファイル名}.png
+```
+
+例: `docs/14_qwen3_4b_transcoder_layers23_24_25.md`、`docs/images/nb03_qwen3_4b_transcoder_layer24_feature_heatmap.png`
+
+### ルール A — すべての report に共通する標準セクション
+
+最低限以下の章立てを満たす：
+
+1. **概要**（script リンク、最終更新日、ステータス）
+2. **目的**
+3. **実験設定**
+4. **結果概要**（数値表は列の意味を明記）
+5. **図**（`![caption](images/xxx.png)` で embed、`**Figure N**:` キャプション + 軸 / colormap / 系列の説明）
+6. **解釈**
+7. **応用への示唆**（講義デモへの活用、関連する notebook（nb02 / nb03 など）への寄与、再利用したい figure の指針）
+8. **開発の経緯**（複数 stage の更新があれば）
+9. **出力ファイル**（`outputs/` の manifest）
+10. **注意事項**
+11. **関連実験**（他 report への cross-link）
+
+その他:
+
+- frontmatter は使わない（Obsidian notes と違って素 md）
+- script への link は `[scripts/14_xx.py](../scripts/14_xx.py)` のように workspace 相対
+- 画像 path は `images/...`（docs/ 直下から見て）
+- 数式は KaTeX 記法 `$ ... $` / `$$ ... $$`。Cursor 内蔵 Preview は非対応、`Cmd+Shift+V` の正規 Markdown Preview / Obsidian / GitHub で render される
+
+### ルール B — 入門レベルの説明を強化する場合（実験の最初の md など）
+
+ルール A の章の前半に、以下の解説セクションを挿入する：
+
+- **背景**: ルール A の **目的 (2)** と **実験設定 (3)** の間に挿入。
+  その実験で使う解析道具（SAE、transcoder、logit lens 等）が何か、数式で定義する。Transformer block の中での位置づけ、対象モデルとの関係を明示。
+- **方法**: ルール A の **実験設定 (3)** と **結果概要 (4)** の間に挿入。
+  パイプライン全体を**数式とコード併記**で説明（hook の役割、encode/decode の式とコードの対応）。読者が「結果テーブルを見る前に、何がどう計算されているか」を理解できるようにする。
+- **測定する指標の定義**: 同じく **3-4 の間**、方法の直後に置く。
+  表で各指標を**数式 + コード**で定義（`active_fraction`, `pos3 max|Δ|`, `reconstruction RMSE` など）。
+- **「position」が何を意味するか**の表: 実験設定の中、または指標定義の直前に置く。
+  pos=0..N-1 がどのトークンに対応し、どの比較に使うか。
+- **結果テーブルの直前に列の意味を箇条書き**で明示。
+
+→ B 適用後の章立て例:
+
+1. 概要
+2. 目的
+3. **背景** ← B
+4. 実験設定
+5. **方法** ← B
+6. **測定する指標の定義** ← B
+7. 結果概要
+8. 図
+9. 解釈
+10. 応用への示唆
+11. 開発の経緯
+12. 出力ファイル
+13. 注意事項
+14. 関連実験
+
+これは「同じ workspace の文脈を知らない読者（学生）」が単独で読めるレベルまで踏み込む方針。
+全 report に B を適用する必要はない。実験の中核となる report、講義デモに直接使う report に適用する。
+
+### docs/ への作業フロー
+
+```text
+1. 実験スクリプトを実行 → outputs/ に PNG / CSV ができる
+2. logs/{番号}_{slug}.md にドラフト作成（実験中で繰り返し更新する場合はここ）
+3. レポートが固まったら docs/{番号}_{slug}.md に cp
+4. docs/{番号}_{slug}.md の中の画像 path を「../outputs/xxx」から「images/xxx」に書き換え
+5. 参照されている PNG / CSV を outputs/ から docs/images/ に cp
+6. git add docs/ で commit
+```
+
+logs/ に書かずいきなり docs/ に書く運用も可。実験中のドラフト保存場所として logs/ を活用するかは個別判断。
 
 ---
 
@@ -513,7 +619,7 @@ fix: scratch path resolution
 - 通常の probe script に暗黙の download 処理を追加する。
 - 明示的な指示なしに model_id を Qwen/Qwen3-4B から変える。
 - attention 保存時に sequence length を大きくする。
-- 生成物を commit する。
+- 生成物を commit する。ただし `docs/` は例外で、完成品レポートと figure (docs/images/) は意図的に git 管理対象。
 - 番号付き script 群を、理由なく巨大な単一 script にまとめる。
 ```
 
