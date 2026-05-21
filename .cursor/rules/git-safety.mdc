@@ -27,7 +27,7 @@ alwaysApply: true
 git add .
 
 # ✅ OK
-git add scripts/04_probe_forward.py
+git add path/to/changed_file.py
 git add CLAUDE.md README.md
 ```
 
@@ -41,13 +41,11 @@ runs/
 logs/
 cache/
 tmp/
-*.pt
-*.bin
-*.safetensors
 .vscode/settings.json
 .env
 .env.*
 token や secret を含むファイル
+大きな binary (build artifacts, generated outputs, モデル重み等)
 ```
 
 ## ブランチ操作
@@ -77,12 +75,12 @@ git push -u origin feature/xxx
 
 ```
 # ✅ OK
-add: attention heatmap script
-update: probe config for short sequences
-fix: outputs path resolution
+add: data preprocessing script
+update: config for short cases
+fix: path resolution edge case
 
 # ❌ NG — 冗長
-add: add a new script for attention heatmap visualization with multiple label modes
+add: add a new script for data preprocessing with multiple options X, Y, Z
 ```
 
 ## 作業フロー

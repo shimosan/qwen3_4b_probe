@@ -1,21 +1,16 @@
 ---
-description: Project rules pointer. Defer to CLAUDE.md for detailed workflow / coding conventions.
-globs:
-  - "**/*"
+description: Project rules pointer — defer to CLAUDE.md for detailed workflow and conventions
 alwaysApply: true
 ---
 
 # このプロジェクトのルールは [CLAUDE.md](../../CLAUDE.md) に集約
 
-詳細な workflow / コーディング規約 / notebook 方針 / docs/ レポート作成方法 等は、リポジトリルートの `CLAUDE.md` を参照してください。
+詳細な workflow / コーディング規約 / プロジェクト固有方針は、リポジトリルートの `CLAUDE.md` を参照してください。Cursor 上で AI 作業を行う場合も、CLAUDE.md の方針に従うこと。
 
-最重要事項のみ抜粋:
+汎用的な最重要事項のみ抜粋:
 
-- **対象モデル**: `Qwen/Qwen3-4B` (変更は明示指示があるときのみ)
-- **Transformers は pip install 版**を使う (ソース改変は別 workspace `qwen3_4b_trace` 側)
-- **venv 2 つ**: `llm2026` (notebooks + scripts 00-06) / `llm2026-dev` (scripts 07+)
-- **モデル重み・大きな tensor を workspace 内に保存しない** (`~/.cache/huggingface/` 等を使う)
-- **マシン固有の絶対パスをハードコードしない**
-- **notebook は単体で完結**: `scripts/` の import 禁止、必要なら内部に書き写す
+- **secret (`.env`, API key, token 等) を commit しない**
+- **マシン固有の絶対パスをハードコードしない** (`~/...` などの home 相対や環境変数を使う)
+- **大きな成果物 (build artifacts, caches, モデル重み等) を git 管理下に置かない**
 
 Git 操作の安全規約は [git-safety.mdc](git-safety.mdc) を参照。
