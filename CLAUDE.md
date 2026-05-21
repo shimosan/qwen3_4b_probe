@@ -615,7 +615,7 @@ fix: scratch path resolution
 - Transformers ソースコードを改変する。
 - モデル重みを repository に入れる。
 - 大きな tensor を workspace 内に保存する。
-- /Users/shimo/... や C:\Users\<name>\... のような絶対パスを script に直書きする。
+- `/Users/<name>/...` や `C:\Users\<name>\...` のようなマシン固有絶対パスを script に直書きする。
 - 通常の probe script に暗黙の download 処理を追加する。
 - 明示的な指示なしに model_id を Qwen/Qwen3-4B から変える。
 - attention 保存時に sequence length を大きくする。
