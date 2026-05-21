@@ -88,8 +88,7 @@ huggingface_hub: 1.14.0
 mps built: True
 mps available: True
 cuda available: False
-workspace: /Users/shimo/.../work/.../.../aidemo2026/qwen3_4b_probe
-scratch_dir: /Users/shimo/scratch/aidemo2026/qwen3_4b_probe
+workspace: /Users/shimo/.../qwen3_4b_probe
 model_id: Qwen/Qwen3-4B
 ```
 

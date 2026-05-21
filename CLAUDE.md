@@ -62,7 +62,7 @@ qwen3_4b_trace
 Transformers の改変可能な source tree は以下です。
 
 ```text
-~/.../.../transformers_qwen
+<editable-install transformers tree>
 ```
 
 ---
