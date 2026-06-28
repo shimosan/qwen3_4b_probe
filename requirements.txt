@@ -1,4 +1,4 @@
-# aidemo2026 — 共通環境の requirements（情報AI基礎・下平講義）
+# aidemo2026 — 共通環境の requirements
 #
 # qwen（テキスト生成）/ diffusers（画像生成）/ wordvec（単語埋め込み）を 1 つの環境で動かす。
 # このファイル1個で Mac / Windows / GPU の有無、どれでもインストールできる。
@@ -21,8 +21,9 @@
 # 3) このファイルを入れる:
 #      pip install -r requirements.txt
 #
-# 4) Jupyter / VSCode で使うならカーネル登録:
-#      python -m ipykernel install --user --name aidemo2026 --display-name aidemo2026
+# 4) （任意）notebook の kernelspec は name=python3 なので、VSCode / Cursor は手順1の
+#    venv を interpreter に選べばそのまま動く（追加登録は不要）。classic Jupyter で
+#    一覧に出したい場合のみ: python -m ipykernel install --user --display-name aidemo2026
 #
 # ※ Colab はインストール不要（torch も含め最初から入っている）。手順は不要で、そのまま開いて実行する。
 # ※ torch をこのファイルに書かないのは OS/GPU で入れ方が違うため（手順2で先に入れる）。
