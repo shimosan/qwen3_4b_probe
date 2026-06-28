@@ -12,7 +12,7 @@ Script: [`scripts/16_prelim_qwenscope_sae_smoke.py`](../scripts/16_prelim_qwensc
 >
 > ### 1. なぜ Base なのか
 >
-> **Qwen-Scope SAE は Base 専用に学習されており**、Instruct 用 SAE は (2026-05-21 時点で) 1 つも公開されていない。Base SAE を Instruct モデルに当てると、Instruct の SFT/RLHF で residual stream の分布が Base からシフトしているため、SAE encoder が out-of-distribution な入力を受けることになり、再構成・feature 同定の根拠が失われる。
+> **Qwen-Scope SAE は基本的に Base モデルの residual stream を対象に学習されている**（Qwen3 系では 1.7B / 8B 等いずれも Base 学習で、Instruct backbone を使うのは Qwen3.5-27B のみという例外）。そのため本実験では Base モデルに適用するのが最も素直。Base SAE を Instruct / post-training checkpoint に当てると、SFT/RLHF で residual stream の分布が Base からシフトし、SAE encoder が out-of-distribution な入力を受けるため、再構成精度や feature 同定の信頼性が低下しうる。一方で Qwen-Scope 公式 model card は、Base モデルで学習した SAE を post-training checkpoint の内部過程探索に用いることも多くの場合 reasonable としている。本ノートでは解釈の安全性を優先して Base モデルに限定する。
 >
 > ### 2. なぜ 1.7B / 8B なのか (4B ではなく)
 >
@@ -89,7 +89,7 @@ $$
 
 - $d_{\text{sae}} = 32768$（W32K の意味）、$d_{\text{model}} = 2048$（1.7B-Base の hidden_size）。$d_{\text{sae}} \gg d_{\text{model}}$ で **overcomplete**。
 - $k = 50$（L0_50 の意味、TopK の $k$）。$\mathbf{f}_t$ は **正確に $k = 50$ 個**の非ゼロ成分を持つ。
-- ReLU SAE と違い、$\mathbf{f}_t$ の成分は負にもなりうる（pre-activation の符号がそのまま残る）。
+- 本 script の encode は ReLU を掛けないため、pre-activation の符号がそのまま残り、上位 $k$ に負値が混じりうる（一般の TopK SAE は ReLU 併用で非負化することが多い; Gao et al. 2024）。
 - 学習は $\hat{h}_{j+1} \approx h_{j+1}$（自己回帰的に residual stream を再構成）と $L_0 = k$ 制約のもとで行われる。
 
 各 $i \in \{0, \dots, d_{\text{sae}} - 1\}$ を **feature $i$** と呼ぶ。
@@ -114,8 +114,8 @@ $$
 
 本実験では `Qwen/Qwen3-1.7B-Base` (Instruct ではなく Base) を使う。**理由は Qwen-Scope SAE が Base 専用に学習されているため**:
 
-- Qwen 公式が公開している Qwen-Scope SAE checkpoint は `SAE-Res-Qwen3-*-Base-*` の形式で、命名どおり Base モデルの residual stream を学習対象にしている。Instruct 用 SAE は (2026-05-21 時点で) 1 つも公開されていない。
-- Base SAE を Instruct モデルに当てると、Instruct の SFT/RLHF で residual stream の分布が Base からシフトしているため、SAE encoder が out-of-distribution な入力を受けることになり、再構成 RMSE 悪化と feature 同定根拠の喪失を招く。
+- Qwen 公式が公開している Qwen-Scope SAE checkpoint は `SAE-Res-Qwen3-*-Base-*` の形式で、命名どおり Base モデルの residual stream を学習対象にしている。Qwen3 系（1.7B / 8B など）には Instruct 用 SAE は (2026-05-21 時点で) 公開されていない（Qwen-Scope 全体では Qwen3.5-27B のみ Instruct backbone を学習対象とする例外がある）。
+- Base SAE を Instruct モデルに当てると、Instruct の SFT/RLHF で residual stream の分布が Base からシフトするため、SAE encoder が out-of-distribution な入力を受け、再構成 RMSE 悪化や feature 同定精度の低下を招きうる。もっとも Qwen-Scope 公式 model card は Base SAE を post-training checkpoint に適用するのも多くの状況で合理的としており、本実験では分布ミスマッチを避けるため Base モデルに揃える。
 - workspace 内の `notebooks/02_qwen3_4b_residual_stream_logit_lens_patching.ipynb` および別途進行中の 1.7B/8B 派生 notebook 02 は **Instruct** を使っているが、これは logit lens / patching が SAE と違ってモデルバリアントに依存せず動くため。**本 SAE 実験 (script 16) と notebook 02 系はモデルバリアント (Base vs Instruct) が違う**ことに注意。
 
 ### 設定一覧
@@ -347,7 +347,7 @@ $$
 ## 8. 解釈
 
 - **TopK SAE は ReLU SAE よりトークン固有 feature が top1 に出やすい**: script 14 (mwhanna 4B transcoder, ReLU) では layer 24 の top1 が「文脈共通 feature f30233」だったが、本 1.7B Qwen-Scope SAE (TopK, k=50) では layer 20 の top1 が「国名固有 feature」(f18023 / f24406) で完全に分離している。TopK の $k$ を制限していることで、文脈共通 features が大量に発火して discriminative features を希釈する現象が抑えられている、と解釈できる。
-- **layer 20 (= 28 層中 21 番目、約 71%) で既にトークン分離が見える**: 中盤後半の residual stream が、すでにトークン固有の feature 空間で「整理されている」状況。この layer がモデル全体の logit lens / patching の中でどこに位置するかは、別途進行中の 1.7B 用 notebook 02 で確認する予定。
+- **layer index 20（0始まり、28 block 中 20/28 ≈ 71%、対応する hidden_states は hs[21]）で既にトークン分離が見える**: 中盤後半の residual stream が、すでにトークン固有の feature 空間で「整理されている」状況。この layer がモデル全体の logit lens / patching の中でどこに位置するかは、別途進行中の 1.7B 用 notebook 02 で確認する予定。
 - **last position (' is') にも前文脈の差が残る**: causal LM の self-attention が、`' is'` トークンに対しても直前の `' Japan'` / `' France'` の情報を持ち越している証拠が、feature 空間で見える。
 
 ---

@@ -425,7 +425,7 @@ CSV ([outputs/attention_layer0_head0_piece.csv](../outputs/attention_layer0_head
 
 1. **causal triangle**（右上が真っ黒）で autoregressive 性が一目で分かる。講義の最初のスライドに最適。
 2. **`<|im_start|>` への attention sink**（列 0 の縦縞）は近年の large LM でよく観察される現象で、「特殊な token を *anchor* として使う」という性質の一例。
-3. **文節境界の助詞 (`の` / `に`) に集中する縦縞**: layer 0 head 0 が「直前の助詞 / 連体修飾の境界」を拾う head になっていそう、という解釈ができる。layer 0 という浅い層なので、構造的・syntactic な特徴を拾うのは自然。
+3. **文節境界の助詞 (`の` / `に`) に集中する縦縞**: layer 0 head 0 が「直前の助詞 / 連体修飾の境界」を拾う head になっていそう、という解釈ができる。layer 0 という浅い層なので、構造的・syntactic な特徴を拾うのは自然。ただしこれは layer 0 / head 0 の単一観察に基づく仮説であり、head の機能を確定するには本来 head ごとの体系的解析を要する。
 
 ### 出力ファイル
 

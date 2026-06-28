@@ -21,14 +21,17 @@ Script: [`scripts/14_prelim_qwen3_4b_transcoder_smoke.py`](../scripts/14_prelim_
 Qwen3 を含む現代の Transformer の各 block（layer）は、おおざっぱに以下の構造です：
 
 $$
-\text{block } j: \quad h_{j+1} = h_j + \mathrm{Attn}(\mathrm{LN}_1(h_j)) + \mathrm{MLP}(\mathrm{LN}_2(h_j + \mathrm{Attn}(\cdots)))
+\begin{aligned}
+a_j &= h_j + \mathrm{Attn}(\mathrm{RMSNorm}_1(h_j)) \quad(\text{Attention sub-block}) \\
+h_{j+1} &= a_j + \mathrm{MLP}(\mathrm{RMSNorm}_2(a_j)) \quad(\text{MLP sub-block})
+\end{aligned}
 $$
 
-ここで $h_j \in \mathbb{R}^{T \times d_{\text{model}}}$ は **residual stream**（block $j$ の入力時点の表現、$T$=トークン数、$d_{\text{model}}$=hidden_size）。block 内では Attention sub-block と MLP sub-block の 2 段で residual stream を更新します。
+ここで $h_j \in \mathbb{R}^{T \times d_{\text{model}}}$ は **residual stream**（block $j$ の入力時点の表現、$T$=トークン数、$d_{\text{model}}$=hidden_size）。$a_j$ は Attention sub-block 適用後・MLP 適用前の residual stream。block 内では Attention sub-block と MLP sub-block の 2 段で residual stream を更新します。なお $\mathrm{RMSNorm}_1, \mathrm{RMSNorm}_2$ は各 sub-block の入力正規化で、Qwen3 では平均減算を行う LayerNorm ではなくスケールのみの **RMSNorm** を使います。
 
 この実験で対象にするのは **block $j$ の中の MLP** の挙動です。具体的には：
 
-- **MLP input** $X_j$: post-attention の residual に LayerNorm をかけたもの。MLP module の forward に実際に渡される tensor。shape $[T, d_{\text{model}}]$。
+- **MLP input** $X_j$: post-attention の residual $a_j$ に RMSNorm（$\mathrm{RMSNorm}_2$）をかけたもの。MLP module の forward に実際に渡される tensor。shape $[T, d_{\text{model}}]$。
 - **MLP output** $Y_j$: MLP module が返す tensor（residual add 前）。shape $[T, d_{\text{model}}]$。
 
 $$
@@ -70,7 +73,7 @@ $$
 
 つまり mwhanna transcoder は「MLP 自体を、解釈可能 features の組み合わせとして近似する」ツール。residual stream のスナップショットを取るわけではない点に注意。
 
-参考: [Hanna, Pearce, Belrose. *Saes Are Highly Dataset Dependent: A Case Study on the Refusal Direction*. 2024 / Github: `mwhanna/sae_transcoder_training`]. 本実験では学習済み weights を Hugging Face から取得して使用するだけ。
+参考: MLP transcoder という考え方と標準的な定義については、Dunefsky, Chlenski & Nanda, *Transcoders Find Interpretable LLM Feature Circuits*, NeurIPS 2024 (arXiv:2406.11944) を参照。この論文では、transcoder を「元の MLP sublayer の入出力挙動を、より広く sparse に発火する MLP で近似するもの」として扱っている。本実験で用いる Qwen3-4B 用の学習済み重みは、Hugging Face の `mwhanna/qwen3-4b-transcoders`（Michael Hanna）から取得した配布 artifact である。
 
 ---
 

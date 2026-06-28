@@ -226,7 +226,7 @@ layer 29-33──► "当然" early lock-in。final 答え '言' は裏でラン
 layer 34-36──► final 答え '言' が top1 に確定
 ```
 
-このパターンは [Belrose et al. 2023] が指摘する "convergence-toward-final-prediction" の典型例。「最終予測が出るのは最後の 2-3 層」というのも、4B クラスの instruct model でしばしば観察されます。
+このパターンは [Belrose et al. 2023]（Tuned Lens）が論じる、各層の予測が最終的な出力分布へ次第に収束していく現象の典型例。「最終予測が出るのは最後の 2-3 層」というのも、4B クラスの instruct model でしばしば観察されます。
 
 ### 5-4. なぜ `当然` が一旦 top1 になるのか（解釈）
 
@@ -264,4 +264,4 @@ layer 34-36──► final 答え '言' が top1 に確定
 - **RMSNorm を中間層で忘れない**: $k < K$ の `hidden_states[k]` を直接 `lm_head` に通すと、scale がずれて意味の通らない結果になる。CSV に `norm_applied` flag を残しているのはこのため。
 - **fp16 数値誤差**: 選択 position のスライスだけ再 `lm_head` を呼ぶと `max_abs_diff = 0.0078125 = 1/128`（fp16 精度の floor）。full sequence の reuse なら 0.0。これが嫌なら全部 float32 で計算するのが [docs/11](11_compare_logit_lens_float32.md) のアプローチ。
 - **`tie_word_embeddings=True` 前提**: Qwen3-4B では $W_U = W_E$ なので「層 0 で input identity が top1 になる」現象が起きる。tie していないモデルではこの現象は弱まる（embedding と unembedding が別空間なので、$W_U \cdot W_E e_x$ が対角に集中する保証がない）。
-- **logit lens は本来 affine probing が望ましい**: nostalgebraist の原典・Belrose et al. (Tuned Lens) は、中間層 hidden state に**学習された affine 変換**をかけてから `lm_head` に通すことを推奨する。本実験は **untuned logit lens**（学習なし、直接 `lm_head` を当てる）で、簡便だが各層の "意味" を過大評価しやすい。Tuned Lens は [docs/10](10_compare_logit_lens_transformerlens.md) で言及あり（Qwen3 未対応のため動作はしていない）。
+- **logit lens は本来 affine probing で改善できる**: **Belrose et al. (Tuned Lens)** は、中間層 hidden state に**学習された affine 変換（translator）**をかけてから unembedding に通すことを提案している（nostalgebraist の原典 logit lens は学習なしで unembedding を直接当てる baseline で、Tuned Lens はそれを改善する手法）。本実験は **untuned logit lens**（学習なし、直接 `lm_head` を当てる）で、簡便だが各層の "意味" を過大評価しやすい。Tuned Lens は [docs/10](10_compare_logit_lens_transformerlens.md) で言及あり（Qwen3 未対応のため動作はしていない）。

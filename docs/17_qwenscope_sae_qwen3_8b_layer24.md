@@ -10,7 +10,7 @@ Script: [`scripts/17_prelim_qwenscope_sae_8b_smoke.py`](../scripts/17_prelim_qwe
 >
 > 本実験は **`Qwen/Qwen3-8B-Base`** を対象にする。Instruct (= `Qwen/Qwen3-8B`) ではない。
 >
-> 理由: **Qwen-Scope SAE は Base 専用に学習されており**、Instruct 用 SAE は (2026-05-21 時点で) 1 つも公開されていない。Base SAE を Instruct に当てると分布シフトで out-of-distribution になり、再構成・feature 同定の根拠が失われる。
+> 理由: **Qwen-Scope SAE は基本的に Base モデルの residual stream を対象に学習されている**。Qwen3-8B（および Qwen3 系の他サイズ）には Instruct 用 SAE は (2026-05-21 時点で) 公開されていない（Qwen-Scope で Instruct backbone を学習するのは Qwen3.5-27B のみ）。Base SAE を Instruct / post-training checkpoint に当てると分布シフトで out-of-distribution になり、再構成精度や feature 同定の信頼性が低下しうる。一方で Qwen-Scope 公式 model card は、Base モデルで学習した SAE を post-training checkpoint の内部過程探索に用いることも多くの場合 reasonable としている。本ノートでは解釈の安全性を優先して Base モデルに限定する。
 >
 > **workspace 内の `notebooks/02_*` 系 (logit lens + residual stream patching) は Instruct を使っているが、これは本 SAE 実験とモデルバリアントが違う**。詳細な背景は [docs/16 の §3 「Base 版を使う理由」](16_qwenscope_sae_qwen3_1p7b_layer20.md#3-実験設定) を参照。
 
@@ -24,7 +24,7 @@ Script: [`scripts/17_prelim_qwenscope_sae_8b_smoke.py`](../scripts/17_prelim_qwe
 |---|---|---|
 | 対象モデル | **`Qwen/Qwen3-1.7B-Base`** (K=28, hidden=2048) | **`Qwen/Qwen3-8B-Base`** (K=36, hidden=4096) |
 | 対象 SAE | `SAE-Res-Qwen3-1.7B-Base-W32K-L0_50` | `SAE-Res-Qwen3-8B-Base-W64K-L0_50` |
-| LAYER_IDX | 20 (→ hs[21], 71% 深さ) | 24 (→ hs[25], 69% 深さ) |
+| LAYER_IDX | 20 (→ hs[21], 20/28 ≈ 71% 深さ) | 24 (→ hs[25], 24/36 ≈ 67% 深さ) |
 | $d_{\text{sae}}$ | 32768 | **65536** |
 | TopK $k$ | 50 | 50 |
 | SAE checkpoint size | 537 MB | **2.15 GB** |
@@ -144,7 +144,7 @@ Script: [`scripts/17_prelim_qwenscope_sae_8b_smoke.py`](../scripts/17_prelim_qwe
 
 ## 6. 解釈
 
-- **1.7B (layer 20, depth 71%) では top1 がトークン固有、8B (layer 24, depth 69%) では top1 が共通 feature**。深さの相対位置は同程度なのに挙動が違う。考えられる要因:
+- **1.7B (layer index 20, depth 20/28 ≈ 71%) では top1 がトークン固有、8B (layer index 24, depth 24/36 ≈ 67%) では top1 が共通 feature**。深さの相対位置は同程度なのに挙動が違う。考えられる要因:
   1. 8B は parameter count が多く、文脈構造を表現する「より太い」汎用 feature を持つ余裕がある。
   2. Qwen-Scope の SAE 自体の学習データ・hyperparameter 差（W32K vs W64K、ただし TopK k は同じ 50）。
   3. 単に layer 選択 (20 vs 24) と各モデルの内部表現曲線のずれ。

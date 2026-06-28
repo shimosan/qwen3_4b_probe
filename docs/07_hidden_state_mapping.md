@@ -91,7 +91,7 @@ handles = [
 ]
 ```
 
-各 `Qwen3DecoderLayer` の forward が呼ばれるたびに、**その layer の出力 tensor** が `hook_outputs[j]` に格納されます。出力が tuple の場合は最初の要素を取る（Qwen3 では `(hidden_states,)` だけが返る設定）。
+各 `Qwen3DecoderLayer` の forward が呼ばれるたびに、**その layer の出力 tensor** が `hook_outputs[j]` に格納されます。出力が tuple の場合は最初の要素を取る（Qwen3 では単一 tensor が返る。過去の version では `(hidden_states,)` の形だった）。
 
 ### 4-2. 1 回 forward して両方の経路を取得
 

@@ -46,7 +46,7 @@ logit lens で「層 $k$ の hidden state $h^{(k)}$ から token $i$ の予測�
 
 $$
 \text{score}_i(h^{(k)}) \;=\; W_U[i] \cdot \mathrm{RMSNorm}(h^{(k)})
-\;=\; \underbrace{(W_U[i] \odot g)}_{=: \ W_U^{\text{eff}}[i]} \cdot \frac{h^{(k)}}{\sqrt{\frac{1}{d}\sum_k (h^{(k)})_k^2 + \varepsilon}}
+\;=\; \underbrace{(W_U[i] \odot g)}_{=: \ W_U^{\text{eff}}[i]} \cdot \frac{h^{(k)}}{\sqrt{\frac{1}{d}\sum_m (h^{(k)})_m^2 + \varepsilon}}
 $$
 
 つまり、**RMSNorm の gain $g$ を吸収した実効的な readout 方向**は $W_U^{\text{eff}}[i] = W_U[i] \odot g$ で表せます（分母の RMS スカラは hidden state ごとに異なるので分離できない）。本実験ではこれを `effective_unembedding` と呼びます。

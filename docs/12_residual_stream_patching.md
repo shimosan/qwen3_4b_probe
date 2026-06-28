@@ -16,7 +16,7 @@ Script: [`scripts/12_residual_stream_patching.py`](../scripts/12_residual_stream
 - **corrupt prompt**: `"The capital of France is"` → 期待答え `" Paris"`
 - 各 layer の出力 (residual stream) を corrupt run の中で **clean の値に置き換え**たとき、top1 が `Paris` から `Tokyo` に切り替わる layer を特定する
 
-これが mechanistic interpretability の典型手法 [Activation Patching (Meng et al. 2022, "ROME"; Heimersheim & Nanda 2024)](https://arxiv.org/abs/2202.05262) で、講義デモ ([notebooks/02_residual_stream_logit_lens_patching.ipynb](../notebooks/02_residual_stream_logit_lens_patching.ipynb)) の中核を成す。
+これが mechanistic interpretability の典型手法 [Activation Patching / Causal Tracing (Meng et al. 2022; Heimersheim & Nanda 2024)](https://arxiv.org/abs/2202.05262) で、講義デモ ([notebooks/02_residual_stream_logit_lens_patching.ipynb](../notebooks/02_residual_stream_logit_lens_patching.ipynb)) の中核を成す。
 
 ---
 
@@ -301,7 +301,7 @@ patching したら corrupt より **悪化**する（`Paris` の確率が 0.97 �
 
 - **Position 4 のみ patch**: 全 position × 全 layer のグリッドは notebook 02 が行う。本実験は計算量を抑えた予備調査。
 - **`out = out.clone()` 必須**: hook 内で `out[0, pos, :] = patch_vec` を直接書くと、view への inplace write になり、後続の autograd で問題（本実験は no_grad なので動くが、安全のため clone）。Transformers 5.x では `Qwen3DecoderLayer.forward` が plain tensor を返すため、`hook(module, inp, out)` の `out` がそのまま tensor として使える。
-- **fp16 数値の不安定さ**: 中間層 (k=8-15) で negative recovery (-0.02 〜 -0.08) が出るが、これは「intermediate patching が意味を持たない」現象であり、fp16 のせいではない（fp32 で再実験しても trend は同じ）。
+- **fp16 数値の不安定さ**: 中間層 (k=8-15) で negative recovery (-0.02 〜 -0.08) が出る。本実験では fp32 で再実験しても同じ trend が出たため、これは fp16 量子化由来というより「intermediate patching が意味を持たない」現象と考えられる（本実験固有の観察に基づく解釈で、外部文献による裏付けではない点に注意）。
 - **clean / corrupt の seq_len が同じ前提**: 両 prompt とも 5 token なので position 4 が両方の `is` に対応する。違う seq_len の prompt 間で patching すると position の対応が壊れる。
 - **single-token answer 前提**: `" Tokyo"` / `" Paris"` が **単一トークン**で encode される偶然に依存。多トークン答えなら最初の token だけを使うか、log-prob を集約するか、追加の工夫が必要。
 - **CLAUDE.md 違反でないこと**: `output_hidden_states=True` は clean run のみで使用、メモリ消費は 5 token × 37 hs × 2560 d_model × 2 bytes ≈ 1 MB と小さい。

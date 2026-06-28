@@ -299,6 +299,7 @@ per-layer (× 36 layer):
 - 実行時間 ~15-20 分
 - layer 間で feature_id を直接比較しない（各 layer の transcoder は独立学習で、feature 空間が違う）
 - 後段 layer の指標値（特に max_single, RMSE）は magnitude が大きすぎるので、layer 間比較する際は normalize するか log scale 検討
+- **mwhanna の transcoder は Qwen 公式の Qwen-Scope SAE ではなく、community が公開している MLP transcoder** である。residual stream SAE ではなく、MLP input から MLP output を sparse に近似する道具である点に注意。詳細は [docs/14 §12](14_qwen3_4b_transcoder_layers23_24_25.md) を参照。
 
 ## 9. 関連実験
 
