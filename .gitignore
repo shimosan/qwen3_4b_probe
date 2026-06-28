@@ -17,8 +17,11 @@ cache/
 # Local-only dirs inside workspace, if any
 tmp/
 
-# Sandbox notebooks (free to modify, not tracked)
-sandbox/
+# Scratch — AI 自由作業領域（試行錯誤、非追跡）
+scratch/
+
+# 作業ノート（md・非追跡。索引 README / 時系列 worklog）
+notes/
 
 # Secrets / local env
 .env

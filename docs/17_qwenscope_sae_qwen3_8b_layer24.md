@@ -12,7 +12,7 @@ Script: [`scripts/17_prelim_qwenscope_sae_8b_smoke.py`](../scripts/17_prelim_qwe
 >
 > 理由: **Qwen-Scope SAE は基本的に Base モデルの residual stream を対象に学習されている**。Qwen3-8B（および Qwen3 系の他サイズ）には Instruct 用 SAE は (2026-05-21 時点で) 公開されていない（Qwen-Scope で Instruct backbone を学習するのは Qwen3.5-27B のみ）。Base SAE を Instruct / post-training checkpoint に当てると分布シフトで out-of-distribution になり、再構成精度や feature 同定の信頼性が低下しうる。一方で Qwen-Scope 公式 model card は、Base モデルで学習した SAE を post-training checkpoint の内部過程探索に用いることも多くの場合 reasonable としている。本ノートでは解釈の安全性を優先して Base モデルに限定する。
 >
-> **workspace 内の `notebooks/02_*` 系 (logit lens + residual stream patching) は Instruct を使っているが、これは本 SAE 実験とモデルバリアントが違う**。詳細な背景は [docs/16 の §3 「Base 版を使う理由」](16_qwenscope_sae_qwen3_1p7b_layer20.md#3-実験設定) を参照。
+> **workspace 内の `lecture/02_*` 系 (logit lens + residual stream patching) は Instruct を使っているが、これは本 SAE 実験とモデルバリアントが違う**。詳細な背景は [docs/16 の §3 「Base 版を使う理由」](16_qwenscope_sae_qwen3_1p7b_layer20.md#3-実験設定) を参照。
 
 ---
 
@@ -156,7 +156,7 @@ Script: [`scripts/17_prelim_qwenscope_sae_8b_smoke.py`](../scripts/17_prelim_qwe
 ## 7. 応用への示唆
 
 - デモでは **1.7B (docs/16) の図を「クリーンな分離が見える例」、8B (本 doc) の図を「共通 feature top1 問題」の例として対比**させると、「SAE で何が見えるかは layer 選択と差分視点に依存する」というメッセージが伝わりやすい。
-- 「8B の SAE layer 24 が patching/lens 曲線のどこに位置するか」の確認は、別途進行中の 8B 用 notebook 02 (`notebooks/02_qwen3_8b_base_residual_stream_logit_lens_patching.ipynb`) で行う。
+- 「8B の SAE layer 24 が patching/lens 曲線のどこに位置するか」の確認は、別途進行中の 8B 用 notebook 02 (`lecture/02_qwen3_8b_base_residual_stream_logit_lens_patching.ipynb`) で行う。
 
 ---
 
@@ -187,5 +187,5 @@ outputs/nb03_qwenscope_sae_qwen3_8b_layer24_feature_diffs_heatmap.png
 ## 10. 関連実験
 
 - [docs/16](16_qwenscope_sae_qwen3_1p7b_layer20.md): 1.7B 版 smoke。手法解説（数式・コード対応）の中心はこちら。
-- 別途進行中の 8B 用 notebook 02 (notebooks/02_qwen3_4b_residual_stream_logit_lens_patching.ipynb の 8B 派生): logit lens / patching。**こちらは Instruct を使用**。本 SAE 実験 (Base) とはモデルバリアントが違うため、SAE layer 24 の正確な位置確認には Base 版の 8B notebook を別途用意するか、Instruct 版での結果を参考値として扱う必要がある。
+- 別途進行中の 8B 用 notebook 02 (lecture/02_qwen3_4b_residual_stream_logit_lens_patching.ipynb の 8B 派生): logit lens / patching。**こちらは Instruct を使用**。本 SAE 実験 (Base) とはモデルバリアントが違うため、SAE layer 24 の正確な位置確認には Base 版の 8B notebook を別途用意するか、Instruct 版での結果を参考値として扱う必要がある。
 - [docs/14](14_qwen3_4b_transcoder_layers23_24_25.md): 4B + community MLP transcoder。本 SAE とは入力も復元対象も違う。layer 24 の top1 共通 feature 現象は本 doc と類似。

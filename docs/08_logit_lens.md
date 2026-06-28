@@ -236,7 +236,7 @@ layer 34-36──► final 答え '言' が top1 に確定
 
 ## 6. 図
 
-このスクリプト自体は PNG を出力しません（CSV/JSON のみ）。可視化は **[notebooks/02_residual_stream_logit_lens_patching.ipynb](../notebooks/02_residual_stream_logit_lens_patching.ipynb)** が同じデータで行います（[outputs/nb02_logit_lens_clean.png](../outputs/nb02_logit_lens_clean.png) など）。
+このスクリプト自体は PNG を出力しません（CSV/JSON のみ）。可視化は **[lecture/02_residual_stream_logit_lens_patching.ipynb](../lecture/02_residual_stream_logit_lens_patching.ipynb)** が同じデータで行います（[outputs/nb02_logit_lens_clean.png](../outputs/nb02_logit_lens_clean.png) など）。
 
 ターミナル出力としては、各層の top1 / final top1 ランクが printed されます。
 

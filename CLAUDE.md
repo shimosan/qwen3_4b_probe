@@ -97,7 +97,7 @@ hidden states や attentions を保存するとメモリを使うため、prompt
 この workspace では venv を用途別に分けます。
 
 ```text
-~/.venvs/llm2026      notebooks + core scripts (00-06) 用
+~/.venvs/llm2026      lecture + core scripts (00-06) 用
 ~/.venvs/llm2026-dev  実験スクリプト (07 以降) 用（llm2026 の上位互換）
 ```
 
@@ -108,13 +108,13 @@ requirements.txt      llm2026 の pip freeze
 requirements-dev.txt  llm2026-dev の pip freeze
 ```
 
-notebooks のカーネルには `llm2026` を使います。  
+lecture のカーネルには `llm2026` を使います。  
 scripts/07 以降は `llm2026-dev` を前提とします。
 
 activate：
 
 ```bash
-source ~/.venvs/llm2026/bin/activate      # notebooks / core scripts
+source ~/.venvs/llm2026/bin/activate      # lecture / core scripts
 source ~/.venvs/llm2026-dev/bin/activate  # 実験スクリプト
 ```
 
@@ -182,16 +182,18 @@ qwen3_4b_probe/
     10_prelim_compare_logit_lens_transformerlens.py
     11_prelim_compare_logit_lens_float32.py
     12_residual_stream_patching.py
-  notebooks/
+  lecture/
   outputs/
-  logs/
+  runs/
+  notes/
+  scratch/
   docs/
     images/
 ```
 
 `outputs/` は runtime output 用のフォルダで、Git 管理対象**外**です（PNG / CSV / JSON など）。
 
-`logs/` は実行ログおよび drafts 用の Git 管理対象**外**フォルダです（`*.log` と作業中の `*.md`）。
+`runs/` は実行ログ（`*.log`）用、`notes/` は作業中のノート（`*.md`、索引は README / 時系列は worklog）用で、いずれも Git 管理対象**外**フォルダです。`scratch/` は試行錯誤の自由作業領域（同じく管理外）。
 
 `docs/` は完成品の実験レポート md を置く Git 管理対象フォルダです。`docs/images/` には report が参照する figure を `outputs/` から **cp**（mv ではない）してきます。永続的なドキュメントは docs/ に置きます。
 
@@ -240,7 +242,7 @@ python scripts/10_prelim_compare_logit_lens_transformerlens.py
 python scripts/11_prelim_compare_logit_lens_float32.py
 ```
 
-scripts と notebooks は独立しています。notebooks は `llm2026` で動作します。
+scripts と lecture は独立しています。lecture は `llm2026` で動作します。
 
 ---
 
@@ -283,12 +285,13 @@ log file（テキスト実行ログ）とは別物で、これは**実行後に�
 
 ```text
 outputs/   git 管理外。script の生成物（PNG / CSV / JSON）。再生成可能、永続性なし。
-logs/      git 管理外。実行ログ (*.log) と作業中の md ドラフト。
+runs/      git 管理外。実行ログ (*.log)。
+notes/     git 管理外。作業中の md ノート（索引 README / 時系列 worklog）。
 docs/      git 管理。完成品の実験レポート md。配布対象。
 docs/images/  git 管理。docs/*.md が参照する figure を outputs/ から cp する。
 ```
 
-- `outputs/` と `logs/` は再生成可能で永続性がないので、**完成版のレポート**は必ず `docs/` に置く。
+- `outputs/` と `runs/` は再生成可能で永続性がないので、**完成版のレポート**は必ず `docs/` に置く。
 - figure は `outputs/` から `docs/images/` へ **cp**（mv ではない）。outputs/ にも原本を残す。
 - 1 script = 1 docs md。同じ script を複数回更新しても**新ファイルを作らず**、md を更新する。
 
@@ -362,14 +365,14 @@ docs/images/{outputs と同じファイル名}.png
 
 ```text
 1. 実験スクリプトを実行 → outputs/ に PNG / CSV ができる
-2. logs/{番号}_{slug}.md にドラフト作成（実験中で繰り返し更新する場合はここ）
+2. notes/{番号}_{slug}.md にドラフト作成（実験中で繰り返し更新する場合はここ）
 3. レポートが固まったら docs/{番号}_{slug}.md に cp
 4. docs/{番号}_{slug}.md の中の画像 path を「../outputs/xxx」から「images/xxx」に書き換え
 5. 参照されている PNG / CSV を outputs/ から docs/images/ に cp
 6. git add docs/ で commit
 ```
 
-logs/ に書かずいきなり docs/ に書く運用も可。実験中のドラフト保存場所として logs/ を活用するかは個別判断。
+notes/ に書かずいきなり docs/ に書く運用も可。実験中のドラフト保存場所として notes/ を活用するかは個別判断。
 
 ---
 
@@ -389,7 +392,7 @@ logs/ に書かずいきなり docs/ に書く運用も可。実験中のドラ�
 source ~/.venvs/llm2026/bin/activate
 
 # 1. 全 notebook を実行して outputs を生成
-cd notebooks
+cd lecture
 jupyter execute 00_intro_chat.ipynb 01_tokenizer.ipynb \
                 02_residual_stream_logit_lens_patching.ipynb \
                 02_residual_stream_logit_lens_patching_qwen3_1p7b.ipynb \
@@ -397,7 +400,7 @@ jupyter execute 00_intro_chat.ipynb 01_tokenizer.ipynb \
 cd ..
 
 # 2. nbstripout filter を一時的に bypass して output 込みで commit
-git -c filter.nbstripout.clean=cat add notebooks/*.ipynb
+git -c filter.nbstripout.clean=cat add lecture/*.ipynb
 git commit -m "release: include notebook outputs for v1.0"
 
 # 3. tag を打って公開ポイントを固定
@@ -497,17 +500,17 @@ autoregressive LM では、未来 token を見られないため、通常は cau
 
 ## notebook の作業フロー
 
-原則として `notebooks/` で直接作業してよい。  
-大規模な改修や、壊れるリスクが高い変更の場合は、`sandbox/` のコピーで検証してから `notebooks/` に反映してもよい。
+原則として `lecture/` で直接作業してよい。  
+大規模な改修や、壊れるリスクが高い変更の場合は、`scratch/` のコピーで検証してから `lecture/` に反映してもよい。
 
 ```text
-1. 通常の修正は notebooks/ で直接行う
-2. 大きな改修・破壊的変更が心配なときは sandbox/ で先に検証してから notebooks/ に反映する
+1. 通常の修正は lecture/ で直接行う
+2. 大きな改修・破壊的変更が心配なときは scratch/ で先に検証してから lecture/ に反映する
 3. notebook の実行・出力上書きは、ユーザーから明示的に指示があったときのみ行う
 ```
 
-`sandbox/` は git 管理外（`.gitignore` に登録済み）の自由な作業領域。  
-`notebooks/` は git 管理下なので、変更後は `git status` / `git diff` で内容を確認できるようにする。
+`scratch/` は git 管理外（`.gitignore` に登録済み）の自由な作業領域。  
+`lecture/` は git 管理下なので、変更後は `git status` / `git diff` で内容を確認できるようにする。
 
 ## notebook の設計原則
 
@@ -520,7 +523,7 @@ autoregressive LM では、未来 token を見られないため、通常は cau
 - notebook を開けばそのまま実行できる状態を保つ
 ```
 
-scripts と notebooks は独立した成果物であり、scripts が notebook の前提条件にならないようにしてください。
+scripts と lecture は独立した成果物であり、scripts が notebook の前提条件にならないようにしてください。
 
 ---
 
@@ -557,6 +560,8 @@ outputs/
 outputs/
 runs/
 logs/
+notes/
+scratch/
 cache/
 tmp/
 *.pt

@@ -8,7 +8,7 @@ Script: [`scripts/16_prelim_qwenscope_sae_smoke.py`](../scripts/16_prelim_qwensc
 
 > ## 重要 — 使用モデルは **Base** (Instruct ではない)、サイズは **1.7B** (4B ではない)
 >
-> 本実験は **`Qwen/Qwen3-1.7B-Base`** を対象にする。Instruct (= `Qwen/Qwen3-1.7B`) ではない。また workspace の他のスクリプト (script 04 系の forward probe, notebooks/02 など) で使っている **Qwen3-4B でもない**。
+> 本実験は **`Qwen/Qwen3-1.7B-Base`** を対象にする。Instruct (= `Qwen/Qwen3-1.7B`) ではない。また workspace の他のスクリプト (script 04 系の forward probe, lecture/02 など) で使っている **Qwen3-4B でもない**。
 >
 > ### 1. なぜ Base なのか
 >
@@ -34,7 +34,7 @@ Script: [`scripts/16_prelim_qwenscope_sae_smoke.py`](../scripts/16_prelim_qwensc
 >
 > ### 3. notebook 02 系との関係
 >
-> **workspace 内の `notebooks/02_*` 系 (logit lens + residual stream patching) は Instruct (= `Qwen/Qwen3-4B` などの 4B / 1.7B / 8B Instruct) を使っているが、これは本 SAE 実験とモデルバリアントが違う**。SAE 実験 (script 16/17) と notebook 02 系は、それぞれの実験で利用可能な resource (公式 SAE が Base 専用 / logit lens は Instruct でも問題なし) に合わせて意図的に Base / Instruct を使い分けている。詳細な背景は §3 「Base 版を使う理由」を参照。
+> **workspace 内の `lecture/02_*` 系 (logit lens + residual stream patching) は Instruct (= `Qwen/Qwen3-4B` などの 4B / 1.7B / 8B Instruct) を使っているが、これは本 SAE 実験とモデルバリアントが違う**。SAE 実験 (script 16/17) と notebook 02 系は、それぞれの実験で利用可能な resource (公式 SAE が Base 専用 / logit lens は Instruct でも問題なし) に合わせて意図的に Base / Instruct を使い分けている。詳細な背景は §3 「Base 版を使う理由」を参照。
 
 ---
 
@@ -116,7 +116,7 @@ $$
 
 - Qwen 公式が公開している Qwen-Scope SAE checkpoint は `SAE-Res-Qwen3-*-Base-*` の形式で、命名どおり Base モデルの residual stream を学習対象にしている。Qwen3 系（1.7B / 8B など）には Instruct 用 SAE は (2026-05-21 時点で) 公開されていない（Qwen-Scope 全体では Qwen3.5-27B のみ Instruct backbone を学習対象とする例外がある）。
 - Base SAE を Instruct モデルに当てると、Instruct の SFT/RLHF で residual stream の分布が Base からシフトするため、SAE encoder が out-of-distribution な入力を受け、再構成 RMSE 悪化や feature 同定精度の低下を招きうる。もっとも Qwen-Scope 公式 model card は Base SAE を post-training checkpoint に適用するのも多くの状況で合理的としており、本実験では分布ミスマッチを避けるため Base モデルに揃える。
-- workspace 内の `notebooks/02_qwen3_4b_residual_stream_logit_lens_patching.ipynb` および別途進行中の 1.7B/8B 派生 notebook 02 は **Instruct** を使っているが、これは logit lens / patching が SAE と違ってモデルバリアントに依存せず動くため。**本 SAE 実験 (script 16) と notebook 02 系はモデルバリアント (Base vs Instruct) が違う**ことに注意。
+- workspace 内の `lecture/02_qwen3_4b_residual_stream_logit_lens_patching.ipynb` および別途進行中の 1.7B/8B 派生 notebook 02 は **Instruct** を使っているが、これは logit lens / patching が SAE と違ってモデルバリアントに依存せず動くため。**本 SAE 実験 (script 16) と notebook 02 系はモデルバリアント (Base vs Instruct) が違う**ことに注意。
 
 ### 設定一覧
 
@@ -356,7 +356,7 @@ $$
 
 - **デモ映え**: heatmap 1 枚で「causal mask による pos 0..2 の完全一致」「pos=3 でのトークン固有 feature 出現」「pos=4 (' is') でも前文脈差が残る」の 3 点をひとめで見せられる。
 - **8B 版への自然な拡張**: 同じパイプラインを `Qwen/Qwen3-8B-Base` + `SAE-Res-Qwen3-8B-Base-W64K-L0_50` (layer 24) に適用したのが [docs/17](17_qwenscope_sae_qwen3_8b_layer24.md)。
-- **logit lens / patching との位置合わせ**: SAE layer_idx = j は `hidden_states[j + 1]` を読むため、patching/logit-lens の k = j + 1 と対応する。各モデルでこの k 位置が recovery 曲線上のどこに当たるかは、別途進行中の 1.7B / 8B 用 notebook 02 (notebooks/02_qwen3_*_base_residual_stream_logit_lens_patching.ipynb) で確認する想定。
+- **logit lens / patching との位置合わせ**: SAE layer_idx = j は `hidden_states[j + 1]` を読むため、patching/logit-lens の k = j + 1 と対応する。各モデルでこの k 位置が recovery 曲線上のどこに当たるかは、別途進行中の 1.7B / 8B 用 notebook 02 (lecture/02_qwen3_*_base_residual_stream_logit_lens_patching.ipynb) で確認する想定。
 - **再利用したい figure**: Figure 1 (token × feature heatmap) をアイキャッチに使うと「Sparse Autoencoder で residual stream を見るとはこういうこと」が 1 図で伝わる。
 
 ---
@@ -391,4 +391,4 @@ outputs/nb03_qwenscope_sae_layer20_feature_diffs_heatmap.png
 
 - [docs/14](14_qwen3_4b_transcoder_layers23_24_25.md): community MLP transcoder (4B, layers 23-25)。本 16 とは入力も復元対象も違う。top1 が「文脈共通 feature」になる現象が出る。
 - [docs/17](17_qwenscope_sae_qwen3_8b_layer24.md): 同じ Qwen-Scope SAE を `Qwen3-8B-Base` + `SAE-Res-Qwen3-8B-Base-W64K-L0_50` (layer 24) で実行した 8B 版。
-- 別途進行中の 1.7B / 8B 用 notebook 02 (= notebooks/02_qwen3_4b_residual_stream_logit_lens_patching.ipynb の 1.7B / 8B 派生): logit lens + residual stream patching。**こちらは Instruct を使用**。本 SAE 実験 (Base) とはモデルバリアントが違うため、本 SAE layer 20 の正確な位置確認には Base 版の 1.7B notebook を別途用意するか、Instruct 版での結果を参考値として扱う必要がある。
+- 別途進行中の 1.7B / 8B 用 notebook 02 (= lecture/02_qwen3_4b_residual_stream_logit_lens_patching.ipynb の 1.7B / 8B 派生): logit lens + residual stream patching。**こちらは Instruct を使用**。本 SAE 実験 (Base) とはモデルバリアントが違うため、本 SAE layer 20 の正確な位置確認には Base 版の 1.7B notebook を別途用意するか、Instruct 版での結果を参考値として扱う必要がある。

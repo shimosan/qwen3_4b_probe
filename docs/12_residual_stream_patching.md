@@ -16,7 +16,7 @@ Script: [`scripts/12_residual_stream_patching.py`](../scripts/12_residual_stream
 - **corrupt prompt**: `"The capital of France is"` → 期待答え `" Paris"`
 - 各 layer の出力 (residual stream) を corrupt run の中で **clean の値に置き換え**たとき、top1 が `Paris` から `Tokyo` に切り替わる layer を特定する
 
-これが mechanistic interpretability の典型手法 [Activation Patching / Causal Tracing (Meng et al. 2022; Heimersheim & Nanda 2024)](https://arxiv.org/abs/2202.05262) で、デモ ([notebooks/02_residual_stream_logit_lens_patching.ipynb](../notebooks/02_residual_stream_logit_lens_patching.ipynb)) の中核を成す。
+これが mechanistic interpretability の典型手法 [Activation Patching / Causal Tracing (Meng et al. 2022; Heimersheim & Nanda 2024)](https://arxiv.org/abs/2202.05262) で、デモ ([lecture/02_residual_stream_logit_lens_patching.ipynb](../lecture/02_residual_stream_logit_lens_patching.ipynb)) の中核を成す。
 
 ---
 
@@ -265,7 +265,7 @@ patching したら corrupt より **悪化**する（`Paris` の確率が 0.97 �
 
 ## 6. 図
 
-このスクリプト自体は PNG を出力しません（CSV/JSON のみ）。可視化は [notebooks/02_residual_stream_logit_lens_patching.ipynb](../notebooks/02_residual_stream_logit_lens_patching.ipynb) が行います:
+このスクリプト自体は PNG を出力しません（CSV/JSON のみ）。可視化は [lecture/02_residual_stream_logit_lens_patching.ipynb](../lecture/02_residual_stream_logit_lens_patching.ipynb) が行います:
 
 - [outputs/nb02_recovery_curve.png](../outputs/nb02_recovery_curve.png) — recovery 曲線（本実験データを直接 plot）
 - [outputs/nb02_patching_probs.png](../outputs/nb02_patching_probs.png) — P(Tokyo) / P(Paris) の遷移

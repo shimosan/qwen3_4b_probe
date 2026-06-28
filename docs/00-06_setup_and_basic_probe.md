@@ -16,7 +16,7 @@ Scripts:
 
 ## 1. このドキュメントの位置づけ
 
-このリポジトリ ([qwen3_4b_probe](../README.md)) では、Qwen3-4B の内部状態を Hugging Face Transformers の既存 API で観察することが目的です。最終的な成果物は [notebooks/](../notebooks/) の 3 本（nb00 chat 入門 / nb01 tokenizer / nb02 residual stream + logit lens + patching）ですが、それを書くまでに行った **事前探査・セットアップ系の scripts 00–06** が本 md の対象です。
+このリポジトリ ([qwen3_4b_probe](../README.md)) では、Qwen3-4B の内部状態を Hugging Face Transformers の既存 API で観察することが目的です。最終的な成果物は [lecture/](../lecture/) の 3 本（nb00 chat 入門 / nb01 tokenizer / nb02 residual stream + logit lens + patching）ですが、それを書くまでに行った **事前探査・セットアップ系の scripts 00–06** が本 md の対象です。
 
 scripts 00–06 は CLAUDE.md でいう「core scripts」に該当し、`llm2026` venv で動作します。番号には依存関係の意味があります：
 
@@ -460,7 +460,7 @@ scripts 00–06 で確認できたこと:
 - [docs/11_compare_logit_lens_float32.md](11_compare_logit_lens_float32.md) — 上記の fp32 / CPU 版による精度確認
 - [docs/12_residual_stream_patching.md](12_residual_stream_patching.md) — Tokyo / Paris の activation patching
 
-これらの 6 本は最終的に [notebooks/02_residual_stream_logit_lens_patching.ipynb](../notebooks/02_residual_stream_logit_lens_patching.ipynb) に統合されました。
+これらの 6 本は最終的に [lecture/02_residual_stream_logit_lens_patching.ipynb](../lecture/02_residual_stream_logit_lens_patching.ipynb) に統合されました。
 
 ---
 
