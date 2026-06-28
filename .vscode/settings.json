@@ -1,5 +1,5 @@
 {
-  "python.defaultInterpreterPath": "${userHome}/.venvs/llm2026",
+  "python.defaultInterpreterPath": "${userHome}/.venvs/aidemo2026",
   "python.terminal.activateEnvironment": true,
 
   "python.analysis.typeCheckingMode": "basic",
@@ -19,6 +19,8 @@
     "logs": true,
     "cache": true,
     "tmp": true,
+    "scratch": true,
+    "notes": true,
     "**/__pycache__": true
   },
   "cursorpyright.analysis.diagnosticMode": "openFilesOnly",
