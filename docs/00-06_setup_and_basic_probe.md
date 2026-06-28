@@ -18,7 +18,7 @@ Scripts:
 
 このリポジトリ ([qwen3_4b_probe](../README.md)) では、Qwen3-4B の内部状態を Hugging Face Transformers の既存 API で観察することが目的です。最終的な成果物は [lecture/](../lecture/) の 3 本（nb00 chat 入門 / nb01 tokenizer / nb02 residual stream + logit lens + patching）ですが、それを書くまでに行った **事前探査・セットアップ系の scripts 00–06** が本 md の対象です。
 
-scripts 00–06 は CLAUDE.md でいう「core scripts」に該当し、`llm2026` venv で動作します。番号には依存関係の意味があります：
+scripts 00–06 は CLAUDE.md でいう「core scripts」に該当し、`aidemo2026` venv で動作します。番号には依存関係の意味があります：
 
 ```text
 00 → 01 → 02 → 03 → 04 → 06
@@ -357,8 +357,8 @@ Script: [`scripts/05_show_transformers_source.py`](../scripts/05_show_transforme
 
 ```text
 transformers version: 5.8.0
-transformers file: ~/.venvs/llm2026/lib/python3.12/site-packages/transformers/__init__.py
-qwen3 modeling file: ~/.venvs/llm2026/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py
+transformers file: ~/.venvs/aidemo2026/lib/python3.12/site-packages/transformers/__init__.py
+qwen3 modeling file: ~/.venvs/aidemo2026/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py
 
 Qwen3ForCausalLM   -> .../modeling_qwen3.py
 Qwen3Model         -> .../modeling_qwen3.py

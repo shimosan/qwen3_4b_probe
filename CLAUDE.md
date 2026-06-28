@@ -97,24 +97,24 @@ hidden states や attentions を保存するとメモリを使うため、prompt
 この workspace では venv を用途別に分けます。
 
 ```text
-~/.venvs/llm2026      lecture + core scripts (00-06) 用
-~/.venvs/llm2026-dev  実験スクリプト (07 以降) 用（llm2026 の上位互換）
+~/.venvs/aidemo2026   lecture + core scripts (00-06) 用
+~/.venvs/llm2026-dev  実験スクリプト (07 以降) 用（aidemo2026 の上位互換）
 ```
 
 管理ファイル：
 
 ```text
-requirements.txt      llm2026 の pip freeze
+requirements.txt      aidemo2026 の pip freeze
 requirements-dev.txt  llm2026-dev の pip freeze
 ```
 
-lecture のカーネルには `llm2026` を使います。  
+lecture のカーネルには `aidemo2026` を使います。  
 scripts/07 以降は `llm2026-dev` を前提とします。
 
 activate：
 
 ```bash
-source ~/.venvs/llm2026/bin/activate      # lecture / core scripts
+source ~/.venvs/aidemo2026/bin/activate   # lecture / core scripts
 source ~/.venvs/llm2026-dev/bin/activate  # 実験スクリプト
 ```
 
@@ -212,7 +212,7 @@ Path("outputs").mkdir(parents=True, exist_ok=True)
 script の番号には意味があります。  
 番号順の構成をなるべく保ってください。
 
-core scripts（`llm2026` で実行）：
+core scripts（`aidemo2026` で実行）：
 
 ```bash
 python scripts/00_env_check.py
@@ -242,7 +242,7 @@ python scripts/10_prelim_compare_logit_lens_transformerlens.py
 python scripts/11_prelim_compare_logit_lens_float32.py
 ```
 
-scripts と lecture は独立しています。lecture は `llm2026` で動作します。
+scripts と lecture は独立しています。lecture は `aidemo2026` で動作します。
 
 ---
 
@@ -389,7 +389,7 @@ notes/ に書かずいきなり docs/ に書く運用も可。実験中のドラ
 公開時は**実行しなくても出力が見える**よう、output 込みの commit を打ち込む:
 
 ```bash
-source ~/.venvs/llm2026/bin/activate
+source ~/.venvs/aidemo2026/bin/activate
 
 # 1. 全 notebook を実行して outputs を生成
 cd lecture

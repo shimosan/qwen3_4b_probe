@@ -1,6 +1,6 @@
 # Qwen3-4B モデルを Hugging Face cache にダウンロードする。
 # 初回セットアップ時にのみ実行する。2回目以降はキャッシュが使われる。
-# 環境: llm2026
+# 環境: aidemo2026
 
 from __future__ import annotations
 

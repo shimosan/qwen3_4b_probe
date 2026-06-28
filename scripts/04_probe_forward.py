@@ -1,7 +1,7 @@
 # モデルの forward pass を実行し、hidden states・attentions・logits の shape を確認する。
 # 最終トークンの次トークン予測 top-20 を CSV に、コンパクトな tensor を PT ファイルに保存する。
 # 出力: outputs/shape_info.json, next_token_top20.csv, probe_forward_compact.pt
-# 環境: llm2026
+# 環境: aidemo2026
 
 from __future__ import annotations
 
