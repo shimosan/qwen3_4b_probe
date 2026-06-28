@@ -87,7 +87,7 @@ huggingface_hub: 1.14.0
 mps built: True
 mps available: True
 cuda available: False
-workspace: /Users/shimo/.../qwen3_4b_probe
+workspace: ~/.../qwen3_4b_probe
 model_id: Qwen/Qwen3-4B
 ```
 
@@ -113,7 +113,7 @@ Qwen3-4B の重みを Hugging Face cache に取得します。**初回セット�
 Downloaded model:
 Qwen/Qwen3-4B
 Cache path:
-/Users/shimo/.cache/huggingface/hub/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c
+~/.cache/huggingface/hub/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c
 ```
 
 → HF cache の標準位置に snapshot として配置。`commit hash 1cfa9a7…` が固定スナップショット。workspace 内には重みを置きません（CLAUDE.md の禁止事項）。
@@ -357,8 +357,8 @@ Script: [`scripts/05_show_transformers_source.py`](../scripts/05_show_transforme
 
 ```text
 transformers version: 5.8.0
-transformers file: /Users/shimo/.venvs/llm2026/lib/python3.12/site-packages/transformers/__init__.py
-qwen3 modeling file: /Users/shimo/.venvs/llm2026/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py
+transformers file: ~/.venvs/llm2026/lib/python3.12/site-packages/transformers/__init__.py
+qwen3 modeling file: ~/.venvs/llm2026/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py
 
 Qwen3ForCausalLM   -> .../modeling_qwen3.py
 Qwen3Model         -> .../modeling_qwen3.py

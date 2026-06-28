@@ -1,12 +1,12 @@
 # qwen3_4b_probe
 
-Qwen3-4B を用いた LLM 内部可視化の軽量調査 workspace。
+Qwen3-4B を用いた LLM 内部の観察・可視化のための probe workspace。
 
 ## Purpose
 
-2026 年度「情報AI基礎」講義デモ向けに、Qwen3-4B の内部計算を可視化する workspace。
-講義配布用の主成果物は `notebooks/` 配下の Jupyter Notebook 群で、各ノートは単体で完結する設計。
-`scripts/` はその前段・周辺で行った調査スクリプト群、`docs/` には完成版の実験レポート md が置かれている（学生配布対象）。
+Hugging Face Transformers の既存 API を使って、Qwen3-4B の内部計算（hidden states / attention / logits / residual stream など）を観察・可視化するための probe workspace。
+主成果物は `notebooks/` 配下の Jupyter Notebook 群で、各ノートは単体で完結する設計。
+`scripts/` はその前段・周辺で行った調査スクリプト群、`docs/` には完成版の実験レポート md が置かれている。
 
 ## Model
 
@@ -17,9 +17,9 @@ Qwen3-4B を用いた LLM 内部可視化の軽量調査 workspace。
 
 | Path | Git | Contents |
 |---|---|---|
-| `notebooks/` | ✓ | 講義デモ用 Jupyter Notebook（主成果物、各ノート self-contained）|
+| `notebooks/` | ✓ | Jupyter Notebook（主成果物、各ノート self-contained）|
 | `scripts/` | ✓ | 番号付き script 群（後述、3 グループに分かれる）|
-| `docs/` | ✓ | 完成版の実験レポート md と参照画像 `docs/images/`。学生配布対象 |
+| `docs/` | ✓ | 完成版の実験レポート md と参照画像 `docs/images/` |
 | `outputs/` | ✗ | script の生成物（PNG / CSV / JSON 等）。再生成可能で永続性なし |
 | `logs/` | ✗ | 実行ログ（`*.log`）と作業中の md ドラフト |
 | `sandbox/` | ✗ | notebook の検証用作業領域（CLAUDE.md 参照）|
@@ -30,7 +30,7 @@ Qwen3-4B を用いた LLM 内部可視化の軽量調査 workspace。
 
 ## Notebooks（主成果物）
 
-`llm2026` venv で動作。各ノートは外部 script に依存せず単体で実行できる設計。
+`aidemo2026` venv で動作。各ノートは外部 script に依存せず単体で実行できる設計。
 
 - **[00_intro_chat.ipynb](notebooks/00_intro_chat.ipynb)**
   Qwen3-4B の読み込み、tokenizer / chat template、シングル・マルチターン chat、greedy decode による動作確認。
@@ -47,53 +47,82 @@ Qwen3-4B を用いた LLM 内部可視化の軽量調査 workspace。
 - **[02_residual_stream_logit_lens_patching_qwen3_8b.ipynb](notebooks/02_residual_stream_logit_lens_patching_qwen3_8b.ipynb)**（8B 派生版）
   nb02 と同じ実験を Qwen3-8B（Instruct）で実施、4B との結果差分を確認。
 
-- **nb03（予定）** — attention / SAE / transcoder 系の可視化。現在 `scripts/06, 14, 15, 15b, 19` で個別実験中（[後述](#scripts)）。
+- **nb03（予定）** — attention / SAE / transcoder 系の可視化。現在 `scripts/06, 14, 15, 15b` で個別実験中（[後述](#scripts)）。
+
+### 補遺 — 単語ベクトル / 埋め込み入門（別テーマ・Qwen 非依存）
+
+- **[wordvec_demo.ipynb](notebooks/wordvec_demo.ipynb)**（単体完結・GPU 不要・Colab 可）
+  学習済み単語ベクトル **GloVe**（`gensim` 経由）の入門ノート。「単語＝ベクトル」「コサイン類似度＝なす角」「意味の足し引き（`king − man + woman ≈ queen` / `Tokyo − Japan + France ≈ Paris`）」「PCA / t-SNE / UMAP 可視化」「埋め込みの限界（多義語・社会的バイアス）」を手元で再現する。Qwen 本体とは別テーマ（意味表現・単語埋め込みの入門）で、**ノート冒頭セルが必要パッケージ（gensim / scikit-learn / matplotlib / umap-learn）を自動 install** するため `aidemo2026` 以外（Colab 含む）でもそのまま動く。
+
+---
+
+## Colab で開く（1クリック）
+
+各ノートは GitHub から直接 Google Colab で開けます（インストール不要 — ノート冒頭の「環境セットアップ」セルが Colab を自動判定して必要分を入れます）。開いたら「ランタイム → すべて実行」。GPU が要るノートは「ランタイム → ランタイムのタイプを変更」で GPU を選んでから実行してください。
+
+> **注**: 下のリンクは**このリポジトリが GitHub で public になってから**有効です（Colab は非公開リポを読めないため、それまでは 404）。
+
+| ノート | 開く | ランタイム |
+|---|---|---|
+| wordvec_demo（埋め込み）| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/notebooks/wordvec_demo.ipynb) | CPU で可 |
+| 00_intro_chat | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/notebooks/00_intro_chat.ipynb) | GPU（無料 T4 可）|
+| 01_tokenizer | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/notebooks/01_tokenizer.ipynb) | CPU で可 |
+| 02_…_patching（4B 本命）| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/notebooks/02_residual_stream_logit_lens_patching.ipynb) | GPU（無料 T4 可）|
+| 02_…_1p7b | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/notebooks/02_residual_stream_logit_lens_patching_qwen3_1p7b.ipynb) | GPU（無料 T4 可）|
+| 02_…_8b | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/notebooks/02_residual_stream_logit_lens_patching_qwen3_8b.ipynb) | **L4 必須**（無料 T4 では不可）|
+
+**利用される方へ**: ボタンを押すと、このリポジトリのノートがあなたの Google Colab に読み込まれます。そのまま実行できますが、コードを編集・保存したい場合は Colab メニューの **「ファイル」→「ドライブにコピーを保存」** で自分の Google ドライブにコピーしてから作業してください。
 
 ---
 
 ## Setup（notebook 用）
 
-`llm2026` venv を作成し、必要なパッケージを入れ、モデル重みを Hugging Face cache に取得する:
+`aidemo2026` venv を作成し、必要なパッケージを入れ、モデル重みを Hugging Face cache に取得する:
 
 ```bash
-python3 -m venv ~/.venvs/llm2026
-source ~/.venvs/llm2026/bin/activate
+python3 -m venv ~/.venvs/aidemo2026
+source ~/.venvs/aidemo2026/bin/activate
 pip install -U pip wheel
+# torch は OS/GPU で入れ方が違うので先に入れる（版は固定しない）:
+pip install torch torchvision                 # Mac (Apple Silicon) / GPU 無し(CPU)
+# NVIDIA GPU (CUDA 12.8) の場合: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
 pip install -r requirements.txt
 python scripts/01_download_model.py
 ```
 
 モデルダウンロードは初回のみで約 8 GB（fp16）。後続の notebook 起動時は HF cache から読み出されます。
 
+> **Colab で動かす場合はこの setup は不要**です。torch 等は最初から入っており、各ノート冒頭の「環境セットアップ」セルが Colab を自動判定して必要分だけ `!pip install` します。ノートを開いて「ランタイム → すべて実行」するだけです。
+
 ## Notebook の開き方
 
-setup 完了後、`llm2026` venv を activate して Jupyter を起動するか、VS Code / Cursor で `.ipynb` を直接開きます。
+setup 完了後、`aidemo2026` venv を activate して Jupyter を起動するか、VS Code / Cursor で `.ipynb` を直接開きます。
 
 ### 方法 A — Jupyter Lab
 
 ```bash
-source ~/.venvs/llm2026/bin/activate
+source ~/.venvs/aidemo2026/bin/activate
 cd notebooks
 jupyter lab
 ```
 
-ブラウザが開いたら、`00_intro_chat.ipynb` などをクリックして実行。カーネル選択で `llm2026` が選ばれていることを確認してください。
+ブラウザが開いたら、`00_intro_chat.ipynb` などをクリックして実行。カーネル選択で `aidemo2026` が選ばれていることを確認してください。
 
 ### 方法 B — VS Code / Cursor
 
-`.ipynb` ファイルを直接開けば Jupyter 拡張が起動します。右上の「カーネル選択」から `llm2026` (`~/.venvs/llm2026/bin/python`) を選択。cwd は自動で notebook と同じディレクトリに設定されます。
+`.ipynb` ファイルを直接開けば Jupyter 拡張が起動します。右上の「カーネル選択」から `aidemo2026` (`~/.venvs/aidemo2026/bin/python`) を選択。cwd は自動で notebook と同じディレクトリに設定されます。
 
 ### 初回実行時の注意
 
 - 最初のセル（model load）は **数十秒〜数分**かかります（モデルを RAM に展開するため）。
 - Mac (M シリーズ) では MPS が自動で選ばれます。CUDA 環境では CUDA が選ばれます。何も使えなければ CPU fallback。
-- 「カーネルが見つからない」エラーが出た場合は、`source ~/.venvs/llm2026/bin/activate` してから `python -m ipykernel install --user --name llm2026` でカーネル登録してください。
+- 「カーネルが見つからない」エラーが出た場合は、`source ~/.venvs/aidemo2026/bin/activate` してから `python -m ipykernel install --user --name aidemo2026 --display-name aidemo2026` でカーネル登録してください（notebook の kernelspec は `aidemo2026` を指しています）。
 
 ---
 
 # Advanced — scripts と experiment reports
 
-ここから下は、notebooks の前段・周辺で実施した調査スクリプトおよび実験レポートに関する情報。**学生がノートを動かす分には不要**で、内部の経緯や個別実験の詳細を追いたい人向けです。
+ここから下は、notebooks の前段・周辺で実施した調査スクリプトおよび実験レポートに関する情報。**ノートを動かすだけなら不要**で、内部の経緯や個別実験の詳細を追いたい人向けです。
 
 ## Scripts
 
@@ -101,7 +130,7 @@ jupyter lab
 
 ### フェーズ 1 — Qwen3 動作確認・基本 probe（scripts 00–06、2026-05-07 〜 08）
 
-Notebook 作成前に行った、Qwen3-4B の動作確認・環境セットアップ・基本的な内部状態 probe。**個々の script を notebook に統合してはおらず、ノート全体の前提知識として吸収**された。`llm2026` venv で動作。
+Notebook 作成前に行った、Qwen3-4B の動作確認・環境セットアップ・基本的な内部状態 probe。**個々の script を notebook に統合してはおらず、ノート全体の前提知識として吸収**された。`aidemo2026` venv で動作。
 
 詳細レポートは 1 本にまとめてある: **[docs/00-06_setup_and_basic_probe.md](docs/00-06_setup_and_basic_probe.md)**（7 chapter 構成）。
 
@@ -111,17 +140,16 @@ Notebook 作成前に行った、Qwen3-4B の動作確認・環境セットア�
 
 各 script ごとに個別 docs/ 化済み: **[docs/07_*.md](docs/07_hidden_state_mapping.md) 〜 [docs/12_*.md](docs/12_residual_stream_patching.md)**。
 
-### フェーズ 3 — nb03（予定）のための個別実験（scripts 06, 14–17, 19、2026-05-08 / 18 〜 21）
+### フェーズ 3 — nb03（予定）のための個別実験（scripts 06, 14–17、2026-05-08 / 18 〜 21）
 
-community SAE / transcoder / attention 解析の周辺実験。**nb03 にまだ統合されておらず**、各 script が独立した実験として `docs/` に 1:1 でレポート化されている。`llm2026-dev` venv（06 のみ `llm2026`）。
+community SAE / transcoder / attention 解析の周辺実験。**nb03 にまだ統合されておらず**、各 script が独立した実験として `docs/` に 1:1 でレポート化されている。`llm2026-dev` venv（06 のみ `aidemo2026`）。
 
 - 06: 基本 attention heatmap（フェーズ 1 に時系列では属するが、nb03 attention 可視化の予備として位置づけ）
 - 14, 15, 15b: mwhanna MLP transcoder（4B、layer 23-25 詳細 + 全 36 layer sweep）
 - 16, 17: Qwen-Scope 公式 residual SAE（1.7B-Base layer 20 / 8B-Base layer 24）
-  - **注**: 検討の結果、これらの SAE は nb03 には**含めない方針**。Base モデル前提・4B 不在のため講義デモには不適と判断（詳細は [docs/16](docs/16_qwenscope_sae_qwen3_1p7b_layer20.md) / [docs/17](docs/17_qwenscope_sae_qwen3_8b_layer24.md) 冒頭の callout 参照）。レポートだけ残してある。
-- 19: attention 総合 probe（attention weights / head scoring / component patching、初版）
+  - **注**: 検討の結果、これらの SAE は nb03 には**含めない方針**。Base モデル前提・4B 不在のため入門デモには不適と判断（詳細は [docs/16](docs/16_qwenscope_sae_qwen3_1p7b_layer20.md) / [docs/17](docs/17_qwenscope_sae_qwen3_8b_layer24.md) 冒頭の callout 参照）。レポートだけ残してある。
 
-13 番は欠番。
+13・18・19 番は欠番。
 
 ### Script → Notebook 対応表
 
@@ -147,11 +175,10 @@ community SAE / transcoder / attention 解析の周辺実験。**nb03 にまだ�
 | 15b | [qwen3_4b_transcoder_layer_sweep_replots](scripts/15b_qwen3_4b_transcoder_layer_sweep_replots.py) | **nb03**（予定） | 15 結果の再 plot |
 | 16 | [qwenscope_sae_smoke](scripts/16_prelim_qwenscope_sae_smoke.py) | nb03 不採用 | Qwen-Scope SAE × Qwen3-1.7B-Base layer 20（レポートのみ） |
 | 17 | [qwenscope_sae_8b_smoke](scripts/17_prelim_qwenscope_sae_8b_smoke.py) | nb03 不採用 | 同上、Qwen3-8B-Base layer 24（レポートのみ） |
-| 19 | [attention_probe](scripts/19_prelim_attention_probe.py) | **nb03**（予定） | attention weights / head scoring / component patching |
 
 ### Setup（scripts 用、07 以降）
 
-scripts 07 以降は `llm2026-dev` venv が必要（`llm2026` の上位互換で、sklearn / transformer-lens / safetensors 経由の community SAE 等の追加依存を含む）:
+scripts 07 以降は `llm2026-dev` venv が必要（notebook 用 env に sklearn / transformer-lens / safetensors 経由の community SAE 等の追加依存を足したもの。共通環境 `aidemo2026-dev` への統合は未定のため、現状は `llm2026-dev` を使う）:
 
 ```bash
 python3 -m venv ~/.venvs/llm2026-dev
@@ -165,8 +192,8 @@ pip install -r requirements-dev.txt
 `scripts/` 配下の番号付きスクリプトは、どこから実行しても動作する（出力先はプロジェクトルート直下の `outputs/` に解決される）。
 
 ```bash
-# フェーズ 1（00–06）は llm2026 venv で
-source ~/.venvs/llm2026/bin/activate
+# フェーズ 1（00–06）は aidemo2026 venv で
+source ~/.venvs/aidemo2026/bin/activate
 python scripts/00_env_check.py
 python scripts/04_probe_forward.py
 python scripts/06_attention_heatmap.py --head 0 --label-mode piece
@@ -181,10 +208,10 @@ python scripts/12_residual_stream_patching.py
 
 ## Notebook を編集して commit する場合（開発者向け）
 
-学生がノートを動かすだけなら不要だが、`.ipynb` に変更を加えて git commit する人は、**clone 直後に 1 回**以下を実行する:
+ノートを動かすだけなら不要だが、`.ipynb` に変更を加えて git commit する人は、**clone 直後に 1 回**以下を実行する:
 
 ```bash
-source ~/.venvs/llm2026/bin/activate
+source ~/.venvs/aidemo2026/bin/activate
 nbstripout --install --keep-id
 ```
 
@@ -211,12 +238,11 @@ nbstripout --install --keep-id
 - [docs/11_compare_logit_lens_float32.md](docs/11_compare_logit_lens_float32.md) — 同上の fp32/CPU 完全一致確認
 - [docs/12_residual_stream_patching.md](docs/12_residual_stream_patching.md) — Tokyo/Paris activation patching
 
-フェーズ 3（scripts 14–17, 19）— nb03 のための個別実験:
+フェーズ 3（scripts 14–17）— nb03 のための個別実験:
 - [docs/14_qwen3_4b_transcoder_layers23_24_25.md](docs/14_qwen3_4b_transcoder_layers23_24_25.md) — mwhanna MLP transcoder（layer 23/24/25 詳細）
 - [docs/15_qwen3_4b_transcoder_layer_sweep.md](docs/15_qwen3_4b_transcoder_layer_sweep.md) — 同上の全 36 layer sweep
 - [docs/16_qwenscope_sae_qwen3_1p7b_layer20.md](docs/16_qwenscope_sae_qwen3_1p7b_layer20.md) — Qwen-Scope SAE on Qwen3-1.7B-Base（nb03 不採用）
 - [docs/17_qwenscope_sae_qwen3_8b_layer24.md](docs/17_qwenscope_sae_qwen3_8b_layer24.md) — 同上 on Qwen3-8B-Base（nb03 不採用）
-- [docs/19_qwen3_4b_attention_probe.md](docs/19_qwen3_4b_attention_probe.md) — attention 総合 probe（initial version）
 
 ## Notes
 
@@ -232,5 +258,7 @@ nbstripout --install --keep-id
 - **[TransformerLens](https://github.com/TransformerLensOrg/TransformerLens)** (MIT) — logit lens 等の比較実装 ([docs/10](docs/10_compare_logit_lens_transformerlens.md), [docs/11](docs/11_compare_logit_lens_float32.md))
 - **[mwhanna/qwen3-4b-transcoders](https://huggingface.co/mwhanna/qwen3-4b-transcoders)** (MIT) — Qwen3-4B 用 MLP transcoder weights ([docs/14](docs/14_qwen3_4b_transcoder_layers23_24_25.md), [docs/15](docs/15_qwen3_4b_transcoder_layer_sweep.md))
 - **[Qwen-Scope](https://huggingface.co/kisate-team)** (Apache-2.0) — 公式 residual SAE checkpoint ([docs/16](docs/16_qwenscope_sae_qwen3_1p7b_layer20.md), [docs/17](docs/17_qwenscope_sae_qwen3_8b_layer24.md))
+- **[GloVe](https://nlp.stanford.edu/projects/glove/)** (Stanford NLP / 学習済みベクトルは Open Data Commons PDDL) — `wordvec_demo.ipynb` が使う単語埋め込み `glove-wiki-gigaword-300`（Pennington, Socher, Manning. *GloVe: Global Vectors for Word Representation.* EMNLP 2014, [D14-1162](https://aclanthology.org/D14-1162/)）
+- **[gensim](https://radimrehurek.com/gensim/)** (LGPL-2.1) — `wordvec_demo.ipynb` の学習済みベクトル取得（`gensim.downloader`）・最近傍計算
 
 本 repository 自体は MIT License（[LICENSE](LICENSE)）で公開している。
