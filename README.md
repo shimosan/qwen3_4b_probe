@@ -60,8 +60,6 @@ Hugging Face Transformers の既存 API を使って、Qwen3-4B の内部計算�
 
 各ノートは GitHub から直接 Google Colab で開けます（インストール不要 — ノート冒頭の「環境セットアップ」セルが Colab を自動判定して必要分を入れます）。開いたら「ランタイム → すべて実行」。GPU が要るノートは「ランタイム → ランタイムのタイプを変更」で GPU を選んでから実行してください。
 
-> **注**: 下のリンクは**このリポジトリが GitHub で public になってから**有効です（Colab は非公開リポを読めないため、それまでは 404）。
-
 | ノート | 開く | ランタイム |
 |---|---|---|
 | wordvec_demo（埋め込み）| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/notebooks/wordvec_demo.ipynb) | CPU で可 |
@@ -77,9 +75,14 @@ Hugging Face Transformers の既存 API を使って、Qwen3-4B の内部計算�
 
 ## Setup（notebook 用）
 
-`aidemo2026` venv を作成し、必要なパッケージを入れ、モデル重みを Hugging Face cache に取得する:
+`aidemo2026` venv（**Python 3.12 系を使用。手元の基準は 3.12.10**）を作成し、必要なパッケージを入れ、モデル重みを Hugging Face cache に取得する:
 
 ```bash
+# Python は 3.12 系を使う（基準 3.12.10）。まず `python3 --version` で確認:
+#  A) 3.12 系ならそのまま下の `python3 -m venv ...` を実行する。
+#  B) 3.12 系でない / 3.12.10 に厳密に揃えたいなら pyenv で入れ、その python で venv を作る:
+#       pyenv install 3.12.10
+#       ~/.pyenv/versions/3.12.10/bin/python -m venv ~/.venvs/aidemo2026   # ← 下行の代わりにこれ
 python3 -m venv ~/.venvs/aidemo2026
 source ~/.venvs/aidemo2026/bin/activate
 pip install -U pip wheel
@@ -106,7 +109,7 @@ cd notebooks
 jupyter lab
 ```
 
-ブラウザが開いたら、`00_intro_chat.ipynb` などをクリックして実行。カーネル選択で `aidemo2026` が選ばれていることを確認してください。
+ブラウザが開いたら、`00_intro_chat.ipynb` などをクリックして実行。カーネルは起動した `aidemo2026` venv の Python（汎用の `python3` カーネル）がそのまま使われます。
 
 ### 方法 B — VS Code / Cursor
 
@@ -116,7 +119,7 @@ jupyter lab
 
 - 最初のセル（model load）は **数十秒〜数分**かかります（モデルを RAM に展開するため）。
 - Mac (M シリーズ) では MPS が自動で選ばれます。CUDA 環境では CUDA が選ばれます。何も使えなければ CPU fallback。
-- 「カーネルが見つからない」エラーが出た場合は、`source ~/.venvs/aidemo2026/bin/activate` してから `python -m ipykernel install --user --name aidemo2026 --display-name aidemo2026` でカーネル登録してください（notebook の kernelspec は `aidemo2026` を指しています）。
+- ノートの kernelspec は汎用の `python3` を指しているので、**特別なカーネル登録は不要**です。VS Code / Cursor では `aidemo2026` venv の Python を、Jupyter Lab では起動した venv を選べばそのまま動きます（Colab は無関係）。
 
 ---
 
