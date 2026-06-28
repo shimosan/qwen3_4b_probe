@@ -354,10 +354,10 @@ $$
 
 ## 9. 応用への示唆
 
-- **講義デモ映え**: heatmap 1 枚で「causal mask による pos 0..2 の完全一致」「pos=3 でのトークン固有 feature 出現」「pos=4 (' is') でも前文脈差が残る」の 3 点をひとめで見せられる。
+- **デモ映え**: heatmap 1 枚で「causal mask による pos 0..2 の完全一致」「pos=3 でのトークン固有 feature 出現」「pos=4 (' is') でも前文脈差が残る」の 3 点をひとめで見せられる。
 - **8B 版への自然な拡張**: 同じパイプラインを `Qwen/Qwen3-8B-Base` + `SAE-Res-Qwen3-8B-Base-W64K-L0_50` (layer 24) に適用したのが [docs/17](17_qwenscope_sae_qwen3_8b_layer24.md)。
 - **logit lens / patching との位置合わせ**: SAE layer_idx = j は `hidden_states[j + 1]` を読むため、patching/logit-lens の k = j + 1 と対応する。各モデルでこの k 位置が recovery 曲線上のどこに当たるかは、別途進行中の 1.7B / 8B 用 notebook 02 (notebooks/02_qwen3_*_base_residual_stream_logit_lens_patching.ipynb) で確認する想定。
-- **再利用したい figure**: Figure 1 (token × feature heatmap) を講義のアイキャッチに使うと「Sparse Autoencoder で residual stream を見るとはこういうこと」が 1 図で伝わる。
+- **再利用したい figure**: Figure 1 (token × feature heatmap) をアイキャッチに使うと「Sparse Autoencoder で residual stream を見るとはこういうこと」が 1 図で伝わる。
 
 ---
 

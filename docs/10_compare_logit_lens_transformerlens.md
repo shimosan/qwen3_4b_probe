@@ -212,7 +212,7 @@ transformer_lens:
 ## 7. 応用への示唆
 
 - **自前 logit lens は採用 OK**: top1 が TL と完全一致するので、[docs/08](08_logit_lens.md) の方法はそのまま nb02 に使える。
-- **TransformerLens を講義デモには使わない判断材料**: 同等の結果が出るが、HF model のロード時間 + TL の再パック時間が積み上がるため、講義デモには重い。「自前で `model.model.norm` + `model.lm_head` を呼ぶだけ」の薄い実装で十分。
+- **TransformerLens をデモには使わない判断材料**: 同等の結果が出るが、HF model のロード時間 + TL の再パック時間が積み上がるため、デモには重い。「自前で `model.model.norm` + `model.lm_head` を呼ぶだけ」の薄い実装で十分。
 - **fp16 環境での意味的検証は top1 match で**: 数値完全一致は要求しない方が現実的。「top1 が一致 + entropy / rank の傾向が一致」を success criteria に。
 - **fp32 完全一致は [docs/11](11_compare_logit_lens_float32.md) で**: もしどうしても `max_abs_diff < 1e-3` が必要なら、HF も TL も両方 float32 / CPU で動かす必要がある。
 

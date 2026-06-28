@@ -246,7 +246,7 @@ nbstripout --install --keep-id
 
 ## Notes
 
-- このリポジトリでは Transformers ソースコードを改変しない（pip install 版を使う）。source-level の tracing / 改変が必要な場合は別 workspace `qwen3_4b_trace` を使う。
+- このリポジトリでは Transformers ソースコードを改変しない（pip install 版を使う）。source-level の tracing / 改変が必要な場合は別の source-tracing 用 workspace（editable install）を使う。
 - モデル重みは Hugging Face cache に置き、workspace 内には保存しない。
 
 ## 謝辞

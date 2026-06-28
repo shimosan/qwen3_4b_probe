@@ -447,7 +447,7 @@ Figure 8 と同じ指標を **全 5 position + 縦軸 log スケール**で描�
 ### 8-2. top1 feature 30233 問題（layer 24）
 
 - layer 24 では文脈 feature f30233 がトークン固有 features を top1 から押し出す。
-- 講義では「top1 を除いた top-2..20」や「clean と corrupt の差分」を強調する方が、トークン固有 feature の存在を見せやすい。
+- デモでは「top1 を除いた top-2..20」や「clean と corrupt の差分」を強調する方が、トークン固有 feature の存在を見せやすい。
 - 例えば `' Japan'` と `' France'` の同 position で activation 差を取った feature ランキングを別途出すと、もっと意味のある絵になる。これは差分解析 (section 6-4) で実現済み。
 
 ### 8-3. 再構成精度
@@ -465,7 +465,7 @@ Figure 8 と同じ指標を **全 5 position + 縦軸 log スケール**で描�
 
 ## 9. 応用への示唆
 
-- **講義デモ映え**: layer 24 通常 heatmap で文脈 feature 30233 が共通に光り、差分 heatmap で Japan/France 固有 features が見える二段構成が描ける。
+- **デモ映え**: layer 24 通常 heatmap で文脈 feature 30233 が共通に光り、差分 heatmap で Japan/France 固有 features が見える二段構成が描ける。
 - **層方向 trend**: 3 layer の比較で「pos=3 (語彙識別) は layer 23 でピーク、その情報が layer 24-25 で last position に流れる」という流れが見える。
 - **関連 notebook への寄与**: nb02 (residual stream patching) の k=24→25 transition と直接対応づけられる。nb03 では transcoder feature 視点で同じ transition を補強する素材として使える。
 - **再利用したい figure**: layer 24 の combined sum+diff heatmap (Figure 1) と、3-layer 集約の指標群 (Figure 4-7: max\|Δ\|, ‖Δ‖₂, Tanimoto, Jaccard)。前者は単一 layer 内で「強い feature」と「discriminative feature」を 1 枚で対比、後者群は層方向の流れを **outlier / total L2 / 連続 set 類似度 / binary set 類似度** の 4 種で見せる。エンゲージメント指標 (Fig 8-9) と reconstruction 品質チェック (Fig 10) は補助的に。

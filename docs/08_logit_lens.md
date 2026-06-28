@@ -245,7 +245,7 @@ layer 34-36──► final 答え '言' が top1 に確定
 ## 7. 応用への示唆
 
 - **nb02 への直接寄与**: notebook 02 の logit lens セクション（[outputs/nb02_logit_lens_clean.png](../outputs/nb02_logit_lens_clean.png) など）はここでの手法をそのまま使い、`The capital of Japan is` プロンプトで「答え `Tokyo` が浮上する layer」を可視化する。本実験で確認した「中間層 RMSNorm 適用ルール」「`final_top1_rank` 指標」がそのまま使われる。
-- **講義デモ映え**: 「層が深くなるにつれ予測が定まる」「最後の 2-3 層で急に top1 が決まる」を、ランク推移表 / heatmap で示せる。学生は「Transformer の途中では何が決まっているか」を直感的に掴める。
+- **デモ映え**: 「層が深くなるにつれ予測が定まる」「最後の 2-3 層で急に top1 が決まる」を、ランク推移表 / heatmap で示せる。読む側は「Transformer の途中では何が決まっているか」を直感的に掴める。
 - **[docs/12_residual_stream_patching.md](12_residual_stream_patching.md) の前提**: patching で「layer $k$ 付近で答えが決まる」と言う前に、まず logit lens で「naturally どの層で答えが top1 になるか」を確認しておく必要がある。
 - **再利用したい数値**: 「答え `言` が top1 になるのは layer 34」「`当然` early lock-in が layer 29」という具体的数字は、notebook 02 の解説で使える。
 

@@ -16,7 +16,7 @@ Script: [`scripts/12_residual_stream_patching.py`](../scripts/12_residual_stream
 - **corrupt prompt**: `"The capital of France is"` → 期待答え `" Paris"`
 - 各 layer の出力 (residual stream) を corrupt run の中で **clean の値に置き換え**たとき、top1 が `Paris` から `Tokyo` に切り替わる layer を特定する
 
-これが mechanistic interpretability の典型手法 [Activation Patching / Causal Tracing (Meng et al. 2022; Heimersheim & Nanda 2024)](https://arxiv.org/abs/2202.05262) で、講義デモ ([notebooks/02_residual_stream_logit_lens_patching.ipynb](../notebooks/02_residual_stream_logit_lens_patching.ipynb)) の中核を成す。
+これが mechanistic interpretability の典型手法 [Activation Patching / Causal Tracing (Meng et al. 2022; Heimersheim & Nanda 2024)](https://arxiv.org/abs/2202.05262) で、デモ ([notebooks/02_residual_stream_logit_lens_patching.ipynb](../notebooks/02_residual_stream_logit_lens_patching.ipynb)) の中核を成す。
 
 ---
 
@@ -276,11 +276,11 @@ patching したら corrupt より **悪化**する（`Paris` の確率が 0.97 �
 ## 7. 応用への示唆
 
 - **nb02 への直接寄与**: notebook 02 の patching セクションは本実験のデータをそのまま使う。「layer 24 が critical」という主張の数値的根拠。
-- **講義デモ映え**: recovery 曲線で「**ある layer で急に top1 が `Paris` から `Tokyo` にひっくり返る**」が見える。Transformer の知識局在性を伝える絵として強力。
+- **デモ映え**: recovery 曲線で「**ある layer で急に top1 が `Paris` から `Tokyo` にひっくり返る**」が見える。Transformer の知識局在性を伝える絵として強力。
 - **関連実験**:
   - [docs/14](14_qwen3_4b_transcoder_layers23_24_25.md): layer 23/24/25 を mwhanna MLP transcoder で詳細解析。本実験で同定された "critical layer 24" の前後を sparse feature 視点で確認。
   - [docs/15](15_qwen3_4b_transcoder_layer_sweep.md): 全 36 layer の sweep で、layer 23-25 が pos=3 (Japan/France 区別) のピークであることを確認。
-- **講義での説明の流れ**:
+- **説明の流れ**:
   1. logit lens で「答えが top1 になるのは layer 34」を示す（[docs/08](08_logit_lens.md)）
   2. patching で「答えの情報が書き込まれるのは layer 24」を示す（本実験）
   3. その 10 層の差を「情報の書き込み vs unembedding への調整」として説明

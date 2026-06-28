@@ -155,7 +155,7 @@ Script: [`scripts/17_prelim_qwenscope_sae_8b_smoke.py`](../scripts/17_prelim_qwe
 
 ## 7. 応用への示唆
 
-- 講義デモでは **1.7B (docs/16) の図を「クリーンな分離が見える例」、8B (本 doc) の図を「共通 feature top1 問題」の例として対比**させると、「SAE で何が見えるかは layer 選択と差分視点に依存する」というメッセージが伝わりやすい。
+- デモでは **1.7B (docs/16) の図を「クリーンな分離が見える例」、8B (本 doc) の図を「共通 feature top1 問題」の例として対比**させると、「SAE で何が見えるかは layer 選択と差分視点に依存する」というメッセージが伝わりやすい。
 - 「8B の SAE layer 24 が patching/lens 曲線のどこに位置するか」の確認は、別途進行中の 8B 用 notebook 02 (`notebooks/02_qwen3_8b_base_residual_stream_logit_lens_patching.ipynb`) で行う。
 
 ---

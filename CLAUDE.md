@@ -4,7 +4,7 @@
 
 ## プロジェクト概要
 
-このリポジトリは、2026年度「情報AI基礎」講義デモ用の **Qwen3-4B probe workspace** です。
+このリポジトリは、**Qwen3-4B probe workspace** です。
 
 対象モデルは以下です。
 
@@ -53,11 +53,7 @@ probe:
 
 このリポジトリでは、Transformers のソースコードを改変しないでください。
 
-Qwen3 の実装ファイル `modeling_qwen3.py` に breakpoint を張る、`Qwen3Attention` や `Qwen3MLP` を改変する、RoPE や attention score の内部計算を追う、などの作業は、別 workspace で行います。
-
-```text
-qwen3_4b_trace
-```
+Qwen3 の実装ファイル `modeling_qwen3.py` に breakpoint を張る、`Qwen3Attention` や `Qwen3MLP` を改変する、RoPE や attention score の内部計算を追う、などの作業は、source tracing 用の別 workspace（editable install で内部を追う）で行います。
 
 Transformers の改変可能な source tree は以下です。
 
@@ -90,7 +86,7 @@ attention weights を取得する必要がある場合は、原則として以�
 attn_implementation="eager"
 ```
 
-高速化された attention 実装では、講義デモに必要な形で attention weights が返らない場合があります。
+高速化された attention 実装では、デモに必要な形で attention weights が返らない場合があります。
 
 hidden states や attentions を保存するとメモリを使うため、prompt と sequence length は短く保ってください。
 
@@ -197,7 +193,7 @@ qwen3_4b_probe/
 
 `logs/` は実行ログおよび drafts 用の Git 管理対象**外**フォルダです（`*.log` と作業中の `*.md`）。
 
-`docs/` は完成品の実験レポート md を置く Git 管理対象フォルダです。`docs/images/` には report が参照する figure を `outputs/` から **cp**（mv ではない）してきます。学生配布や永続的なドキュメントは docs/ に置きます。
+`docs/` は完成品の実験レポート md を置く Git 管理対象フォルダです。`docs/images/` には report が参照する figure を `outputs/` から **cp**（mv ではない）してきます。永続的なドキュメントは docs/ に置きます。
 
 script で `outputs/` に保存する場合は、必ず事前にディレクトリを作成してください。
 
@@ -263,7 +259,7 @@ attention_layer0_head0_both.csv
 attention_layer0_head0_both.png
 ```
 
-compact tensor には、講義デモに必要な最小限の情報だけを入れます。
+compact tensor には、デモに必要な最小限の情報だけを入れます。
 
 例：
 
@@ -288,7 +284,7 @@ log file（テキスト実行ログ）とは別物で、これは**実行後に�
 ```text
 outputs/   git 管理外。script の生成物（PNG / CSV / JSON）。再生成可能、永続性なし。
 logs/      git 管理外。実行ログ (*.log) と作業中の md ドラフト。
-docs/      git 管理。完成品の実験レポート md。学生配布対象。
+docs/      git 管理。完成品の実験レポート md。配布対象。
 docs/images/  git 管理。docs/*.md が参照する figure を outputs/ から cp する。
 ```
 
@@ -315,7 +311,7 @@ docs/images/{outputs と同じファイル名}.png
 4. **結果概要**（数値表は列の意味を明記）
 5. **図**（`![caption](images/xxx.png)` で embed、`**Figure N**:` キャプション + 軸 / colormap / 系列の説明）
 6. **解釈**
-7. **応用への示唆**（講義デモへの活用、関連する notebook（nb02 / nb03 など）への寄与、再利用したい figure の指針）
+7. **応用への示唆**（デモへの活用、関連する notebook（nb02 / nb03 など）への寄与、再利用したい figure の指針）
 8. **開発の経緯**（複数 stage の更新があれば）
 9. **出力ファイル**（`outputs/` の manifest）
 10. **注意事項**
@@ -359,8 +355,8 @@ docs/images/{outputs と同じファイル名}.png
 13. 注意事項
 14. 関連実験
 
-これは「同じ workspace の文脈を知らない読者（学生）」が単独で読めるレベルまで踏み込む方針。
-全 report に B を適用する必要はない。実験の中核となる report、講義デモに直接使う report に適用する。
+これは「同じ workspace の文脈を知らない読者」が単独で読めるレベルまで踏み込む方針。
+全 report に B を適用する必要はない。実験の中核となる report、デモに直接使う report に適用する。
 
 ### docs/ への作業フロー
 
@@ -385,9 +381,9 @@ logs/ に書かずいきなり docs/ に書く運用も可。実験中のドラ�
 - `git add` 時に **outputs / execution_count / metadata.execution が自動 strip** される
 - repo は軽量、diff は clean
 
-### release フェーズ (講義開始直前に 1 回だけ実施)
+### release フェーズ (公開直前に 1 回だけ実施)
 
-公開時は**学生が実行しなくても出力が見える**よう、output 込みの commit を打ち込む:
+公開時は**実行しなくても出力が見える**よう、output 込みの commit を打ち込む:
 
 ```bash
 source ~/.venvs/llm2026/bin/activate
@@ -410,13 +406,13 @@ git push origin main --tags
 ```
 
 公開後も継続開発するなら、その後は通常通り `git add` で nbstripout が再び outputs を strip する (= v1.0 tag は output 込みで永続保存、main は output なしに戻る)。
-学生は GitHub の Release ページから v1.0 を取得すれば output 込み notebook を読める。
+利用者は GitHub の Release ページから v1.0 を取得すれば output 込み notebook を読める。
 
 ---
 
 ## コーディング方針
 
-Python script は、講義デモで説明しやすいように、簡潔で明示的に書いてください。
+Python script は、デモで説明しやすいように、簡潔で明示的に書いてください。
 
 基本方針：
 
@@ -431,7 +427,7 @@ Python script は、講義デモで説明しやすいように、簡潔で明示
 - download / setup 用 script 以外に暗黙のネットワークアクセスを入れない。
 ```
 
-講義デモ用なので、技巧的な実装よりも、読んで分かる実装を優先してください。
+デモ用なので、技巧的な実装よりも、読んで分かる実装を優先してください。
 
 ---
 
@@ -472,7 +468,7 @@ prompt やモデル設定を変えれば shape も変わります。
 
 ## attention heatmap の方針
 
-attention heatmap は講義デモ用の図です。
+attention heatmap はデモ用の図です。
 
 軸の意味を明確にしてください。
 
@@ -495,7 +491,7 @@ position
 token label が混みすぎる場合は、無理に全部表示せず、`position` 表示にするか、prompt を短くしてください。
 
 autoregressive LM では、未来 token を見られないため、通常は causal mask により右上三角が暗く見えます。  
-この性質は講義で説明しやすいので、heatmap 作成時には意識してください。
+この性質はデモで説明しやすいので、heatmap 作成時には意識してください。
 
 ---
 
@@ -628,30 +624,22 @@ fix: outputs path resolution
 関連 workspace は以下です。
 
 ```text
-qwen3_4b_probe:
-  この repository
+この repository:
   pip install 版 Transformers
   既存 API と軽い hook による観察
 
-qwen3_4b_trace:
-  source tracing 用 workspace
+source tracing 用の別 workspace:
   editable install 版 Transformers
   Qwen3 実装内部への breakpoint / 必要に応じた改変
-
-qwen3_8b_probe:
-  将来の Qwen3-8B 横展開用
-
-llmjp4_8b_probe:
-  将来の日本語 LLM 比較用
 ```
 
 この repository での変更は、Qwen3-4B probe workflow に集中させてください。
 
 ---
 
-## 講義デモとしての優先事項
+## 優先事項
 
-この code は、情報学科1回生向けの講義デモに使うことを想定しています。
+この code は、初学者向けのデモに使うことを想定しています。
 
 優先するもの：
 

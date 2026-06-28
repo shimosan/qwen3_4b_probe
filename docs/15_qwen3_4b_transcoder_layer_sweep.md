@@ -154,7 +154,7 @@ magnitude を捨て、**発火 feature の set 一致度のみ**を測る binary
 
 - **中盤までは Tanimoto と Jaccard はほぼ同じ shape** で動く → 両指標の差は magnitude weighting だけだが、中盤までは大きな寄与の features が active set 全体を支配しているため両指標が連動
 - **後段で乖離**: 特に pos=3 (赤) で L33-35 を見ると、Tanimoto は 0.50 → 0.59 → 0.79 と急上昇する一方、Jaccard は 0.53 → 0.41 → 0.29 と寧ろ低下。これは「**重なる features の個数自体は減るが、その少数の重なる features が両 prompt で巨大な activation を持つようになる**」ことを意味する（最終層 lm_head 直前で「答えに直結する features」が両 prompt で支配的になる）
-- 講義デモで Tanimoto と Jaccard を**両方並べる**価値は、この後段の divergence にある
+- デモで Tanimoto と Jaccard を**両方並べる**価値は、この後段の divergence にある
 
 ### Figure 5 — max single activation (pos=3, 4)
 
@@ -255,13 +255,13 @@ L29 spike (max\|Δ\|=46)、L33-35 の reconstruction RMSE 異常、L35 max_singl
 - 出力 layer 自体の magnitude scale が大きい
 - 一部 outlier feature (lm_head に向けて) の影響
 
-→ **講義デモではこれらの異常値は注意して扱う**。本質的な「discrimination が後段で大きい」trend は real だが、絶対値そのものは layer 間で直接比較しにくい。
+→ **デモではこれらの異常値は注意して扱う**。本質的な「discrimination が後段で大きい」trend は real だが、絶対値そのものは layer 間で直接比較しにくい。
 
 ---
 
 ## 6. 応用への示唆
 
-- **講義デモ映え**: Figure 1 (max\|Δ\|) と Figure 3 (Tanimoto) を並べて見せると、「max は outlier、Tanimoto は set 類似度」という 2 つの異なる視点で同じデータを語れる
+- **デモ映え**: Figure 1 (max\|Δ\|) と Figure 3 (Tanimoto) を並べて見せると、「max は outlier、Tanimoto は set 類似度」という 2 つの異なる視点で同じデータを語れる
 - **関連 notebook**: nb02 (residual stream patching) の k=24→25 transition との対応を、Figure 1 で全 36 layer 視点から補強。「特定 layer (23-25) だけでなく全 layer 範囲で見ると、その transition は『より大きな構造』の一部」と説明可能
 - **再利用したい figure**: Figure 1 (max\|Δ\|) と Figure 3 (Tanimoto) が主役、Figure 9 (reconstruction RMSE log) は品質チェック / 注意事項として
 - **per-layer detail**: 興味ある layer の combined heatmap は Appendix A 参照

@@ -10,13 +10,13 @@ Scripts:
 - [`scripts/06_attention_heatmap.py`](../scripts/06_attention_heatmap.py)
 
 最終更新: 2026-05-21
-ステータス: ✅ 講義デモ前の事前探査・セットアップを完了。
+ステータス: ✅ 事前探査・セットアップを完了。
 
 ---
 
 ## 1. このドキュメントの位置づけ
 
-このリポジトリ ([qwen3_4b_probe](../README.md)) では、Qwen3-4B の内部状態を Hugging Face Transformers の既存 API で観察することが目的です。最終的な配布物は [notebooks/](../notebooks/) の 3 本（nb00 chat 入門 / nb01 tokenizer / nb02 residual stream + logit lens + patching）ですが、それを書くまでに行った **事前探査・セットアップ系の scripts 00–06** が本 md の対象です。
+このリポジトリ ([qwen3_4b_probe](../README.md)) では、Qwen3-4B の内部状態を Hugging Face Transformers の既存 API で観察することが目的です。最終的な成果物は [notebooks/](../notebooks/) の 3 本（nb00 chat 入門 / nb01 tokenizer / nb02 residual stream + logit lens + patching）ですが、それを書くまでに行った **事前探査・セットアップ系の scripts 00–06** が本 md の対象です。
 
 scripts 00–06 は CLAUDE.md でいう「core scripts」に該当し、`llm2026` venv で動作します。番号には依存関係の意味があります：
 
@@ -215,8 +215,8 @@ Script: [`scripts/03_generate_smoke.py`](../scripts/03_generate_smoke.py)
 ### 観察
 
 1. **`<think>` ブロックが空のまま閉じる**: `enable_thinking=False` の効果。Qwen3-4B-Instruct の通常 mode では think 領域に推論を書き込まない。
-2. **`max_new_tokens=64` で途中で打ち切られる**: 「**言語モデルは、人間が話す言」で切れているのは設定通り。講義デモではこの「未完了でも動作確認はできる」状態で十分。
-3. **応答内容**: 講義ターゲット（情報学科 1 回生）を意識した平易な日本語応答が出ている。後の Chapter 04 で next-token 分布も確認します。
+2. **`max_new_tokens=64` で途中で打ち切られる**: 「**言語モデルは、人間が話す言」で切れているのは設定通り。デモではこの「未完了でも動作確認はできる」状態で十分。
+3. **応答内容**: 想定対象（情報学科 1 回生）を意識した平易な日本語応答が出ている。後の Chapter 04 で next-token 分布も確認します。
 
 ### 出力ファイル
 
@@ -290,7 +290,7 @@ torch.save({
 }, "probe_forward_compact.pt")
 ```
 
-**全 layer の hidden states / attentions を `.pt` に丸ごと保存はしない**点に注意（CLAUDE.md ルール）。`probe_forward_compact.pt` には講義デモに必要な最小限だけ。
+**全 layer の hidden states / attentions を `.pt` に丸ごと保存はしない**点に注意（CLAUDE.md ルール）。`probe_forward_compact.pt` にはデモに必要な最小限だけ。
 
 ### 結果
 
@@ -322,7 +322,7 @@ torch.save({
 
 #### 7-3. compact tensor — `outputs/probe_forward_compact.pt`
 
-CLAUDE.md にあるとおり、講義デモに必要な最小限を保存:
+CLAUDE.md にあるとおり、デモに必要な最小限を保存:
 
 | key | shape |
 |---|---|
@@ -367,7 +367,7 @@ Qwen3Attention     -> .../modeling_qwen3.py
 Qwen3MLP           -> .../modeling_qwen3.py
 ```
 
-→ 主要クラス 5 つが**全て同じ `modeling_qwen3.py` に集約**されていることが分かる。Llama 系の実装と同様、Qwen3 も 1 ファイル流派。breakpoint を仕掛けて挙動を追いたい場合は `qwen3_4b_trace` workspace で editable install 版を使うのが CLAUDE.md の方針。
+→ 主要クラス 5 つが**全て同じ `modeling_qwen3.py` に集約**されていることが分かる。Llama 系の実装と同様、Qwen3 も 1 ファイル流派。breakpoint を仕掛けて挙動を追いたい場合は別の source-tracing 用 workspace で editable install 版を使うのが CLAUDE.md の方針。
 
 ---
 
@@ -377,7 +377,7 @@ Script: [`scripts/06_attention_heatmap.py`](../scripts/06_attention_heatmap.py)
 
 ### 目的
 
-Chapter 04 が保存した `probe_forward_compact.pt` の **layer 0 / 任意の head** の attention 行列を heatmap PNG として可視化する。**講義デモ用の主要な図**。
+Chapter 04 が保存した `probe_forward_compact.pt` の **layer 0 / 任意の head** の attention 行列を heatmap PNG として可視化する。**デモ用の主要な図**。
 
 ### 背景: attention 行列の読み方
 
@@ -423,7 +423,7 @@ CSV ([outputs/attention_layer0_head0_piece.csv](../outputs/attention_layer0_head
 
 #### 解釈
 
-1. **causal triangle**（右上が真っ黒）で autoregressive 性が一目で分かる。講義の最初のスライドに最適。
+1. **causal triangle**（右上が真っ黒）で autoregressive 性が一目で分かる。導入スライドに最適。
 2. **`<|im_start|>` への attention sink**（列 0 の縦縞）は近年の large LM でよく観察される現象で、「特殊な token を *anchor* として使う」という性質の一例。
 3. **文節境界の助詞 (`の` / `に`) に集中する縦縞**: layer 0 head 0 が「直前の助詞 / 連体修飾の境界」を拾う head になっていそう、という解釈ができる。layer 0 という浅い層なので、構造的・syntactic な特徴を拾うのは自然。ただしこれは layer 0 / head 0 の単一観察に基づく仮説であり、head の機能を確定するには本来 head ごとの体系的解析を要する。
 
@@ -444,7 +444,7 @@ scripts 00–06 で確認できたこと:
 1. **環境** (Chapter 00): MPS / float16 で Qwen3-4B が動作。
 2. **重み** (Chapter 01): HF cache の標準位置に snapshot 配置済み。
 3. **tokenizer + chat template** (Chapter 02): 35 token に展開、日本語が意味単位で分割、`<think></think>` 空ブロックが入る。
-4. **生成** (Chapter 03): greedy decode で講義向けの平易な応答が出る。
+4. **生成** (Chapter 03): greedy decode で平易な応答が出る。
 5. **forward + 内部 tensor** (Chapter 04): shape が config 通り (37 hidden states, 36 attentions)、next token top1 `言` が 96% の確率。
 6. **Transformers source の場所** (Chapter 05): 主要 5 クラスが `modeling_qwen3.py` に集約。
 7. **attention heatmap** (Chapter 06): layer 0 head 0 で「助詞集中」と「causal triangle」と「attention sink」の 3 つが見える。

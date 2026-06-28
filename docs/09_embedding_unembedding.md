@@ -12,7 +12,7 @@ Qwen3-4B の **embedding 行列 $W_E$** と **unembedding 行列 $W_U$**（= `lm
 
 1. **`tie_word_embeddings = True`** の意味を実装レベルで確認: 別の tensor がコピーされているのか、それとも同一メモリを共有しているのか
 2. **「effective unembedding」** $W_U^{\text{eff}} = W_U \odot g$（$g$ は final RMSNorm の学習 gain）の意味と、$W_E$ / $W_U$ / $W_U^{\text{eff}}$ の **norm と方向の相互関係**
-3. 講義デモ用に、選択した 743 token subset の **PCA / t-SNE 2D 座標**を生成
+3. デモ用に、選択した 743 token subset の **PCA / t-SNE 2D 座標**を生成
 
 これは [docs/08_logit_lens.md](08_logit_lens.md) で観察した「層 0 で input identity が top1 になる」現象や、後段の patching ([docs/12](12_residual_stream_patching.md)) の解釈の基礎になります。
 
@@ -200,7 +200,7 @@ PCA + t-SNE 各 $3N = 2229$ 行 = 4458 行。各行に `(method, representation_
 ## 6. 応用への示唆
 
 - **[docs/08_logit_lens.md](08_logit_lens.md) の現象「層 0 で input identity が top1」の説明**: $h^{(0)} = W_E[x_t]$ に `lm_head` ($W_U$) を当てると、$W_U[v] \cdot W_E[x_t] = W_E[v] \cdot W_E[x_t]$（tie のため）。これは $v = x_t$ で最大値を取りやすいので、層 0 の top1 は入力トークン自身になる。
-- **講義デモ用語の整理**: 「embedding と unembedding は同じ行列なのか」という学生の素朴な疑問に、**Qwen3-4B では Yes（同一テンソル、tie）** と即答できる。Llama 3 8B などは tied ではない（別パラメータ）ことと対比して説明できる。
+- **用語の整理**: 「embedding と unembedding は同じ行列なのか」という素朴な疑問に、**Qwen3-4B では Yes（同一テンソル、tie）** と即答できる。Llama 3 8B などは tied ではない（別パラメータ）ことと対比して説明できる。
 - **logit lens の implementation note**: 中間層 readout で正しい結果を得るには **必ず `model.model.norm` を適用してから `lm_head` に通す**。これは「effective unembedding が gain $g$ を含んでいて、生の $W_U$ で readout すると scale が ≈ 2.83x ずれる」ことの裏返し。
 - **special token の取り扱い注意**: vocab の末尾に並ぶ `<|object_ref_*|>` `<|box_*|>` `<|vision_*|>` 等は **初期化のままで実質的に学習されていない**可能性がある（input_norm = 0.365 で全て同値）。logit lens で top1 にこれらが出てきたら「未訓練トークンが偶然 readout 方向に近かった」可能性を疑う。
 
