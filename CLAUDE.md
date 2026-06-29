@@ -594,15 +594,17 @@ token や secret
 
 ## commit メッセージのスタイル
 
-シンプルに1行で。プレフィックス例：`add:` `update:` `fix:` `remove:`
+1 行目に要約（subject、プレフィックス付き）を書き、空行をはさんで本文（body）に変更点を箇条書きで記す。プレフィックス例：`add:` `update:` `fix:` `remove:`
 
 ```text
-add: cursor rule for git safety
-update: probe config for short sequences
-fix: outputs path resolution
+add: rendered/ に実行済みノートを追加し README を整理
+
+- lecture/ の実行済み版を rendered/ に追加（図入り）
+- README のリンク構成をテーブルから項目リンクへ変更
 ```
 
-署名（Co-Authored-By 等）は追記しない。
+- 署名（Co-Authored-By 等）は追記しない。
+- メッセージは中立に repo の変更内容だけを書く（履歴に残るため、属人的な経緯や一時的な作業文脈は持ち込まない）。
 
 ---
 
