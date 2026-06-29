@@ -2,6 +2,10 @@
 
 Qwen3-4B を用いた LLM 内部の観察・可視化のための調査
 
+![Qwen3-4B logit lens grid](images/nb02_logit_lens_grid_clean.png)
+
+**Figure**: Qwen3-4B の Logit Lens。プロンプト「The capital of Japan is」で、各層（縦軸：下＝埋め込み〜上＝最終層）の residual stream を出力埋め込みで語彙へ射影し、各位置（横軸：入力トークン→次トークン）の top 予測トークンを表示。色は正解トークンの順位（対数スケール、黄＝1位）。最終列「is→Tokyo」では層 30 付近から Tokyo が 1 位に立ち上がる。面白いのは「Japan→is」列で、中間層に東京・日本に関わる語が顔を出し、しかもそれが**中国語**であること（簡体字「东京」— 日本語の「東京」と字形が異なる — や「在日本」）。表層形「is」へ収束する前に、モデルが内部では日本に関する概念を中国語経由で扱っている様子がうかがえる。図はノート [02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb) で生成。
+
 ## Purpose
 
 Hugging Face Transformers の既存 API を使って、Qwen3-4B の内部計算（hidden states / attention / logits / residual stream など）を観察・可視化するための probe workspace。
