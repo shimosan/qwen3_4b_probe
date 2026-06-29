@@ -40,17 +40,17 @@ Hugging Face Transformers の既存 API を使って、Qwen3-4B の内部計算�
 - **[00_intro_chat.ipynb](lecture/00_intro_chat.ipynb)**
   Qwen3-4B の読み込み、tokenizer / chat template、シングル・マルチターン chat、greedy decode による動作確認。
 
-  [図入りで見る](rendered/00_intro_chat.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/00_intro_chat.ipynb)（GPU・無料 T4 可）
+  [実行結果を見る](rendered/00_intro_chat.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/00_intro_chat.ipynb)（GPU・無料 T4 可）
 
 - **[01_tokenizer.ipynb](lecture/01_tokenizer.ipynb)**
   文字コード（Unicode / UTF-8）の基礎、tokenizer の `encode` / `decode`、token 分割の観察、特殊トークン。
 
-  [図入りで見る](rendered/01_tokenizer.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/01_tokenizer.ipynb)（CPU で可）
+  [実行結果を見る](rendered/01_tokenizer.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/01_tokenizer.ipynb)（CPU で可）
 
 - **[02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb)**（Qwen3-4B 版、主）
   入口（embedding）と出口（`lm_head` + softmax）の対応、residual stream と `hidden_states` の関係、Logit Lens、Activation Patching。
 
-  [図入りで見る](rendered/02_residual_stream_logit_lens_patching.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/02_residual_stream_logit_lens_patching.ipynb)（GPU・無料 T4 可）
+  [実行結果を見る](rendered/02_residual_stream_logit_lens_patching.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/02_residual_stream_logit_lens_patching.ipynb)（GPU・無料 T4 可）
 
 - **[02_residual_stream_logit_lens_patching_qwen3_1p7b.ipynb](lecture/02_residual_stream_logit_lens_patching_qwen3_1p7b.ipynb)**（1.7B 派生版）
   nb02 と同じ実験を Qwen3-1.7B（Instruct）で実施、4B との結果差分を確認。
@@ -69,7 +69,7 @@ Hugging Face Transformers の既存 API を使って、Qwen3-4B の内部計算�
 - **[wordvec_demo.ipynb](lecture/wordvec_demo.ipynb)**（単体完結・GPU 不要・Colab 可）
   学習済み単語ベクトル **GloVe**（`gensim` 経由）の入門ノート。「単語＝ベクトル」「コサイン類似度＝なす角」「意味の足し引き（`king − man + woman ≈ queen` / `Tokyo − Japan + France ≈ Paris`）」「PCA / t-SNE / UMAP 可視化」「埋め込みの限界（多義語・社会的バイアス）」を手元で再現する。Qwen 本体とは別テーマ（意味表現・単語埋め込みの入門）で、**ノート冒頭セルが必要パッケージ（gensim / scikit-learn / matplotlib / umap-learn）を自動 install** するため `aidemo2026` 以外（Colab 含む）でもそのまま動く。
 
-  [図入りで見る](rendered/wordvec_demo.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/wordvec_demo.ipynb)（CPU で可）
+  [実行結果を見る](rendered/wordvec_demo.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/wordvec_demo.ipynb)（CPU で可）
 
 ---
 
