@@ -145,7 +145,7 @@ Notebook 作成前に行った、Qwen3-4B の動作確認・環境セットア�
 
 各 script ごとに個別 docs/ 化済み: **[docs/07_*.md](docs/07_hidden_state_mapping.md) 〜 [docs/12_*.md](docs/12_residual_stream_patching.md)**。
 
-### フェーズ 3 — nb03（予定）のための個別実験（scripts 06, 14–17、2026-05-08 / 18 〜 21）
+### フェーズ 3 — nb03（予定）のための個別実験（scripts 06, 14–17, 19、2026-05-08 / 18 〜 21）
 
 community SAE / transcoder / attention 解析の周辺実験。**nb03 にまだ統合されておらず**、各 script が独立した実験として `docs/` に 1:1 でレポート化されている。`llm2026-dev` venv（06 のみ `aidemo2026`）。
 
@@ -153,8 +153,9 @@ community SAE / transcoder / attention 解析の周辺実験。**nb03 にまだ�
 - 14, 15, 15b: mwhanna MLP transcoder（4B、layer 23-25 詳細 + 全 36 layer sweep）
 - 16, 17: Qwen-Scope 公式 residual SAE（1.7B-Base layer 20 / 8B-Base layer 24）
   - **注**: 検討の結果、これらの SAE は nb03 には**含めない方針**。Base モデル前提・4B 不在のため入門デモには不適と判断（詳細は [docs/16](docs/16_qwenscope_sae_qwen3_1p7b_layer20.md) / [docs/17](docs/17_qwenscope_sae_qwen3_8b_layer24.md) 冒頭の callout 参照）。レポートだけ残してある。
+- 19: attention 総合 probe（4B、attention weights / head scoring / residual update / component-level activation patching）。attention 可視化の部分は nb02 §10 に発展。深い head 同定・component patching は nb03 予定分。レポートは暫定版（未検証、[docs/19](docs/19_qwen3_4b_attention_probe.md)）。
 
-13・18・19 番は欠番。
+13・18 番は欠番。
 
 ### Script → Notebook 対応表
 
@@ -180,6 +181,7 @@ community SAE / transcoder / attention 解析の周辺実験。**nb03 にまだ�
 | 15b | [qwen3_4b_transcoder_layer_sweep_replots](scripts/15b_qwen3_4b_transcoder_layer_sweep_replots.py) | **nb03**（予定） | 15 結果の再 plot |
 | 16 | [qwenscope_sae_smoke](scripts/16_prelim_qwenscope_sae_smoke.py) | nb03 不採用 | Qwen-Scope SAE × Qwen3-1.7B-Base layer 20（レポートのみ） |
 | 17 | [qwenscope_sae_8b_smoke](scripts/17_prelim_qwenscope_sae_8b_smoke.py) | nb03 不採用 | 同上、Qwen3-8B-Base layer 24（レポートのみ） |
+| 19 | [prelim_attention_probe](scripts/19_prelim_attention_probe.py) | nb02 §10 / nb03（予定） | attention weights・head scoring・residual update・component patching（レポート暫定版） |
 
 ### Setup（scripts 用、07 以降）
 
