@@ -2,9 +2,17 @@
 
 Qwen3-4B を用いた LLM 内部の観察・可視化のための調査
 
+![Qwen3-4B multilingual word embeddings (English-hub star)](images/nb02_multilingual_star.png)
+
+**Figure 1**: Qwen3-4B の語彙埋め込み $W_E$ を「単語ベクトル」として見た図（t-SNE 2D）。同じ概念を 7 言語（英語・中国語・日本語・韓国語・フランス語・スペイン語・ドイツ語）で用意し、英語をハブとして、単語ごとに単一トークンになる言語だけを英語へリンクした。意味のまとまりが言語をまたいで形成される。これは Figure 2 の Logit Lens で英語プロンプトの内部に中国語トークンが顔を出すこととも整合的。図はノート [02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb) の §6 で生成。
+
 ![Qwen3-4B logit lens grid](images/nb02_logit_lens_grid_clean.png)
 
-**Figure**: Qwen3-4B の Logit Lens。プロンプト「The capital of Japan is」で、各層（縦軸：下＝埋め込み〜上＝最終層）の residual stream を出力埋め込みで語彙へ射影し、各位置（横軸：入力トークン→次トークン）の top 予測トークンを表示。色は正解トークンの順位（対数スケール、黄＝1位）。最終列「is→Tokyo」では層 30 付近から Tokyo が 1 位に立ち上がる。面白いのは「Japan→is」列で、中間層に東京・日本に関わる語が顔を出し、しかもそれが**中国語**であること（簡体字「东京」— 日本語の「東京」と字形が異なる — や「在日本」）。表層形「is」へ収束する前に、モデルが内部では日本に関する概念を中国語経由で扱っている様子がうかがえる。図はノート [02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb) で生成。
+**Figure 2**: Qwen3-4B の Logit Lens。プロンプト「The capital of Japan is」で、各層（縦軸：下＝埋め込み〜上＝最終層）の residual stream を出力埋め込みで語彙へ射影し、各位置（横軸：入力トークン→次トークン）の top 予測トークンを表示。色は正解トークンの順位（対数スケール、黄＝1位）。最終列「is→Tokyo」では層 30 付近から Tokyo が 1 位に立ち上がる。面白いのは「Japan→is」列で、中間層に東京・日本に関わる語が顔を出し、しかもそれが**中国語**であること（簡体字「东京」— 日本語の「東京」と字形が異なる — や「在日本」）。表層形「is」へ収束する前に、モデルが内部では日本に関する概念を中国語経由で扱っている様子がうかがえる。図はノート [02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb) の §8 で生成。
+
+![Qwen3-4B all-heads deviation mosaic](images/nb02_attention_head_mosaic.png)
+
+**Figure 3**: Qwen3-4B の全 36 層 × 32 ヘッド（計 1152 個）の self-attention matrix を 1 枚に敷き詰めた図（プロンプト「The capital of Japan is Tokyo」）。各セルは attention 重みそのものではなく、全ヘッド平均からの差分 D[q,k]（赤＝平均より強く見る／青＝弱い／白＝平均通り）で、共通成分（causal な三角形と先頭トークンへの sink）を差し引くと各ヘッド固有の注目パターンが残る。縦軸は層（下＝入力側 0／上＝出力側 35）、横方向は各層内でヘッドを「平均からの距離」の大きい順に並べ替え（左＝個性的／右＝平均的）。多くのセルに見える赤い副対角は直前トークンを見る previous-token ヘッド。入力側の層ほど個性的なヘッドが多く、出力側は平均に近づく。中盤 L22–24 付近に現れる個性的なヘッドの帯は、activation patching が「Tokyo の決定は L24 付近」と示す層と重なる。図はノート [02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb) の §10 で生成。
 
 ## Purpose
 
