@@ -19,17 +19,9 @@ Hugging Face Transformers の既存 API を使って、Qwen3-4B の内部計算�
 
 ## Repository structure
 
-| Path | Git | Contents |
-|---|---|---|
-| `lecture/` | ✓ | Jupyter Notebook（主成果物、各ノート self-contained）|
-| `scripts/` | ✓ | 番号付き script 群（後述、3 グループに分かれる）|
-| `docs/` | ✓ | 完成版の実験レポート md と参照画像 `docs/images/` |
-| `outputs/` | ✗ | script の生成物（PNG / CSV / JSON 等）。再生成可能で永続性なし |
-| `runs/` | ✗ | 実行ログ（`*.log`）|
-| `notes/` | ✗ | 作業ノート（`*.md`）。索引は README、時系列は worklog |
-| `scratch/` | ✗ | 自由な試行錯誤の作業領域（CLAUDE.md 参照）|
+主な公開物は `lecture/`（ノート本編）と `rendered/`（output 込みの実行済み版）。ほかに `scripts/`（番号付き probe script 群）・`docs/`（実験レポート md + `docs/images/`）・`images/`（README 図）。
 
-詳細な作業方針は [CLAUDE.md](CLAUDE.md) を参照。
+作業用の gitignore ディレクトリ（`outputs/ runs/ notes/ scratch/`）を含む全ディレクトリの役割・作業方針は [CLAUDE.md](CLAUDE.md) の「リポジトリ構成」を参照。
 
 ---
 

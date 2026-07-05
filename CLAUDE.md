@@ -183,6 +183,8 @@ qwen3_4b_probe/
     11_prelim_compare_logit_lens_float32.py
     12_residual_stream_patching.py
   lecture/
+  rendered/
+  images/
   outputs/
   runs/
   notes/
@@ -191,11 +193,21 @@ qwen3_4b_probe/
     images/
 ```
 
-`outputs/` は runtime output 用のフォルダで、Git 管理対象**外**です（PNG / CSV / JSON など）。
+各フォルダの役割と Git 管理対象かどうかは以下のとおり（README の「Repository structure」から集約）。
 
-`runs/` は実行ログ（`*.log`）用、`notes/` は作業中のノート（`*.md`、索引は README / 時系列は worklog）用で、いずれも Git 管理対象**外**フォルダです。`scratch/` は試行錯誤の自由作業領域（同じく管理外）。
+| Path | Git | Contents |
+|---|---|---|
+| `lecture/` | ✓ | Jupyter Notebook（主成果物、各ノート self-contained）|
+| `rendered/` | ✓ | lecture の実行済みノート（output 込みコピー、GitHub 閲覧用）|
+| `scripts/` | ✓ | 番号付き script 群（3 グループに分かれる）|
+| `docs/` | ✓ | 完成版の実験レポート md と参照画像 `docs/images/` |
+| `images/` | ✓ | README 用 showcase 画像（`outputs/` から **cp**）|
+| `outputs/` | ✗ | script の生成物（PNG / CSV / JSON 等）。再生成可能で永続性なし |
+| `runs/` | ✗ | 実行ログ（`*.log`）|
+| `notes/` | ✗ | 作業ノート（`*.md`）。索引は README、時系列は worklog |
+| `scratch/` | ✗ | 自由な試行錯誤の作業領域 |
 
-`docs/` は完成品の実験レポート md を置く Git 管理対象フォルダです。`docs/images/` には report が参照する figure を `outputs/` から **cp**（mv ではない）してきます。永続的なドキュメントは docs/ に置きます。
+`docs/images/` には report が参照する figure を `outputs/` から **cp**（mv ではない）してくる。`outputs/` にも原本を残す。永続的なドキュメントは `docs/` に置く。
 
 script で `outputs/` に保存する場合は、必ず事前にディレクトリを作成してください。
 
