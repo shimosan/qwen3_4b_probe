@@ -89,6 +89,8 @@ python scripts/01_download_model.py
 
 > **Colab で動かす場合はこの setup は不要**です。torch 等は最初から入っており、各ノート冒頭の「環境セットアップ」セルが Colab を自動判定して必要分だけ `!pip install` します。ノートを開いて「ランタイム → すべて実行」するだけです。
 
+> **補足**: activate 後にプロンプトが `((aidemo2026) )` と二重括弧になる場合、`python3 scripts/fix_venv_prompt.py ~/.venvs/aidemo2026` で単一括弧に直せます（見た目だけの問題で動作には無影響）。使い方や仕組みはスクリプト冒頭のコメント参照。
+
 ## Notebook の開き方
 
 setup 完了後、`aidemo2026` venv を activate して Jupyter を起動するか、VS Code / Cursor で `.ipynb` を直接開きます。
