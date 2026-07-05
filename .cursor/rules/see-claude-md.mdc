@@ -1,16 +1,19 @@
 ---
-description: Project rules pointer — defer to CLAUDE.md for detailed workflow and conventions
+description: Project rules pointer — defer to CLAUDE.md; critical git/safety DON'Ts inline
 alwaysApply: true
 ---
 
-# このプロジェクトのルールは [CLAUDE.md](../../CLAUDE.md) に集約
+# このプロジェクトのルールは CLAUDE.md に集約
 
-詳細な workflow / コーディング規約 / プロジェクト固有方針は、リポジトリルートの `CLAUDE.md` を参照してください。Cursor 上で AI 作業を行う場合も、CLAUDE.md の方針に従うこと。
+詳細な workflow / コーディング規約 / プロジェクト固有方針は、リポジトリルートの `CLAUDE.md` を参照（Cursor 上の AI 作業も CLAUDE.md に従う）。
 
-汎用的な最重要事項のみ抜粋:
+## 最重要（抜粋）
+- secret (`.env`, API key, token 等) を commit しない
+- マシン固有の絶対パスをハードコードしない（`~/...` や環境変数を使う）
+- 大きな成果物（build artifacts, caches, モデル重み等）を git 管理下に置かない
 
-- **secret (`.env`, API key, token 等) を commit しない**
-- **マシン固有の絶対パスをハードコードしない** (`~/...` などの home 相対や環境変数を使う)
-- **大きな成果物 (build artifacts, caches, モデル重み等) を git 管理下に置かない**
-
-Git 操作の安全規約は [git-safety.mdc](git-safety.mdc) を参照。
+## Git 安全規約（自律実行しない）
+以下はユーザーの明示指示があるまで実行しない: `git commit` / `git push`（`--force` は常に禁止）/ `git commit --amend` / `git rebase` / `git reset --hard` / `git restore` / `git checkout -- .` / `git clean -f[d]` / ブランチ作成・削除・リネーム。
+- stage は対象を明示（`git add .` / `-A` は使わない）。
+- フロー: `git diff`/`status` 提示 → 承認後 `git add` → commit メッセージ案 → 承認後 `git commit` → `push` は明示要求時のみ。
+- commit メッセージは簡潔・明確、prefix `add:` `update:` `fix:` `remove:`。
