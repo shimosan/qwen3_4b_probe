@@ -4,7 +4,7 @@ Qwen3-4B を用いた LLM 内部の観察・可視化のための調査
 
 ![Qwen3-4B multilingual word embeddings (English-hub star)](images/nb02_multilingual_star.png)
 
-**Figure 1**: Qwen3-4B の語彙埋め込み $W_E$ を「単語ベクトル」として見た図（t-SNE 2D）。同じ概念を 7 言語（英語・中国語・日本語・韓国語・フランス語・スペイン語・ドイツ語）で用意し、英語をハブとして、単語ごとに単一トークンになる言語だけを英語へリンクした。意味のまとまりが言語をまたいで形成される。これは Figure 2 の Logit Lens で英語プロンプトの内部に中国語トークンが顔を出すこととも整合的。図はノート [02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb) の §6 で生成。
+**Figure 1**: Qwen3-4B の語彙埋め込み $W_E$ を「単語ベクトル」として見た図（t-SNE 2D）。同じ概念を 7 言語（英語・中国語・日本語・韓国語・フランス語・スペイン語・ドイツ語）で用意し、英語をハブとして、単語ごとに単一トークンになる言語だけを英語へリンクした。意味のまとまりが言語をまたいで形成される。これは Figure 2 の Logit Lens で英語プロンプトの内部に中国語トークンが顔を出すこととも整合的。中国語=赤・日本語=青で、共通漢字（山・火 など）は日中で同一トークンのため同座標に重なり紫になる。図はノート [02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb) の §6 で生成。
 
 ![Qwen3-4B logit lens grid](images/nb02_logit_lens_grid_clean.png)
 
