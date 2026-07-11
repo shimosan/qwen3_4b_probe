@@ -58,6 +58,7 @@ python-bidi              # 右→左(RTL)並べ替え（同上。bidi.algorithm.
 ipykernel>=6
 ipywidgets>=8            # 進捗バー・HF ダウンロード表示
 nbconvert>=7             # ノートを HTML 書き出し / 一括実行
+jupytext>=1.19           # ノートを .py（percent 形式）で編集し .ipynb に変換（.py を正本にできる）
 watermark>=2.6           # ノートに版数表示
 
 # --- その他（あると便利）---
