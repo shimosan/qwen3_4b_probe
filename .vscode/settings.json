@@ -4,6 +4,9 @@
 
   "python.analysis.typeCheckingMode": "basic",
   "python.analysis.diagnosticMode": "openFilesOnly",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportPrivateImportUsage": "none"
+  },
 
   "notebook.diff.ignoreOutputs": true,
   "notebook.diff.ignoreMetadata": true,
@@ -25,6 +28,9 @@
   },
   "cursorpyright.analysis.diagnosticMode": "openFilesOnly",
   "cursorpyright.analysis.typeCheckingMode": "basic",
+  "cursorpyright.analysis.diagnosticSeverityOverrides": {
+    "reportPrivateImportUsage": "none"
+  },
   "claude.preferredLocation": "sidebar",
 
   "python-envs.pythonProjects": [
