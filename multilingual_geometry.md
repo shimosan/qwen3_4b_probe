@@ -5,7 +5,7 @@
 多言語モデル **Qwen3-4B** のトークン埋め込み（語彙埋め込み行列 $W_E$、$151936 \times 2560$、入力と出力で共有）に刻まれた多言語構造を観察する。各トークンのベクトルは、共通の出発点に「概念の回転」と「言語の回転」を重ねて作られると考える（回転は正確には直交変換）。回転を重ねる順番で **概念先行モデル** $v_L(w)=R(L)R(w)v_o$・**言語先行モデル** $v_L(w)=R(w)R(L)v_o$・**加法モデル** $v_L(w)=v_\text{en}(w)+a_L$ の 3 つを立て、どれが $W_E$ について最もよく支持されるかを、対訳辞書 **MUSE**（英語を軸にした en-XX、44 言語）を用いて図で確かめる。Qwen3-4B のトークン埋め込みでは概念先行モデルが他の 2 つよりよく支持される。概念先行モデルが当てはまると、ある言語で得たベクトルを概念によらず一つの変換で別言語へ移せる（概念非依存の言語転移）。
 
 手続きの詳細・数式・関連研究は notebook 本体を参照:
-[multilingual_geometry_demo.ipynb](lecture/multilingual_geometry_demo.ipynb) ・ [実行結果を見る](rendered/multilingual_geometry_demo.ipynb) ・ [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/multilingual_geometry_demo.ipynb)（CPU で可）
+[multilingual_geometry_demo.ipynb](lecture/multilingual_geometry_demo.ipynb) ・ [実行結果を見る](rendered/multilingual_geometry_demo.ipynb) ・ [nbviewer](https://nbviewer.org/github/shimosan/qwen3_4b_probe/blob/main/rendered/multilingual_geometry_demo.ipynb) ・ [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/multilingual_geometry_demo.ipynb)（CPU で可）
 
 ---
 
