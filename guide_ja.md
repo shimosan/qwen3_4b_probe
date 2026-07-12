@@ -48,17 +48,17 @@ Hugging Face Transformers の既存 API を使って、Qwen3-4B の内部計算�
 - **[00_intro_chat.ipynb](lecture/00_intro_chat.ipynb)**
   Qwen3-4B の読み込み、tokenizer / chat template、シングル・マルチターン chat、greedy decode による動作確認。
 
-  [実行結果を見る](rendered/00_intro_chat.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/00_intro_chat.ipynb)（GPU・無料 T4 可）
+  [実行結果を見る](rendered/00_intro_chat.ipynb)・[![nbviewer](https://img.shields.io/badge/Render-nbviewer-orange)](https://nbviewer.org/github/shimosan/qwen3_4b_probe/blob/main/rendered/00_intro_chat.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/00_intro_chat.ipynb)（GPU・無料 T4 可）
 
 - **[01_tokenizer.ipynb](lecture/01_tokenizer.ipynb)**
   文字コード（Unicode / UTF-8）の基礎、tokenizer の `encode` / `decode`、token 分割の観察、特殊トークン。
 
-  [実行結果を見る](rendered/01_tokenizer.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/01_tokenizer.ipynb)（CPU で可）
+  [実行結果を見る](rendered/01_tokenizer.ipynb)・[![nbviewer](https://img.shields.io/badge/Render-nbviewer-orange)](https://nbviewer.org/github/shimosan/qwen3_4b_probe/blob/main/rendered/01_tokenizer.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/01_tokenizer.ipynb)（CPU で可）
 
 - **[02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb)**（Qwen3-4B 版、主）
   入口（embedding）と出口（`lm_head` + softmax）の対応、residual stream と `hidden_states` の関係、Logit Lens、Activation Patching。
 
-  [実行結果を見る](rendered/02_residual_stream_logit_lens_patching.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/02_residual_stream_logit_lens_patching.ipynb)（GPU・無料 T4 可）
+  [実行結果を見る](rendered/02_residual_stream_logit_lens_patching.ipynb)・[![nbviewer](https://img.shields.io/badge/Render-nbviewer-orange)](https://nbviewer.org/github/shimosan/qwen3_4b_probe/blob/main/rendered/02_residual_stream_logit_lens_patching.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/02_residual_stream_logit_lens_patching.ipynb)（GPU・無料 T4 可）
 
 - **[02_residual_stream_logit_lens_patching_qwen3_1p7b.ipynb](lecture/02_residual_stream_logit_lens_patching_qwen3_1p7b.ipynb)**（1.7B 派生版）
   nb02 と同じ実験を Qwen3-1.7B（Instruct）で実施、4B との結果差分を確認。
@@ -77,14 +77,14 @@ Hugging Face Transformers の既存 API を使って、Qwen3-4B の内部計算�
 - **[wordvec_demo.ipynb](lecture/wordvec_demo.ipynb)**
   学習済み単語ベクトル **GloVe**（`gensim` 経由）の入門ノート。「単語＝ベクトル」「コサイン類似度＝なす角」「意味の足し引き（`king − man + woman ≈ queen` / `Tokyo − Japan + France ≈ Paris`）」「PCA / t-SNE / UMAP 可視化」「埋め込みの限界（多義語・社会的バイアス）」を手元で再現する。Qwen 本体とは別テーマ（意味表現・単語埋め込みの入門）で、**ノート冒頭セルが必要パッケージ（gensim / scikit-learn / matplotlib / umap-learn）を自動 install** するため `aidemo2026` 以外（Colab 含む）でもそのまま動く。
 
-  [実行結果を見る](rendered/wordvec_demo.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/wordvec_demo.ipynb)（CPU で可）
+  [実行結果を見る](rendered/wordvec_demo.ipynb)・[![nbviewer](https://img.shields.io/badge/Render-nbviewer-orange)](https://nbviewer.org/github/shimosan/qwen3_4b_probe/blob/main/rendered/wordvec_demo.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/wordvec_demo.ipynb)（CPU で可）
 
 ### 多言語の語彙埋め込み幾何（Qwen3-4B $W_E$）
 
 - **[multilingual_geometry_demo.ipynb](lecture/multilingual_geometry_demo.ipynb)**
   Qwen3-4B の共有トークン埋め込み $W_E$（151936×2560）を **1 枚だけ**読み、多言語がどう配置されているかを可視化するノート。モデル本体（40 億パラメータ）は動かさないのでメモリは軽い。MUSE 対訳辞書（en-XX 44 言語）で言語類似度・階層クラスタリング・上位 $k$ 近傍類似度を見ると、**英語は語族（Germanic）でなく中国語・日本語・韓国語（CJK）と束ねられ、英語ピボット型データ上で英語–中国語が最も近い**。さらに言語ごとの直交変換 $R(L)$ を対訳ペアから推定し、**概念先行・言語先行・加法の 3 モデルのうち概念先行モデルが最もよく支持される**こと（逆概念変換 $C_L^{-1}$ で概念成分を打ち消すと言語構造が顕在化し、順序を入れ替えた言語先行モデルや加法モデルではそうならないこと）を図と数値で確かめる。Part 5 に関連研究と位置づけ。**ノート冒頭セルが必要パッケージ／CJK フォントを自動整備**するため Mac / Win / Colab のいずれでも日中韓・アラビア/ヘブライのラベルが正しく描画される。
 
-  [実行結果を見る](rendered/multilingual_geometry_demo.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/multilingual_geometry_demo.ipynb)（CPU で可）
+  [実行結果を見る](rendered/multilingual_geometry_demo.ipynb)・[![nbviewer](https://img.shields.io/badge/Render-nbviewer-orange)](https://nbviewer.org/github/shimosan/qwen3_4b_probe/blob/main/rendered/multilingual_geometry_demo.ipynb)・[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/shimosan/qwen3_4b_probe/blob/main/lecture/multilingual_geometry_demo.ipynb)（CPU で可）
 
 ---
 
