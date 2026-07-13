@@ -338,6 +338,10 @@ docs/images/{outputs と同じファイル名}.png
 - script への link は `[scripts/14_xx.py](../scripts/14_xx.py)` のように workspace 相対
 - 画像 path は `images/...`（docs/ 直下から見て）
 - 数式は KaTeX 記法 `$ ... $` / `$$ ... $$`。Cursor 内蔵 Preview は非対応、`Cmd+Shift+V` の正規 Markdown Preview / Obsidian / GitHub で render される
+- **インライン数式 `$...$` の直前は必ず半角スペース（か行頭）にする**。GitHub は開き `$` の直前が全角文字（`（`、`、`、漢字・かな、全角 `＝` 等）だと数式と認識せず、`$\sum_k …$` のように**生の文字列**で表示する。閉じ `$` 側は全角が続いても無害。Obsidian / Cursor の preview は全角隣接でも数式化するので **preview では気づけず GitHub でだけ壊れる**（`m` の斜体化など肉眼で見落としやすい）。
+  - 悪い例: `語彙埋め込み行列 $W_E$、$151936 \times 2560$`（`、` の直後の `$151936…$` が生表示）→ 良い例: `…$W_E$、 $151936 \times 2560$`（`$` の前に半角スペース）
+  - 全 md 一括検出: `git ls-files '*.md' | while read f; do grep -oP '[^\x00-\x7F]\$(?=[^\s$])' "$f"; done`（0 件なら OK）。修正は開き `$` の前に半角スペースを 1 個入れるだけ（閉じ側は触らない）
+  - 一般則として `$...$` の前後を半角スペースで空けておくのが、GitHub / Obsidian / ChatGPT 由来のいずれでも最も堅い（Obsidian も「開き `$` の直後に空白」「単独 `$`＋数字の通貨誤認」など別系統で崩れることがある）
 
 ### ルール B — 入門レベルの説明を強化する場合（実験の最初の md など）
 
