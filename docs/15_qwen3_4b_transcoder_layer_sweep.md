@@ -30,7 +30,7 @@ Script: [`scripts/15_prelim_qwen3_4b_transcoder_layer_sweep.py`](../scripts/15_p
 
 ### 指標の再掲（数式のみ）
 
-各 (layer $\ell$, position $p$) について、$\mathbf{f}^{\text{clean}}_{\ell,p}, \mathbf{f}^{\text{corrupt}}_{\ell,p} \in \mathbb{R}^{163840}$ から以下を計算。本 doc では特に重要な 4 指標を line plot:
+各 (layer $\ell$, position $p$) について、 $\mathbf{f}^{\text{clean}}_{\ell,p}, \mathbf{f}^{\text{corrupt}}_{\ell,p} \in \mathbb{R}^{163840}$ から以下を計算。本 doc では特に重要な 4 指標を line plot:
 
 | 指標 | 数式 | 意味 |
 |---|---|---|

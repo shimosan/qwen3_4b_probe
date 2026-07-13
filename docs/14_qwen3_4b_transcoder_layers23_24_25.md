@@ -27,11 +27,11 @@ h_{j+1} &= a_j + \mathrm{MLP}(\mathrm{RMSNorm}_2(a_j)) \quad(\text{MLP sub-block
 \end{aligned}
 $$
 
-ここで $h_j \in \mathbb{R}^{T \times d_{\text{model}}}$ は **residual stream**（block $j$ の入力時点の表現、$T$=トークン数、$d_{\text{model}}$=hidden_size）。$a_j$ は Attention sub-block 適用後・MLP 適用前の residual stream。block 内では Attention sub-block と MLP sub-block の 2 段で residual stream を更新します。なお $\mathrm{RMSNorm}_1, \mathrm{RMSNorm}_2$ は各 sub-block の入力正規化で、Qwen3 では平均減算を行う LayerNorm ではなくスケールのみの **RMSNorm** を使います。
+ここで $h_j \in \mathbb{R}^{T \times d_{\text{model}}}$ は **residual stream**（block $j$ の入力時点の表現、 $T$=トークン数、 $d_{\text{model}}$=hidden_size）。 $a_j$ は Attention sub-block 適用後・MLP 適用前の residual stream。block 内では Attention sub-block と MLP sub-block の 2 段で residual stream を更新します。なお $\mathrm{RMSNorm}_1, \mathrm{RMSNorm}_2$ は各 sub-block の入力正規化で、Qwen3 では平均減算を行う LayerNorm ではなくスケールのみの **RMSNorm** を使います。
 
 この実験で対象にするのは **block $j$ の中の MLP** の挙動です。具体的には：
 
-- **MLP input** $X_j$: post-attention の residual $a_j$ に RMSNorm（$\mathrm{RMSNorm}_2$）をかけたもの。MLP module の forward に実際に渡される tensor。shape $[T, d_{\text{model}}]$。
+- **MLP input** $X_j$: post-attention の residual $a_j$ に RMSNorm（ $\mathrm{RMSNorm}_2$）をかけたもの。MLP module の forward に実際に渡される tensor。shape $[T, d_{\text{model}}]$。
 - **MLP output** $Y_j$: MLP module が返す tensor（residual add 前）。shape $[T, d_{\text{model}}]$。
 
 $$
@@ -105,8 +105,8 @@ Tokenize すると両方とも 5 tokens。causal mask により最初の 3 token
 | `b_enc` | `[163840]` | bfloat16 |
 | `b_dec` | `[2560]` | bfloat16 |
 
-→ $d_{\text{model}} = 2560$、$d_{\text{feature}} = 163840$。
-→ $W_{\text{enc}}$ の shape が `[d_feature, d_model]` なので、$\mathbf{f} = \mathrm{ReLU}(X W_{\text{enc}}^\top + \mathbf{b}_{\text{enc}})$ という形になる（script 内では `features_x_in` orientation と呼んでいる）。
+→ $d_{\text{model}} = 2560$、 $d_{\text{feature}} = 163840$。
+→ $W_{\text{enc}}$ の shape が `[d_feature, d_model]` なので、 $\mathbf{f} = \mathrm{ReLU}(X W_{\text{enc}}^\top + \mathbf{b}_{\text{enc}})$ という形になる（script 内では `features_x_in` orientation と呼んでいる）。
 
 ---
 
@@ -188,14 +188,14 @@ $$
 
 | 指標 | 定義 | コード |
 |---|---|---|
-| **active_count / position** | 1 トークン position あたりに正値となる feature 数。$\sum_i \mathbb{1}[f_{t,i} > 0]$ を $t$ について平均。 | `(feats > 0).sum(dim=-1).float().mean()` |
-| **active_fraction (clean/corrupt)** | 全 $(t, i)$ ペアのうち $f_{t,i} > 0$ の割合。$\frac{1}{T \cdot d_{\text{feature}}} \sum_{t,i} \mathbb{1}[f_{t,i} > 0]$ | `(feats > 0).float().mean()` |
+| **active_count / position** | 1 トークン position あたりに正値となる feature 数。 $\sum_i \mathbb{1}[f_{t,i} > 0]$ を $t$ について平均。 | `(feats > 0).sum(dim=-1).float().mean()` |
+| **active_fraction (clean/corrupt)** | 全 $(t, i)$ ペアのうち $f_{t,i} > 0$ の割合。 $\frac{1}{T \cdot d_{\text{feature}}} \sum_{t,i} \mathbb{1}[f_{t,i} > 0]$ | `(feats > 0).float().mean()` |
 | **top-k features at position $t$** | $f_{t,i}$ を $i$ について大きい順に並べて先頭 $k$ 個。 | `torch.topk(feats[t], k=20)` |
 | **pos3 diff** | clean と corrupt の position 3 における feature 差分ベクトル $\boldsymbol\delta = \mathbf{f}^{\text{clean}}_3 - \mathbf{f}^{\text{corrupt}}_3 \in \mathbb{R}^{d_{\text{feature}}}$ | `clean_feats[3] - corrupt_feats[3]` |
 | **pos3 max\|Δ\|** | $\max_i |\delta_i|$。pos=3 における clean vs corrupt の最大 feature 活性差。 | `diff.abs().max()` |
 | **last diff / last max\|Δ\|** | 上記を最終 position (`pos=4`、ともに `' is'`) について計算したもの。 | 同上 |
 | **reconstruction RMSE** | 上記 4-4 の式。clean run / corrupt run を別々に計算。 | `((recon - target)**2).mean().sqrt()` |
-| **mean cosine** | 各 token position について $\cos(\hat{Y}_t, Y_t)$ を計算し、$t$ について平均。方向の一致度。 | per-position cosine の `np.mean` |
+| **mean cosine** | 各 token position について $\cos(\hat{Y}_t, Y_t)$ を計算し、 $t$ について平均。方向の一致度。 | per-position cosine の `np.mean` |
 
 ### 「position」が何を意味するか（本実験での具体）
 
@@ -230,7 +230,7 @@ $$
 ### 6-2. Layer 間比較（3 layer 集約）
 
 各列の意味:
-- `active_frac (clean / corrupt)`: clean / corrupt 各 run の active_fraction。$T \cdot d_{\text{feature}}$ 個のうち発火している割合。
+- `active_frac (clean / corrupt)`: clean / corrupt 各 run の active_fraction。 $T \cdot d_{\text{feature}}$ 個のうち発火している割合。
 - `pos=3 max|Δ|`: pos=3 (`' Japan'` vs `' France'`) における feature 差分の最大絶対値。大きいほど「ここで国名が違うことが feature 空間で目立つ」。
 - `last max|Δ|`: last (`' is'` vs `' is'`、ただし前文脈が違う) における feature 差分の最大絶対値。大きいほど「同じトークンだが前文脈の違いが feature 空間に残っている」。
 - `recon rmse (clean / corrupt)` / `recon mean_cos (clean / corrupt)`: 再構成精度。transcoder が MLP 出力をどれだけよく近似できているか。
@@ -346,7 +346,7 @@ corrupt ' is' > clean ' is':
 
 各 (layer, position) の clean / corrupt feature vector $\mathbf{f}^{\text{clean}}_{\ell, p}, \mathbf{f}^{\text{corrupt}}_{\ell, p} \in \mathbb{R}^{163840}$ から計算したスカラ指標を、layer 軸 (x = [23, 24, 25]) でプロット。Figure 4-8 は **pos=3, 4 のみ**を 2 系列で表示（pos 0..2 は causal mask により差分系で 0、Tanimoto / Jaccard で 1.0 になり情報がないため省略）。Figure 9 は engagement の log spread を見る目的で全 5 position 表示。Figure 10 は layer-level の reconstruction quality（per-position ではない）。
 
-以下、$f^{\text{clean}}_j$ は $\mathbf{f}^{\text{clean}}_{\ell, p}$ の feature $j$ 成分（添字 $\ell, p$ 省略）。pos 3 = 赤 (Japan / France)、pos 4 = 青 (' is' の前文脈差)。
+以下、 $f^{\text{clean}}_j$ は $\mathbf{f}^{\text{clean}}_{\ell, p}$ の feature $j$ 成分（添字 $\ell, p$ 省略）。pos 3 = 赤 (Japan / France)、pos 4 = 青 (' is' の前文脈差)。
 
 #### Figure 4 — outlier-driven discrimination (pos=3, 4)
 

@@ -41,7 +41,7 @@ h_{\text{out}} &= h' + \mathrm{MLP}_j(\mathrm{RMSNorm}_2(h'))
 \end{aligned}
 $$
 
-$T$ = トークン数、$d_{\text{model}}$ = hidden size。**residual stream** とは layer をまたいで一貫した「token ごとの内部表現の通り道」のことで、各 block はその通り道に新しい情報を**足し算**で書き込む。最後に final RMSNorm + `lm_head` で語彙ロジットになる。
+$T$ = トークン数、 $d_{\text{model}}$ = hidden size。**residual stream** とは layer をまたいで一貫した「token ごとの内部表現の通り道」のことで、各 block はその通り道に新しい情報を**足し算**で書き込む。最後に final RMSNorm + `lm_head` で語彙ロジットになる。
 
 ```text
 embed  →  [block 0]  →  [block 1]  →  ...  →  [block 35]  →  RMSNorm  →  lm_head  →  logits

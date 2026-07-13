@@ -87,8 +87,8 @@ $$
 
 ここで:
 
-- $d_{\text{sae}} = 32768$（W32K の意味）、$d_{\text{model}} = 2048$（1.7B-Base の hidden_size）。$d_{\text{sae}} \gg d_{\text{model}}$ で **overcomplete**。
-- $k = 50$（L0_50 の意味、TopK の $k$）。$\mathbf{f}_t$ は **正確に $k = 50$ 個**の非ゼロ成分を持つ。
+- $d_{\text{sae}} = 32768$（W32K の意味）、 $d_{\text{model}} = 2048$（1.7B-Base の hidden_size）。 $d_{\text{sae}} \gg d_{\text{model}}$ で **overcomplete**。
+- $k = 50$（L0_50 の意味、TopK の $k$）。 $\mathbf{f}_t$ は **正確に $k = 50$ 個**の非ゼロ成分を持つ。
 - 本 script の encode は ReLU を掛けないため、pre-activation の符号がそのまま残り、上位 $k$ に負値が混じりうる（一般の TopK SAE は ReLU 併用で非負化することが多い; Gao et al. 2024）。
 - 学習は $\hat{h}_{j+1} \approx h_{j+1}$（自己回帰的に residual stream を再構成）と $L_0 = k$ 制約のもとで行われる。
 
@@ -104,7 +104,7 @@ $$
 | sparsity | ReLU + 学習で疎化 | **TopK $k=50$（正確に $k$ 本）** |
 | 役割 | MLP 自体を sparse approximation | residual stream の sparse 分解 |
 
-→ 16 は「**block $j$ 通過後の表現を、$d_{\text{sae}} = 32768$ 次元の sparse 空間で見る**」道具。14 とは入力も復元対象も違う点に注意。
+→ 16 は「**block $j$ 通過後の表現を、 $d_{\text{sae}} = 32768$ 次元の sparse 空間で見る**」道具。14 とは入力も復元対象も違う点に注意。
 
 ---
 
@@ -148,7 +148,7 @@ corrupt : "The capital of France is"  → 期待答え " Paris"
 | `b_enc` | `[32768]` | float32 |
 | `b_dec` | `[2048]` | float32 |
 
-→ $d_{\text{model}} = 2048$、$d_{\text{sae}} = 32768$。$W_{\text{enc}}$ の shape が `[d_sae, d_model]` なので、encode は $\mathbf{f} = \mathrm{TopK}(X W_{\text{enc}}^\top + \mathbf{b}_{\text{enc}})$ となる（script 内では `features_x_in` orientation と呼ぶ）。$W_{\text{dec}}$ は `[d_model, d_sae]` なので decode は $\hat{X} = \mathbf{f} W_{\text{dec}}^\top + \mathbf{b}_{\text{dec}}$。
+→ $d_{\text{model}} = 2048$、 $d_{\text{sae}} = 32768$。 $W_{\text{enc}}$ の shape が `[d_sae, d_model]` なので、encode は $\mathbf{f} = \mathrm{TopK}(X W_{\text{enc}}^\top + \mathbf{b}_{\text{enc}})$ となる（script 内では `features_x_in` orientation と呼ぶ）。 $W_{\text{dec}}$ は `[d_model, d_sae]` なので decode は $\hat{X} = \mathbf{f} W_{\text{dec}}^\top + \mathbf{b}_{\text{dec}}$。
 
 ---
 
@@ -214,7 +214,7 @@ $$
 \mathrm{RMSE} = \sqrt{\frac{1}{T \cdot d_{\text{model}}} \sum_{t,d} (\hat{X}_{t,d} - X_{t,d})^2}
 $$
 
-加えて per-position cosine $\cos(\hat{X}_t, X_t)$ を計算し、$t$ について平均する。
+加えて per-position cosine $\cos(\hat{X}_t, X_t)$ を計算し、 $t$ について平均する。
 
 ---
 

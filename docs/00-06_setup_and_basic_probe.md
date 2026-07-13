@@ -381,7 +381,7 @@ Chapter 04 が保存した `probe_forward_compact.pt` の **layer 0 / 任意の 
 
 ### 背景: attention 行列の読み方
 
-self-attention の各 head は、$T \times T$ 行列 $A \in [0, 1]^{T \times T}$ を出力します。各行 $A_{q, *}$ は **query token $q$ から key token $k$ への重み**で、$\sum_k A_{q, k} = 1$。
+self-attention の各 head は、 $T \times T$ 行列 $A \in [0, 1]^{T \times T}$ を出力します。各行 $A_{q, *}$ は **query token $q$ から key token $k$ への重み**で、 $\sum_k A_{q, k} = 1$。
 
 | 軸 | 意味 |
 |---|---|

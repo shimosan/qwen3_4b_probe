@@ -186,7 +186,7 @@ diff = (lm_out - outputs_hook.logits).abs().max()
 
 ### 5-3. 何が確認できたか
 
-1. **`hidden_states[j]` は `model.model.layers[j-1]` の出力に等しい**（$j \geq 1$）。`j = 0` だけは embedding 出力。
+1. **`hidden_states[j]` は `model.model.layers[j-1]` の出力に等しい**（ $j \geq 1$）。`j = 0` だけは embedding 出力。
 2. **最終層 (layer 35) の hook 出力は post-norm ではなく pre-norm**。`hidden_states[-1]` を取るときは内部で `model.model.norm` が適用されているので、両者をそのまま比較すると違って見える。`norm(hook output)` で揃う。
 3. **`lm_head(hidden_states[-1])` で logits が再現できる**。「最後の hidden state に unembedding をかけて softmax を取れば next-token 分布が出る」という logit lens の原理 ([docs/08](08_logit_lens.md)) がここから直接導かれる。
 4. **数値が完全一致 (`= 0.0`)**: float16 / MPS でも、同じ tensor を 2 経路から取り出しているだけなので誤差は出ない。これは「hook と `output_hidden_states` が **同一の tensor 参照**を返している」ことを意味する（実装的にも transformers/modeling_qwen3.py で確認可能）。

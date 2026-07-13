@@ -66,7 +66,7 @@ Script: [`scripts/17_prelim_qwenscope_sae_8b_smoke.py`](../scripts/17_prelim_qwe
 | `b_enc` | `[65536]` | float32 |
 | `b_dec` | `[4096]` | float32 |
 
-→ $d_{\text{model}} = 4096$, $d_{\text{sae}} = 65536$。1.7B 版から $d_{\text{model}}$ は 2 倍、$d_{\text{sae}}$ は 2 倍、SAE 全体のパラメータ数は約 4 倍。
+→ $d_{\text{model}} = 4096$, $d_{\text{sae}} = 65536$。1.7B 版から $d_{\text{model}}$ は 2 倍、 $d_{\text{sae}}$ は 2 倍、SAE 全体のパラメータ数は約 4 倍。
 
 その他のコード（encode/decode/diff/heatmap/reconstruction）は 16 とほぼ同一で、ファイル名 prefix が `prelim_qwenscope_sae_qwen3_8b_layer24_*` / `nb03_qwenscope_sae_qwen3_8b_layer24_*` に変わるだけ。
 

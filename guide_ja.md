@@ -4,11 +4,11 @@ Qwen3-4B を用いた LLM 内部の観察・可視化のための調査
 
 [![Qwen3-4B 多言語の階層クラスタリング（英語は中国語側に束ねられる）](images/mling_demo_dendro_ward.png)](multilingual_geometry.md)
 
-**Figure 1**: Qwen3-4B のトークン埋め込み $W_E$ から測った 38 言語の階層クラスタリング（Ward 法、距離＝$\sqrt{1-\text{言語間の平均コサイン類似度}}$）。**英語は自分の語族（Germanic）から離れ、中国語・日本語・韓国語の塊に入り、英語–中国語が最も近い**。これは言語の系統では説明できず、学習データで中国語・英語が主要言語であることを反映したものと見られる（英語ピボット辞書と選択基準の影響は分離できていない）。多言語の対応を「回転（直交変換）」の合成とみると、概念先行・言語先行・加法の 3 モデルのうち概念先行モデルが最もよく支持され、逆概念変換で言語構造が顕在化すること等の詳細は → **[Qwen3-4B のトークン埋め込みに刻まれた多言語構造](multilingual_geometry.md)**（English: [multilingual_geometry_en.md](multilingual_geometry_en.md)）。
+**Figure 1**: Qwen3-4B のトークン埋め込み $W_E$ から測った 38 言語の階層クラスタリング（Ward 法、距離＝ $\sqrt{1-\text{言語間の平均コサイン類似度}}$）。**英語は自分の語族（Germanic）から離れ、中国語・日本語・韓国語の塊に入り、英語–中国語が最も近い**。これは言語の系統では説明できず、学習データで中国語・英語が主要言語であることを反映したものと見られる（英語ピボット辞書と選択基準の影響は分離できていない）。多言語の対応を「回転（直交変換）」の合成とみると、概念先行・言語先行・加法の 3 モデルのうち概念先行モデルが最もよく支持され、逆概念変換で言語構造が顕在化すること等の詳細は → **[Qwen3-4B のトークン埋め込みに刻まれた多言語構造](multilingual_geometry.md)**（English: [multilingual_geometry_en.md](multilingual_geometry_en.md)）。
 
 ![en→L 転移性能 vs 生のコサイン](images/mling_demo_transfer_vs_raw.png)
 
-**Figure 2**: en→L の「転移性能」（英語→各言語へ回転 $R(L)$ ひとつで移せる度合い、$R(L)$ の推定に使っていない held-out 対訳で測定）を、英語との生のコサイン $m_{en,L}$ に対して散布図にしたもの（各点＝1 言語、色＝言語グループ）。両者は強く相関する（Pearson $r=0.83$, Spearman $\rho=0.87$）が完全一致せず、**Romance（es, pt, fr）は生の近さの割に転移が上位**。生の近さと「回転ひとつで別言語へ移せる度合い」は別物であることを示す。図はノート [multilingual_geometry_demo.ipynb](lecture/multilingual_geometry_demo.ipynb) の Part 2.2 で生成。
+**Figure 2**: en→L の「転移性能」（英語→各言語へ回転 $R(L)$ ひとつで移せる度合い、 $R(L)$ の推定に使っていない held-out 対訳で測定）を、英語との生のコサイン $m_{en,L}$ に対して散布図にしたもの（各点＝1 言語、色＝言語グループ）。両者は強く相関する（Pearson $r=0.83$, Spearman $\rho=0.87$）が完全一致せず、**Romance（es, pt, fr）は生の近さの割に転移が上位**。生の近さと「回転ひとつで別言語へ移せる度合い」は別物であることを示す。図はノート [multilingual_geometry_demo.ipynb](lecture/multilingual_geometry_demo.ipynb) の Part 2.2 で生成。
 
 ![Qwen3-4B multilingual word embeddings (English-hub star)](images/nb02_multilingual_star.png)
 

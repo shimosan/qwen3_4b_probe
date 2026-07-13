@@ -11,7 +11,7 @@ Script: [`scripts/09_embedding_unembedding.py`](../scripts/09_embedding_unembedd
 Qwen3-4B の **embedding 行列 $W_E$** と **unembedding 行列 $W_U$**（= `lm_head.weight`）の関係を数値で確かめる。具体的には:
 
 1. **`tie_word_embeddings = True`** の意味を実装レベルで確認: 別の tensor がコピーされているのか、それとも同一メモリを共有しているのか
-2. **「effective unembedding」** $W_U^{\text{eff}} = W_U \odot g$（$g$ は final RMSNorm の学習 gain）の意味と、$W_E$ / $W_U$ / $W_U^{\text{eff}}$ の **norm と方向の相互関係**
+2. **「effective unembedding」** $W_U^{\text{eff}} = W_U \odot g$（ $g$ は final RMSNorm の学習 gain）の意味と、 $W_E$ / $W_U$ / $W_U^{\text{eff}}$ の **norm と方向の相互関係**
 3. デモ用に、選択した 743 token subset の **PCA / t-SNE 2D 座標**を生成
 
 これは [docs/08_logit_lens.md](08_logit_lens.md) で観察した「層 0 で input identity が top1 になる」現象や、後段の patching ([docs/12](12_residual_stream_patching.md)) の解釈の基礎になります。
@@ -22,9 +22,9 @@ Qwen3-4B の **embedding 行列 $W_E$** と **unembedding 行列 $W_U$**（= `lm
 
 ### 2-1. `tie_word_embeddings` とは
 
-Transformer 系では vocabulary が大きい場合 (Qwen3-4B では $V = 151{,}936$)、$W_E \in \mathbb{R}^{V \times d}$ と $W_U \in \mathbb{R}^{V \times d}$ を別パラメータにすると、それだけで $2 V d = 2 \times 151936 \times 2560 \approx 778$M params を消費します（モデル全体の 19%）。
+Transformer 系では vocabulary が大きい場合 (Qwen3-4B では $V = 151{,}936$)、 $W_E \in \mathbb{R}^{V \times d}$ と $W_U \in \mathbb{R}^{V \times d}$ を別パラメータにすると、それだけで $2 V d = 2 \times 151936 \times 2560 \approx 778$M params を消費します（モデル全体の 19%）。
 
-**`tie_word_embeddings = True`** の設定では、$W_U \equiv W_E$（同一テンソル）として共有し、メモリと容量を半減できます。Llama / Qwen 系の小さめモデル（7B 以下）でよく使われます。
+**`tie_word_embeddings = True`** の設定では、 $W_U \equiv W_E$（同一テンソル）として共有し、メモリと容量を半減できます。Llama / Qwen 系の小さめモデル（7B 以下）でよく使われます。
 
 ```python
 W_E = model.model.embed_tokens.weight      # [V, d] = [151936, 2560]
@@ -171,7 +171,7 @@ X_tsne = TSNE(n_components=2, init="pca", perplexity=30).fit_transform(X_all)
 観察:
 
 - `input_norm = unembedding_norm` ぴったり（tie の自明な帰結）
-- **effective unembedding は ≈ 2.83x 大きい**（gain $g$ の効果）。$\|W_U^{\text{eff}}[i]\| / \|W_U[i]\| \approx 2.83$ が全 token でほぼ一定 → $g$ は方向ベクトルを少しいびつにストレッチするが、概ね uniform に拡大
+- **effective unembedding は ≈ 2.83x 大きい**（gain $g$ の効果）。 $\|W_U^{\text{eff}}[i]\| / \|W_U[i]\| \approx 2.83$ が全 token でほぼ一定 → $g$ は方向ベクトルを少しいびつにストレッチするが、概ね uniform に拡大
 - **特殊トークン（`<|im_start|>` 等）は input_norm が小さい** (0.36–0.42)。学習中の頻度や初期化の影響と推察。`<|object_ref_start|>`〜`<|video_pad|>` は数値が完全一致 (0.364955) — 初期化のままで実質的に更新されていない可能性
 
 ### 5-3. Cosine の統計（input vs effective unembedding）
@@ -185,7 +185,7 @@ X_tsne = TSNE(n_components=2, init="pca", perplexity=30).fit_transform(X_all)
 | min | **0.877**（一部の special token） |
 | max | 0.991 |
 
-→ **$g$ は方向をほとんど変えない** が、完全に同じ方向ではない（cos = 1.0 ではなく 0.97–0.99）。「$g$ は dimension ごとに $W_U$ をいびつに重み付けする」ことで、わずかに方向を回転させている。特殊トークンで cos が 0.876 と低めになるのは、$W_U[i]$ の特定 dimension に強い偏りがあり、$g$ の不均一性が拡大して効くため、と推察できる。
+→ **$g$ は方向をほとんど変えない** が、完全に同じ方向ではない（cos = 1.0 ではなく 0.97–0.99）。「 $g$ は dimension ごとに $W_U$ をいびつに重み付けする」ことで、わずかに方向を回転させている。特殊トークンで cos が 0.876 と低めになるのは、 $W_U[i]$ の特定 dimension に強い偏りがあり、 $g$ の不均一性が拡大して効くため、と推察できる。
 
 ### 5-4. 2D 座標 — [outputs/prelim_embedding_unembedding_coords.csv](../outputs/prelim_embedding_unembedding_coords.csv)
 
@@ -199,7 +199,7 @@ PCA + t-SNE 各 $3N = 2229$ 行 = 4458 行。各行に `(method, representation_
 
 ## 6. 応用への示唆
 
-- **[docs/08_logit_lens.md](08_logit_lens.md) の現象「層 0 で input identity が top1」の説明**: $h^{(0)} = W_E[x_t]$ に `lm_head` ($W_U$) を当てると、$W_U[v] \cdot W_E[x_t] = W_E[v] \cdot W_E[x_t]$（tie のため）。これは $v = x_t$ で最大値を取りやすいので、層 0 の top1 は入力トークン自身になる。
+- **[docs/08_logit_lens.md](08_logit_lens.md) の現象「層 0 で input identity が top1」の説明**: $h^{(0)} = W_E[x_t]$ に `lm_head` ($W_U$) を当てると、 $W_U[v] \cdot W_E[x_t] = W_E[v] \cdot W_E[x_t]$（tie のため）。これは $v = x_t$ で最大値を取りやすいので、層 0 の top1 は入力トークン自身になる。
 - **用語の整理**: 「embedding と unembedding は同じ行列なのか」という素朴な疑問に、**Qwen3-4B では Yes（同一テンソル、tie）** と即答できる。Llama 3 8B などは tied ではない（別パラメータ）ことと対比して説明できる。
 - **logit lens の implementation note**: 中間層 readout で正しい結果を得るには **必ず `model.model.norm` を適用してから `lm_head` に通す**。これは「effective unembedding が gain $g$ を含んでいて、生の $W_U$ で readout すると scale が ≈ 2.83x ずれる」ことの裏返し。
 - **special token の取り扱い注意**: vocab の末尾に並ぶ `<|object_ref_*|>` `<|box_*|>` `<|vision_*|>` 等は **初期化のままで実質的に学習されていない**可能性がある（input_norm = 0.365 で全て同値）。logit lens で top1 にこれらが出てきたら「未訓練トークンが偶然 readout 方向に近かった」可能性を疑う。
@@ -218,6 +218,6 @@ PCA + t-SNE 各 $3N = 2229$ 行 = 4458 行。各行に `(method, representation_
 
 - **fp16 計算誤差**: `cos(W_E[i], W_U[i])` は理論的に 1.0 だが、CSV では 1.000001 ± 1e-6。これは `e` `u` を float32 に cast してから内積を計算しているが、元の値が fp16 量子化されているため。実用上は無視可能。
 - **`tie` モデル特有**: 本実験の結論（input_norm = unembedding_norm、cos = 1.0 など）は **Qwen3-4B が tied だから成立する**。tie していないモデルでは値が分かれる。
-- **`effective_unembedding` は近似指標**: RMSNorm の分母（hidden state のスカラ RMS）は token ごとに違うので、$W_U^{\text{eff}}$ だけで完全な readout 方向を表すわけではない。「**学習 gain $g$ を吸収した方向**」の意味で使う。
+- **`effective_unembedding` は近似指標**: RMSNorm の分母（hidden state のスカラ RMS）は token ごとに違うので、 $W_U^{\text{eff}}$ だけで完全な readout 方向を表すわけではない。「**学習 gain $g$ を吸収した方向**」の意味で使う。
 - **PCA / t-SNE の結果はランダム性に依存**: `random_state=0` で固定しているが、scikit-learn のバージョンや BLAS によって誤差が出る。「同じデータでも plot が完全一致しない」のは正常。
 - **PCA + t-SNE の比較**: PCA は線形射影で global 構造を保つ。t-SNE は近傍を保つ非線形。同じ subset でも見える「クラスタ」の意味が異なるので併用すると相補的。
