@@ -324,7 +324,7 @@ docs/images/{outputs と同じファイル名}.png
 2. **目的**
 3. **実験設定**
 4. **結果概要**（数値表は列の意味を明記）
-5. **図**（`![caption](images/xxx.png)` で embed、`**Figure N**:` キャプション + 軸 / colormap / 系列の説明）
+5. **図**（下記「図の embed 記法」で embed、`**Figure N**:` キャプション + 軸 / colormap / 系列の説明）
 6. **解釈**
 7. **応用への示唆**（デモへの活用、関連する notebook（nb02 / nb03 など）への寄与、再利用したい figure の指針）
 8. **開発の経緯**（複数 stage の更新があれば）
@@ -336,12 +336,24 @@ docs/images/{outputs と同じファイル名}.png
 
 - frontmatter は使わない（Obsidian notes と違って素 md）
 - script への link は `[scripts/14_xx.py](../scripts/14_xx.py)` のように workspace 相対
-- 画像 path は `images/...`（docs/ 直下から見て）
+- 画像 path は `images/...`（docs/ 直下から見て）。`../outputs/...` を直接参照しない（git 管理外なので GitHub で表示されない）
 - 数式は KaTeX 記法 `$ ... $` / `$$ ... $$`。Cursor 内蔵 Preview は非対応、`Cmd+Shift+V` の正規 Markdown Preview / Obsidian / GitHub で render される
 - **インライン数式 `$...$` の直前は必ず半角スペース（か行頭）にする**。GitHub は開き `$` の直前が全角文字（`（`、`、`、漢字・かな、全角 `＝` 等）だと数式と認識せず、`$\sum_k …$` のように**生の文字列**で表示する。閉じ `$` 側は全角が続いても無害。Obsidian / Cursor の preview は全角隣接でも数式化するので **preview では気づけず GitHub でだけ壊れる**（`m` の斜体化など肉眼で見落としやすい）。
   - 悪い例: `語彙埋め込み行列 $W_E$、$151936 \times 2560$`（`、` の直後の `$151936…$` が生表示）→ 良い例: `…$W_E$、 $151936 \times 2560$`（`$` の前に半角スペース）
   - 全 md 一括検出: `git ls-files '*.md' | while read f; do grep -oP '[^\x00-\x7F]\$(?=[^\s$])' "$f"; done`（0 件なら OK）。修正は開き `$` の前に半角スペースを 1 個入れるだけ（閉じ側は触らない）
   - 一般則として `$...$` の前後を半角スペースで空けておくのが、GitHub / Obsidian / ChatGPT 由来のいずれでも最も堅い（Obsidian も「開き `$` の直後に空白」「単独 `$`＋数字の通貨誤認」など別系統で崩れることがある）
+
+### 図の embed 記法
+
+素の `![caption](images/xxx.png)` は原寸で表示されるため、図が本文を圧迫する。表示幅を指定し、クリックで原寸を開けるようにする：
+
+```html
+<a href="images/xxx.png"><img src="images/xxx.png" width="60%" alt="caption"></a>
+```
+
+- **幅**は画像の縦横比で決める。横長（幅 ÷ 高さ が 2 以上）は `80%`、それ以外は `60%`
+- **リンク先**は、その図に本来リンクしたい先（解説 md など）があればそれを使う。無ければ画像自身
+- `alt` に `"` を含める場合は `&quot;` にエスケープする（属性が壊れる）
 
 ### ルール B — 入門レベルの説明を強化する場合（実験の最初の md など）
 
