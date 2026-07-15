@@ -124,19 +124,19 @@ Script: [`scripts/17_prelim_qwenscope_sae_8b_smoke.py`](../scripts/17_prelim_qwe
 
 ### Figure 1 — Token × feature heatmap
 
-![8B layer24 SAE token×feature heatmap](images/nb03_qwenscope_sae_qwen3_8b_layer24_feature_heatmap.png)
+<a href="images/nb03_qwenscope_sae_qwen3_8b_layer24_feature_heatmap.png"><img src="images/nb03_qwenscope_sae_qwen3_8b_layer24_feature_heatmap.png" width="80%" alt="8B layer24 SAE token×feature heatmap"></a>
 
 **Figure 1**: 縦軸 = `prompt:position:token`、横軸 = top-60 features (各 prompt × position の top-20 features の union、`max activation 降順`)。1.7B (docs/16 Figure 1) と異なり、**pos=3 / pos=4 で clean と corrupt の発火パターンに「共通する列」(f6378, f16957) が見える**。
 
 ### Figure 2 — Differential bar plot
 
-![8B layer24 SAE differential bar plot](images/nb03_qwenscope_sae_qwen3_8b_layer24_feature_diffs_bar.png)
+<a href="images/nb03_qwenscope_sae_qwen3_8b_layer24_feature_diffs_bar.png"><img src="images/nb03_qwenscope_sae_qwen3_8b_layer24_feature_diffs_bar.png" width="60%" alt="8B layer24 SAE differential bar plot"></a>
 
 **Figure 2**: 4 段 bar plot（Japan>France / France>Japan / clean last>corrupt last / corrupt last>clean last）、上位 20 features の $|\Delta|$。
 
 ### Figure 3 — Differential heatmap
 
-![8B layer24 SAE differential heatmap](images/nb03_qwenscope_sae_qwen3_8b_layer24_feature_diffs_heatmap.png)
+<a href="images/nb03_qwenscope_sae_qwen3_8b_layer24_feature_diffs_heatmap.png"><img src="images/nb03_qwenscope_sae_qwen3_8b_layer24_feature_diffs_heatmap.png" width="80%" alt="8B layer24 SAE differential heatmap"></a>
 
 **Figure 3**: 2 行 (pos=3 / last) × 69 列 (両 comparison の top-k features の union)、発散カラーマップ。
 

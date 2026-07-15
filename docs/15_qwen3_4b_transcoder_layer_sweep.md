@@ -108,7 +108,7 @@ L 35    : 0.789          ← 出力直前、ほぼ similar
 
 ### Figure 1 — max|Δ| 全 layer sweep (outlier discrimination, pos=3, 4)
 
-![max abs delta pos34](images/nb03_qwen3_4b_transcoder_layer_sweep_max_abs_delta_pos34.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer_sweep_max_abs_delta_pos34.png"><img src="images/nb03_qwen3_4b_transcoder_layer_sweep_max_abs_delta_pos34.png" width="80%" alt="max abs delta pos34"></a>
 
 $$
 \max_j \,\bigl|\,f^{\text{clean}}_{\ell, p, j} - f^{\text{corrupt}}_{\ell, p, j}\,\bigr|
@@ -118,7 +118,7 @@ x = layer_idx 0..35、赤 = pos=3 (Japan/France)、青 = pos=4 (' is' の前文�
 
 ### Figure 2 — ‖Δ‖₂ 全 layer sweep (total L2 discrimination, pos=3, 4)
 
-![l2 delta pos34](images/nb03_qwen3_4b_transcoder_layer_sweep_l2_delta_pos34.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer_sweep_l2_delta_pos34.png"><img src="images/nb03_qwen3_4b_transcoder_layer_sweep_l2_delta_pos34.png" width="80%" alt="l2 delta pos34"></a>
 
 $$
 \bigl\|\,\mathbf{f}^{\text{clean}}_{\ell, p} - \mathbf{f}^{\text{corrupt}}_{\ell, p}\,\bigr\|_2
@@ -128,7 +128,7 @@ max\|Δ\| (Fig 1) と類似する形状。outlier 1 個ではなく全 features 
 
 ### Figure 3 — Tanimoto 全 layer sweep (連続 Jaccard, pos=3, 4)
 
-![tanimoto pos34](images/nb03_qwen3_4b_transcoder_layer_sweep_tanimoto_pos34.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer_sweep_tanimoto_pos34.png"><img src="images/nb03_qwen3_4b_transcoder_layer_sweep_tanimoto_pos34.png" width="80%" alt="tanimoto pos34"></a>
 
 $$
 T = \frac{\sum_j \min(f^{\text{clean}}_j,\, f^{\text{corrupt}}_j)}{\sum_j \max(f^{\text{clean}}_j,\, f^{\text{corrupt}}_j)}
@@ -143,7 +143,7 @@ $$
 
 ### Figure 4 — Jaccard (binary, active sets) 全 layer sweep (pos=3, 4)
 
-![jaccard pos34](images/nb03_qwen3_4b_transcoder_layer_sweep_jaccard_pos34.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer_sweep_jaccard_pos34.png"><img src="images/nb03_qwen3_4b_transcoder_layer_sweep_jaccard_pos34.png" width="80%" alt="jaccard pos34"></a>
 
 $$
 J(A^{\text{clean}}, A^{\text{corrupt}}) = \frac{|A^{\text{clean}} \cap A^{\text{corrupt}}|}{|A^{\text{clean}} \cup A^{\text{corrupt}}|},
@@ -158,7 +158,7 @@ magnitude を捨て、**発火 feature の set 一致度のみ**を測る binary
 
 ### Figure 5 — max single activation (pos=3, 4)
 
-![max single pos34](images/nb03_qwen3_4b_transcoder_layer_sweep_max_single_pos34.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer_sweep_max_single_pos34.png"><img src="images/nb03_qwen3_4b_transcoder_layer_sweep_max_single_pos34.png" width="80%" alt="max single pos34"></a>
 
 $$
 \max_j \,\max\bigl(f^{\text{clean}}_{\ell, p, j},\, f^{\text{corrupt}}_{\ell, p, j}\bigr)
@@ -168,13 +168,13 @@ $$
 
 ### Figure 6 — max single activation 全 5 position 比較 (log y)
 
-![max single log](images/nb03_qwen3_4b_transcoder_layer_sweep_max_single_log.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer_sweep_max_single_log.png"><img src="images/nb03_qwen3_4b_transcoder_layer_sweep_max_single_log.png" width="80%" alt="max single log"></a>
 
 Figure 5 と同じ指標を **全 5 position + 縦軸 log スケール**で描画。pos 0..2 (グレー = causal mask、clean = corrupt) も後段で大きな値になる事実が見える（pos=0 ' The' は前段 ' Japan' / ' France' より小さいが、後段では同程度）。これは「**後段 layer の feature scale 自体が token 内容によらず大きくなる**」現象。Fig 5 の絶対値ではなく Fig 6 の log spread で「各 position の **相対的** な engagement」を観察できる。
 
 ### Figure 7 — active fraction (layer-level aggregate)
 
-![active fraction sweep](images/nb03_qwen3_4b_transcoder_layer_sweep_active_fraction.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer_sweep_active_fraction.png"><img src="images/nb03_qwen3_4b_transcoder_layer_sweep_active_fraction.png" width="80%" alt="active fraction sweep"></a>
 
 mean active fraction = $\mathbb{E}_{t, j}[\mathbb{1}[f_{t,j} > 0]]$、clean / corrupt 別に prompt 全体（5 token × 163840 feature）で平均。
 
@@ -182,7 +182,7 @@ mean active fraction = $\mathbb{E}_{t, j}[\mathbb{1}[f_{t,j} > 0]]$、clean / co
 
 ### Figure 8 — active feature count per (layer, position, prompt) — log y
 
-![active count per position](images/nb03_qwen3_4b_transcoder_layer_sweep_active_count_per_position.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer_sweep_active_count_per_position.png"><img src="images/nb03_qwen3_4b_transcoder_layer_sweep_active_count_per_position.png" width="80%" alt="active count per position"></a>
 
 Figure 7 が「全 5 position × 163840 features 平均の active fraction」を 1 数値で見せたのに対し、本図は **(layer, position, prompt) 単位の active count** を分解。pos 0..2 (グレー、causal mask により clean=corrupt なので 1 線で表示) と pos=3, 4 (赤・青、clean=実線 / corrupt=破線) で計 7 線。
 
@@ -190,7 +190,7 @@ Figure 7 が「全 5 position × 163840 features 平均の active fraction」を
 
 ### Figure 9 — reconstruction quality (RMSE log y + mean cosine linear)
 
-![reconstruction log](images/nb03_qwen3_4b_transcoder_layer_sweep_reconstruction_log.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer_sweep_reconstruction_log.png"><img src="images/nb03_qwen3_4b_transcoder_layer_sweep_reconstruction_log.png" width="60%" alt="reconstruction log"></a>
 
 上段 = RMSE（**log y スケール**）、下段 = mean cosine（linear）。log で見ると **layer 6 (40.9)、L16 (10.1)、L33-35 (18.7, 44.5, 216.2)** の異常層が明確、また異常でない中間層も 0.04 〜 2.3 の幅で構造的に layer-by-layer 変動する事実が読める。cosine は概ね 0.6-0.9 範囲、後段に向けて緩やかに上昇。後段で MLP output 自体の magnitude が大きくなるため RMSE 比較は単純でない（次の section 5 参照）。
 
@@ -326,54 +326,54 @@ per-layer (× 36 layer):
 
 ### Layers 0-5
 
-![layer 0](images/nb03_qwen3_4b_transcoder_layer0_feature_heatmap.png)
-![layer 1](images/nb03_qwen3_4b_transcoder_layer1_feature_heatmap.png)
-![layer 2](images/nb03_qwen3_4b_transcoder_layer2_feature_heatmap.png)
-![layer 3](images/nb03_qwen3_4b_transcoder_layer3_feature_heatmap.png)
-![layer 4](images/nb03_qwen3_4b_transcoder_layer4_feature_heatmap.png)
-![layer 5](images/nb03_qwen3_4b_transcoder_layer5_feature_heatmap.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer0_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer0_feature_heatmap.png" width="60%" alt="layer 0"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer1_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer1_feature_heatmap.png" width="60%" alt="layer 1"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer2_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer2_feature_heatmap.png" width="60%" alt="layer 2"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer3_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer3_feature_heatmap.png" width="60%" alt="layer 3"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer4_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer4_feature_heatmap.png" width="60%" alt="layer 4"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer5_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer5_feature_heatmap.png" width="60%" alt="layer 5"></a>
 
 ### Layers 6-11
 
-![layer 6](images/nb03_qwen3_4b_transcoder_layer6_feature_heatmap.png)
-![layer 7](images/nb03_qwen3_4b_transcoder_layer7_feature_heatmap.png)
-![layer 8](images/nb03_qwen3_4b_transcoder_layer8_feature_heatmap.png)
-![layer 9](images/nb03_qwen3_4b_transcoder_layer9_feature_heatmap.png)
-![layer 10](images/nb03_qwen3_4b_transcoder_layer10_feature_heatmap.png)
-![layer 11](images/nb03_qwen3_4b_transcoder_layer11_feature_heatmap.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer6_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer6_feature_heatmap.png" width="60%" alt="layer 6"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer7_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer7_feature_heatmap.png" width="60%" alt="layer 7"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer8_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer8_feature_heatmap.png" width="60%" alt="layer 8"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer9_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer9_feature_heatmap.png" width="60%" alt="layer 9"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer10_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer10_feature_heatmap.png" width="60%" alt="layer 10"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer11_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer11_feature_heatmap.png" width="60%" alt="layer 11"></a>
 
 ### Layers 12-17
 
-![layer 12](images/nb03_qwen3_4b_transcoder_layer12_feature_heatmap.png)
-![layer 13](images/nb03_qwen3_4b_transcoder_layer13_feature_heatmap.png)
-![layer 14](images/nb03_qwen3_4b_transcoder_layer14_feature_heatmap.png)
-![layer 15](images/nb03_qwen3_4b_transcoder_layer15_feature_heatmap.png)
-![layer 16](images/nb03_qwen3_4b_transcoder_layer16_feature_heatmap.png)
-![layer 17](images/nb03_qwen3_4b_transcoder_layer17_feature_heatmap.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer12_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer12_feature_heatmap.png" width="60%" alt="layer 12"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer13_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer13_feature_heatmap.png" width="60%" alt="layer 13"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer14_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer14_feature_heatmap.png" width="60%" alt="layer 14"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer15_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer15_feature_heatmap.png" width="60%" alt="layer 15"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer16_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer16_feature_heatmap.png" width="60%" alt="layer 16"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer17_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer17_feature_heatmap.png" width="60%" alt="layer 17"></a>
 
 ### Layers 18-23
 
-![layer 18](images/nb03_qwen3_4b_transcoder_layer18_feature_heatmap.png)
-![layer 19](images/nb03_qwen3_4b_transcoder_layer19_feature_heatmap.png)
-![layer 20](images/nb03_qwen3_4b_transcoder_layer20_feature_heatmap.png)
-![layer 21](images/nb03_qwen3_4b_transcoder_layer21_feature_heatmap.png)
-![layer 22](images/nb03_qwen3_4b_transcoder_layer22_feature_heatmap.png)
-![layer 23](images/nb03_qwen3_4b_transcoder_layer23_feature_heatmap.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer18_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer18_feature_heatmap.png" width="60%" alt="layer 18"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer19_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer19_feature_heatmap.png" width="60%" alt="layer 19"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer20_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer20_feature_heatmap.png" width="60%" alt="layer 20"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer21_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer21_feature_heatmap.png" width="60%" alt="layer 21"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer22_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer22_feature_heatmap.png" width="60%" alt="layer 22"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer23_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer23_feature_heatmap.png" width="60%" alt="layer 23"></a>
 
 ### Layers 24-29
 
-![layer 24](images/nb03_qwen3_4b_transcoder_layer24_feature_heatmap.png)
-![layer 25](images/nb03_qwen3_4b_transcoder_layer25_feature_heatmap.png)
-![layer 26](images/nb03_qwen3_4b_transcoder_layer26_feature_heatmap.png)
-![layer 27](images/nb03_qwen3_4b_transcoder_layer27_feature_heatmap.png)
-![layer 28](images/nb03_qwen3_4b_transcoder_layer28_feature_heatmap.png)
-![layer 29](images/nb03_qwen3_4b_transcoder_layer29_feature_heatmap.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer24_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer24_feature_heatmap.png" width="60%" alt="layer 24"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer25_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer25_feature_heatmap.png" width="60%" alt="layer 25"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer26_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer26_feature_heatmap.png" width="60%" alt="layer 26"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer27_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer27_feature_heatmap.png" width="60%" alt="layer 27"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer28_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer28_feature_heatmap.png" width="60%" alt="layer 28"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer29_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer29_feature_heatmap.png" width="60%" alt="layer 29"></a>
 
 ### Layers 30-35
 
-![layer 30](images/nb03_qwen3_4b_transcoder_layer30_feature_heatmap.png)
-![layer 31](images/nb03_qwen3_4b_transcoder_layer31_feature_heatmap.png)
-![layer 32](images/nb03_qwen3_4b_transcoder_layer32_feature_heatmap.png)
-![layer 33](images/nb03_qwen3_4b_transcoder_layer33_feature_heatmap.png)
-![layer 34](images/nb03_qwen3_4b_transcoder_layer34_feature_heatmap.png)
-![layer 35](images/nb03_qwen3_4b_transcoder_layer35_feature_heatmap.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer30_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer30_feature_heatmap.png" width="60%" alt="layer 30"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer31_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer31_feature_heatmap.png" width="60%" alt="layer 31"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer32_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer32_feature_heatmap.png" width="60%" alt="layer 32"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer33_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer33_feature_heatmap.png" width="60%" alt="layer 33"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer34_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer34_feature_heatmap.png" width="60%" alt="layer 34"></a>
+<a href="images/nb03_qwen3_4b_transcoder_layer35_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer35_feature_heatmap.png" width="60%" alt="layer 35"></a>

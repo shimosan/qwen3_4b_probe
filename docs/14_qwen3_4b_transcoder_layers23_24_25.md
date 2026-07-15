@@ -321,7 +321,7 @@ corrupt ' is' > clean ' is':
 
 #### Layer 24 — Token × feature combined heatmap (sum & diff)
 
-![Qwen3-4B layer24 sum+diff combined heatmap](images/nb03_qwen3_4b_transcoder_layer24_feature_heatmap.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer24_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer24_feature_heatmap.png" width="60%" alt="Qwen3-4B layer24 sum+diff combined heatmap"></a>
 
 **Figure 1**: 上段 = sum (clean + corrupt activation, viridis)、下段 = diff (clean − corrupt, RdBu_r 発散カラーマップ)。両 heatmap で 5 token position × 60 features を表示、列順は両者で揃えてある（**全 163840 features の中から `max-over-10-cells` 降順で top-60 を選択**）。
 
@@ -332,13 +332,13 @@ corrupt ' is' > clean ' is':
 
 ### Layer 23 — pos=3 max|Δ| ピーク layer
 
-![Layer23 sum+diff combined heatmap](images/nb03_qwen3_4b_transcoder_layer23_feature_heatmap.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer23_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer23_feature_heatmap.png" width="60%" alt="Layer23 sum+diff combined heatmap"></a>
 
 **Figure 2**: Layer 23 の sum & diff combined heatmap。Figure 1 と同じ layout。**pos=3 の diff が 3 layer 中で最大** (max|Δ|=19.26)、Japan/France の語彙識別ピーク。
 
 ### Layer 25 — last 立ち上がり完了後
 
-![Layer25 sum+diff combined heatmap](images/nb03_qwen3_4b_transcoder_layer25_feature_heatmap.png)
+<a href="images/nb03_qwen3_4b_transcoder_layer25_feature_heatmap.png"><img src="images/nb03_qwen3_4b_transcoder_layer25_feature_heatmap.png" width="60%" alt="Layer25 sum+diff combined heatmap"></a>
 
 **Figure 3**: Layer 25 の sum & diff combined heatmap。pos=3 max|Δ| は 9.26 まで減衰、代わりに pos=4 (' is') の diff が立ち上がり完了 (6.23)。
 
@@ -350,7 +350,7 @@ corrupt ' is' > clean ' is':
 
 #### Figure 4 — outlier-driven discrimination (pos=3, 4)
 
-![max abs delta](images/nb03_qwen3_4b_transcoder_layers23_24_25_max_abs_delta.png)
+<a href="images/nb03_qwen3_4b_transcoder_layers23_24_25_max_abs_delta.png"><img src="images/nb03_qwen3_4b_transcoder_layers23_24_25_max_abs_delta.png" width="60%" alt="max abs delta"></a>
 
 $$
 \text{max}_j \,\bigl|\,f^{\text{clean}}_j - f^{\text{corrupt}}_j\,\bigr|
@@ -360,7 +360,7 @@ $$
 
 #### Figure 5 — total L2 discrimination (pos=3, 4)
 
-![l2 delta](images/nb03_qwen3_4b_transcoder_layers23_24_25_l2_delta.png)
+<a href="images/nb03_qwen3_4b_transcoder_layers23_24_25_l2_delta.png"><img src="images/nb03_qwen3_4b_transcoder_layers23_24_25_l2_delta.png" width="60%" alt="l2 delta"></a>
 
 $$
 \bigl\|\,\mathbf{f}^{\text{clean}} - \mathbf{f}^{\text{corrupt}}\,\bigr\|_2
@@ -371,7 +371,7 @@ $$
 
 #### Figure 6 — Tanimoto similarity (連続 Jaccard, pos=3, 4)
 
-![tanimoto](images/nb03_qwen3_4b_transcoder_layers23_24_25_tanimoto.png)
+<a href="images/nb03_qwen3_4b_transcoder_layers23_24_25_tanimoto.png"><img src="images/nb03_qwen3_4b_transcoder_layers23_24_25_tanimoto.png" width="60%" alt="tanimoto"></a>
 
 $$
 T\bigl(\mathbf{f}^{\text{clean}}, \mathbf{f}^{\text{corrupt}}\bigr)
@@ -386,7 +386,7 @@ mwhanna transcoder は **ReLU** で「pre-activation がわずかに正でも fe
 
 #### Figure 7 — Jaccard similarity (binary, active sets, pos=3, 4)
 
-![jaccard](images/nb03_qwen3_4b_transcoder_layers23_24_25_jaccard.png)
+<a href="images/nb03_qwen3_4b_transcoder_layers23_24_25_jaccard.png"><img src="images/nb03_qwen3_4b_transcoder_layers23_24_25_jaccard.png" width="60%" alt="jaccard"></a>
 
 $$
 J\bigl(A^{\text{clean}}, A^{\text{corrupt}}\bigr)
@@ -403,7 +403,7 @@ magnitude を捨て、**発火 feature の set 一致度のみ**を測る binary
 
 #### Figure 8 — engagement (strongest single activation, pos=3, 4)
 
-![max single](images/nb03_qwen3_4b_transcoder_layers23_24_25_max_single.png)
+<a href="images/nb03_qwen3_4b_transcoder_layers23_24_25_max_single.png"><img src="images/nb03_qwen3_4b_transcoder_layers23_24_25_max_single.png" width="60%" alt="max single"></a>
 
 $$
 \text{max}_j \,\max\bigl(f^{\text{clean}}_j,\, f^{\text{corrupt}}_j\bigr)
@@ -413,13 +413,13 @@ clean か corrupt の **どちらか強い方**で取った、最も強く発火
 
 #### Figure 9 — max single activation 全 5 position 比較 (log y)
 
-![max single log](images/nb03_qwen3_4b_transcoder_layers23_24_25_max_single_log.png)
+<a href="images/nb03_qwen3_4b_transcoder_layers23_24_25_max_single_log.png"><img src="images/nb03_qwen3_4b_transcoder_layers23_24_25_max_single_log.png" width="60%" alt="max single log"></a>
 
 Figure 8 と同じ指標を **全 5 position + 縦軸 log スケール**で描画。pos 0..2 (グレー = causal mask、clean = corrupt) のスケール感も含めて見ると、各 position の engagement の絶対値関係が分かる。pos=0 'The' は前段 ' Japan' / ' France' より小さいが、後段では同程度（layer 数が 3 つだけなので大きな trend は見えないが、絶対値スケールの比較材料として）。
 
 #### Figure 10 — reconstruction quality (RMSE log y + mean cosine linear)
 
-![reconstruction](images/nb03_qwen3_4b_transcoder_layers23_24_25_reconstruction.png)
+<a href="images/nb03_qwen3_4b_transcoder_layers23_24_25_reconstruction.png"><img src="images/nb03_qwen3_4b_transcoder_layers23_24_25_reconstruction.png" width="60%" alt="reconstruction"></a>
 
 上段 = RMSE（**log y**）、下段 = mean cosine（linear）。transcoder の reconstruction 品質チェック。layer 23 → 25 で RMSE は 0.320 → 0.710 → 0.974（log で見ると意味のある幅）、mean cosine は 0.761 → 0.737 → 0.739 でほぼ一定。後段 layer で MLP output 自体の magnitude が大きくなるため RMSE が増えるのは自然だが、cosine が安定していることから「方向は捉えられている」と判断できる。
 

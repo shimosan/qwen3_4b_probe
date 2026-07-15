@@ -318,7 +318,7 @@ $$
 
 ### Figure 1 — Token × feature heatmap
 
-![1.7B layer20 SAE token×feature heatmap](images/nb03_qwenscope_sae_layer20_feature_heatmap.png)
+<a href="images/nb03_qwenscope_sae_layer20_feature_heatmap.png"><img src="images/nb03_qwenscope_sae_layer20_feature_heatmap.png" width="80%" alt="1.7B layer20 SAE token×feature heatmap"></a>
 
 **Figure 1**: 縦軸 = `prompt:position:token`（clean: c0-c4、corrupt: k0-k4、· は leading space）、横軸 = 全 $d_{\text{sae}}$ = 32768 features から「いずれかの prompt × position で top-20 入りした features の union」(73 → 60 個を `max activation 降順`で選定)、colormap = viridis（activation）。
 
@@ -328,7 +328,7 @@ $$
 
 ### Figure 2 — Differential bar plot (top features)
 
-![1.7B layer20 SAE differential bar plot](images/nb03_qwenscope_sae_layer20_feature_diffs_bar.png)
+<a href="images/nb03_qwenscope_sae_layer20_feature_diffs_bar.png"><img src="images/nb03_qwenscope_sae_layer20_feature_diffs_bar.png" width="60%" alt="1.7B layer20 SAE differential bar plot"></a>
 
 **Figure 2**: 4 段の bar plot。上 2 段 = pos=3 (Japan / France)、下 2 段 = last pos (' is' / ' is')。各段 = $|\Delta\text{activation}|$ の top-20 features。赤 = clean > corrupt（Japan-side / clean-last-side）、青 = corrupt > clean（France-side / corrupt-last-side）。
 
@@ -336,7 +336,7 @@ $$
 
 ### Figure 3 — Differential heatmap (pos=3 vs last)
 
-![1.7B layer20 SAE differential heatmap](images/nb03_qwenscope_sae_layer20_feature_diffs_heatmap.png)
+<a href="images/nb03_qwenscope_sae_layer20_feature_diffs_heatmap.png"><img src="images/nb03_qwenscope_sae_layer20_feature_diffs_heatmap.png" width="80%" alt="1.7B layer20 SAE differential heatmap"></a>
 
 **Figure 3**: 2 行 (pos=3 / last) × 73 列 (両 comparison の top-k features の union、`max-over-rows |Δ|` 降順)。発散カラーマップ RdBu_r（赤=clean>corrupt、青=corrupt>clean）。
 

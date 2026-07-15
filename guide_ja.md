@@ -2,23 +2,23 @@
 
 Qwen3-4B を用いた LLM 内部の観察・可視化のための調査
 
-[![Qwen3-4B 多言語の階層クラスタリング（英語は中国語側に束ねられる）](images/mling_demo_dendro_ward.png)](multilingual_geometry.md)
+<a href="multilingual_geometry.md"><img src="images/mling_demo_dendro_ward.png" width="80%" alt="Qwen3-4B 多言語の階層クラスタリング（英語は中国語側に束ねられる）"></a>
 
 **Figure 1**: Qwen3-4B のトークン埋め込み $W_E$ から測った 38 言語の階層クラスタリング（Ward 法、距離＝ $\sqrt{1-\text{言語間の平均コサイン類似度}}$）。**英語は自分の語族（Germanic）から離れ、中国語・日本語・韓国語の塊に入り、英語–中国語が最も近い**。これは言語の系統では説明できず、学習データで中国語・英語が主要言語であることを反映したものと見られる（英語ピボット辞書と選択基準の影響は分離できていない）。多言語の対応を「回転（直交変換）」の合成とみると、概念先行・言語先行・加法の 3 モデルのうち概念先行モデルが最もよく支持され、逆概念変換で言語構造が顕在化すること等の詳細は → **[Qwen3-4B のトークン埋め込みに刻まれた多言語構造](multilingual_geometry.md)**（English: [multilingual_geometry_en.md](multilingual_geometry_en.md)）。
 
-![en→L 転移性能 vs 生のコサイン](images/mling_demo_transfer_vs_raw.png)
+<a href="images/mling_demo_transfer_vs_raw.png"><img src="images/mling_demo_transfer_vs_raw.png" width="60%" alt="en→L 転移性能 vs 生のコサイン"></a>
 
 **Figure 2**: en→L の「転移性能」（英語→各言語へ回転 $R(L)$ ひとつで移せる度合い、 $R(L)$ の推定に使っていない held-out 対訳で測定）を、英語との生のコサイン $m_{en,L}$ に対して散布図にしたもの（各点＝1 言語、色＝言語グループ）。両者は強く相関する（Pearson $r=0.83$, Spearman $\rho=0.87$）が完全一致せず、**Romance（es, pt, fr）は生の近さの割に転移が上位**。生の近さと「回転ひとつで別言語へ移せる度合い」は別物であることを示す。図はノート [multilingual_geometry_demo.ipynb](lecture/multilingual_geometry_demo.ipynb) の Part 2.2 で生成。
 
-![Qwen3-4B multilingual word embeddings (English-hub star)](images/nb02_multilingual_star.png)
+<a href="images/nb02_multilingual_star.png"><img src="images/nb02_multilingual_star.png" width="60%" alt="Qwen3-4B multilingual word embeddings (English-hub star)"></a>
 
 **Figure 3**: Qwen3-4B の語彙埋め込み $W_E$ を「単語ベクトル」として見た図（t-SNE 2D）。同じ概念を 7 言語（英語・中国語・日本語・韓国語・フランス語・スペイン語・ドイツ語）で用意し、英語をハブとして、単語ごとに単一トークンになる言語だけを英語へリンクした。意味のまとまりが言語をまたいで形成される。これは Figure 4 の Logit Lens で英語プロンプトの内部に中国語トークンが顔を出すこととも整合的。中国語=赤・日本語=青で、共通漢字（山・火 など）は日中で同一トークンのため同座標に重なり紫になる。図はノート [02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb) の §6 で生成。
 
-![Qwen3-4B logit lens grid](images/nb02_logit_lens_grid_clean.png)
+<a href="images/nb02_logit_lens_grid_clean.png"><img src="images/nb02_logit_lens_grid_clean.png" width="60%" alt="Qwen3-4B logit lens grid"></a>
 
 **Figure 4**: Qwen3-4B の Logit Lens。プロンプト「The capital of Japan is」で、各層（縦軸：下＝埋め込み〜上＝最終層）の residual stream を出力埋め込みで語彙へ射影し、各位置（横軸：入力トークン→次トークン）の top 予測トークンを表示。色は正解トークンの順位（対数スケール、黄＝1位）。最終列「is→Tokyo」では層 30 付近から Tokyo が 1 位に立ち上がる。面白いのは「Japan→is」列で、中間層に東京・日本に関わる語が顔を出し、しかもそれが**中国語**であること（簡体字「东京」— 日本語の「東京」と字形が異なる — や「在日本」）。表層形「is」へ収束する前に、モデルが内部では日本に関する概念を中国語経由で扱っている様子がうかがえる。図はノート [02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb) の §8 で生成。
 
-![Qwen3-4B all-heads deviation mosaic](images/nb02_attention_head_mosaic.png)
+<a href="images/nb02_attention_head_mosaic.png"><img src="images/nb02_attention_head_mosaic.png" width="60%" alt="Qwen3-4B all-heads deviation mosaic"></a>
 
 **Figure 5**: Qwen3-4B の全 36 層 × 32 ヘッド（計 1152 個）の self-attention matrix を 1 枚に敷き詰めた図（プロンプト「The capital of Japan is Tokyo」）。各セルは attention 重みそのものではなく、全ヘッド平均からの差分 D[q,k]（赤＝平均より強く見る／青＝弱い／白＝平均通り）で、共通成分（causal な三角形と先頭トークンへの sink）を差し引くと各ヘッド固有の注目パターンが残る。縦軸は層（下＝入力側 0／上＝出力側 35）、横方向は各層内でヘッドを「平均からの距離」の大きい順に並べ替え（左＝個性的／右＝平均的）。多くのセルに見える赤い副対角は直前トークンを見る previous-token ヘッド。入力側の層ほど個性的なヘッドが多く、出力側は平均に近づく。中盤 L22–24 付近に現れる個性的なヘッドの帯は、activation patching が「Tokyo の決定は L24 付近」と示す層と重なる。図はノート [02_residual_stream_logit_lens_patching.ipynb](lecture/02_residual_stream_logit_lens_patching.ipynb) の §10 で生成。
 

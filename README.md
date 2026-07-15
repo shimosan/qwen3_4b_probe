@@ -8,13 +8,13 @@ A teaching repository that probes Qwen3-4B's internal computation — hidden sta
 
 ---
 
-[![Qwen3-4B multilingual hierarchical clustering: English is bundled with Chinese/Japanese/Korean](images/mling_demo_dendro_ward.png)](multilingual_geometry.md)
+<a href="multilingual_geometry.md"><img src="images/mling_demo_dendro_ward.png" width="80%" alt="Qwen3-4B multilingual hierarchical clustering: English is bundled with Chinese/Japanese/Korean"></a>
 
 **Figure 1**: Hierarchical clustering of 38 languages measured from Qwen3-4B's token embedding matrix $W_E$ (Ward linkage; distance = √(1 − mean cosine similarity)). **English leaves its own Germanic family and joins the Chinese / Japanese / Korean cluster, with English–Chinese the closest pair**. This is consistent with the training-data mix rather than linguistic genealogy (the English-pivot dictionary is a confound). The demo also estimates per-language orthogonal maps $R(L)$ and, comparing three accounts of $W_E$ (concept-first / language-first / additive), finds the concept-first model $v_L(w)=R(L)R(w)v_o$ best supported; removing the concept component then makes the hidden language structure surface.
 
 Read the illustrated write-up: **Multilingual geometry encoded in Qwen3-4B's token embedding matrix** → [English](multilingual_geometry_en.md) · [日本語 (Japanese)](multilingual_geometry.md)
 
-![Qwen3-4B Logit Lens for "The capital of Japan is"](images/nb02_logit_lens_grid_clean.png)
+<a href="images/nb02_logit_lens_grid_clean.png"><img src="images/nb02_logit_lens_grid_clean.png" width="60%" alt="Qwen3-4B Logit Lens for &quot;The capital of Japan is&quot;"></a>
 
 **Figure 2**: Logit Lens on the prompt "The capital of Japan is" (from notebook [02 residual_stream / logit_lens / patching](lecture/02_residual_stream_logit_lens_patching.ipynb)). Each layer's residual stream (vertical: bottom = embedding, top = final layer) is projected through the output embedding to the vocabulary; each cell shows the top predicted token at that position (horizontal: input token → next token), colored by the gold token's rank (log scale, yellow = rank 1). "is → Tokyo" rises to rank 1 around layer 30. Notably, in the "Japan → is" column the middle layers surface **Chinese** tokens for Japan / Tokyo (e.g. simplified 东京, distinct from Japanese 東京) before converging to the surface form. Internally the model appears to route the Japan concept through Chinese.
 

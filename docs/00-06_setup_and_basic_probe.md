@@ -404,7 +404,7 @@ Autoregressive LM では未来 token を見られないので、**causal mask �
 
 #### Figure 1: piece mode の heatmap
 
-![attention heatmap layer 0 head 0](images/attention_layer0_head0_piece.png)
+<a href="images/attention_layer0_head0_piece.png"><img src="images/attention_layer0_head0_piece.png" width="60%" alt="attention heatmap layer 0 head 0"></a>
 
 **Figure 1**: Qwen3-4B layer 0, head 0 の attention 行列。横軸 = key token (japanese tokens)、縦軸 = query token、colormap = viridis (0=暗紫 / 1=黄)。35 × 35 セル。
 
